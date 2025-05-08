@@ -1,98 +1,155 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Documentação de Integração Backend e Frontend - Projeto E-coletas
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 🔧 Backend - NestJS + Prisma + Auth
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### 1. Configuração do Prisma
 
-## Description
+* Banco configurado via Docker (PostgreSQL).
+* `.env`:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+  ```env
+  DATABASE_URL="postgresql://root:root@localhost:5432/ecoleta"
+  ```
+* Comando para iniciar migração:
 
-## Project setup
+  ```bash
+  npx prisma migrate dev --name init
+  ```
+* Prisma Service criado para centralizar o acesso ao banco:
 
-```bash
-$ npm install
-```
+  ```ts
+  // prisma.service.ts
+  @Injectable()
+  export class PrismaService extends PrismaClient implements OnModuleInit {
+    async onModuleInit() {
+      await this.$connect();
+    }
+  }
+  ```
 
-## Compile and run the project
+### 2. Módulo de Criação de Usuário
 
-```bash
-# development
-$ npm run start
+* Rota: `POST /users`
+* Validação de dados com DTO (Data Transfer Object).
+* Controller, Service e Repository implementados seguindo arquitetura MVC.
 
-# watch mode
-$ npm run start:dev
+### 3. Autenticação com JWT + Argon2
 
-# production mode
-$ npm run start:prod
-```
+* Utilizado `@nestjs/jwt` e `argon2`.
+* Autenticação feita por rota `POST /auth/login`.
+* Payload JWT inclui apenas o `sub` (userId).
+* `JwtStrategy` atualizado para validar e injetar `userId` no `request.user`.
 
-## Run tests
+### 4. Proteção de Rotas
 
-```bash
-# unit tests
-$ npm run test
+* Criado `JwtAuthGuard` usando:
 
-# e2e tests
-$ npm run test:e2e
+  ```ts
+  @UseGuards(AuthGuard('jwt'))
+  ```
+* Middleware de validação JWT nas rotas privadas.
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Deployment
+## 👁️ Frontend - Next.js + React + Ky + Zod
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### 1. Configuração de Ambiente
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+* Arquivo `src/env.ts`:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+  ```ts
+  import { createEnv } from '@t3-oss/env-nextjs';
+  import { z } from 'zod';
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+  export const env = createEnv({
+    shared: {
+      NEXT_PUBLIC_API_BASE_URL: z.string().url(),
+    },
+    runtimeEnv: {
+      NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    },
+  });
+  ```
 
-## Resources
+### 2. Client HTTP (Ky)
 
-Check out a few resources that may come in handy when working with NestJS:
+* Arquivo `src/http/api.ts`:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+  ```ts
+  import ky from 'ky';
+  import { env } from '@/env';
 
-## Support
+  export const api = ky.create({
+    prefixUrl: env.NEXT_PUBLIC_API_BASE_URL,
+    hooks: {
+      beforeRequest: [
+        (request) => {
+          const token = localStorage.getItem('token');
+          if (token) {
+            request.headers.set('Authorization', `Bearer ${token}`);
+          }
+        },
+      ],
+    },
+  });
+  ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 3. Tela de Login
 
-## Stay in touch
+* Armazena JWT no `localStorage`.
+* Redireciona para `/dashboard` ao logar.
+* Usa `react-toast` para feedback visual.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 4. Proteção de Rotas no Frontend
 
-## License
+* Componente `AuthGuard` em `src/components/AuthGuard.tsx`:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+  ```tsx
+  'use client';
+  import { useEffect, useState } from 'react';
+  import { useRouter } from 'next/navigation';
+
+  export function AuthGuard({ children }: { children: React.ReactNode }) {
+    const [isAuth, setIsAuth] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) router.replace('/login');
+      else setIsAuth(true);
+    }, [router]);
+
+    if (!isAuth) return null;
+    return <>{children}</>;
+  }
+  ```
+
+### 5. Aplicando AuthGuard
+
+* Exemplo com a página `/dashboard/page.tsx`:
+
+  ```tsx
+  'use client';
+  import { AuthGuard } from '@/components/AuthGuard';
+
+  export default function DashboardPage() {
+    return (
+      <AuthGuard>
+        {/* conteúdo protegido */}
+      </AuthGuard>
+    );
+  }
+  ```
+
+---
+
+## ✅ Status Atual
+
+* Backend pronto com login e proteção JWT.
+* Frontend integrado com autenticação.
+* Tela de login funcional.
+* Rotas privadas protegidas com `AuthGuard`.
+
+---
+
+Se desejar, podemos evoluir para uso de cookies HttpOnly e middleware no Next.js para proteção no lado do servidor.
