@@ -18,12 +18,12 @@ export default {
             DEFAULT: '#065f46',   // Verde escuro esportivo
           },
           background: {
-            DEFAULT: '#0d0f10',   // Fundo principal escuro
-            light: '#f9f9f9',     // Alternativo claro
+            DEFAULT: '#f9fafb',   // Fundo principal escuro
+            light: '#0d0f10',     // Alternativo claro
           },
           text: {
-            DEFAULT: '#e5e7eb',   // Texto claro sobre fundo escuro
-            dark: '#111827',      // Texto escuro sobre fundo claro
+            DEFAULT: '#111827',   // Texto claro sobre fundo escuro
+            dark: '#e5e7eb',      // Texto escuro sobre fundo claro
             muted: '#9ca3af',     // Texto secundário
           },
           border: {

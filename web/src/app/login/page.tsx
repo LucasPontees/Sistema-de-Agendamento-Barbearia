@@ -35,8 +35,8 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen bg-background text-text flex items-center justify-center px-4">
-            <div className="w-full max-w-md bg-[#111827] rounded-2xl shadow-lg p-8">
-                <h1 className="text-2xl font-semibold text-center mb-6">Entrar no Cash Alto</h1>
+            <div className="w-full max-w-md bg-background rounded-2xl shadow-ld p-8 border border-border">
+                <h1 className="text-2xl text-text text-center mb-6">Entrar no Cash Alto</h1>
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div>
