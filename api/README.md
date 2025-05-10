@@ -1,3 +1,10 @@
+1 - cd api
+2 - npm install
+3 - docker compose up -d
+4 - npx prisma migrate dev
+5 - 
+
+
 # Documentação de Integração Backend e Frontend - Projeto E-coletas
 
 ## 🔧 Backend - NestJS + Prisma + Auth
