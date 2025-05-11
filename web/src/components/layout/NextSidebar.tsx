@@ -33,8 +33,8 @@ const SidebarItem = ({ icon: Icon, label, href, isActive }: SidebarItemProps) =>
         "flex items-center p-3 rounded-lg mb-1 transition-all",
         isOpen ? "px-4" : "px-3 justify-center",
         isActive 
-          ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-          : "text-sidebar-foreground hover:bg-sidebar-accent/50"
+          ? "bg-secondary text-sidebar-accent-foreground" 
+          : "bg-white hover:bg-sidebar-accent/50"
       )}
     >
       <Icon className="h-5 w-5 shrink-0" />
@@ -67,7 +67,7 @@ export default function NextSidebar() {
       <div className="flex items-center h-16 px-4">
         <div className={cn("flex items-center", isOpen ? "justify-start" : "justify-center w-full")}>
           <div className="h-8 w-8 rounded-full flex items-center justify-center">
-            <span className="text-ecoleta-primary font-bold text-xl"><img src="/favicon.ico" alt="Cash Alto" className="w-full h-full" /></span>
+            <span className="font-bold text-xl"><img src="/favicon.ico" alt="Cash Alto" className="w-full h-full" /></span>
           </div>
           {isOpen && (
             <span className="ml-3 font-semibold text-white text-lg">Cash Alto</span>
@@ -86,23 +86,6 @@ export default function NextSidebar() {
               isActive={item.isActive}
             />
           ))}
-        </div>
-      </div>
-      
-      <div className="p-4 border-t border-sidebar-border">
-        <div className={cn(
-          "flex items-center", 
-          isOpen ? "justify-start" : "justify-center"
-        )}>
-          <div className="h-8 w-8 rounded-full bg-sidebar-accent flex items-center justify-center">
-            <User className="h-4 w-4 text-white" />
-          </div>
-          {isOpen && (
-            <div className="ml-3">
-              <p className="text-xs text-sidebar-foreground/80">Logado como</p>
-              <p className="text-sm text-sidebar-foreground font-semibold">Admin</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
