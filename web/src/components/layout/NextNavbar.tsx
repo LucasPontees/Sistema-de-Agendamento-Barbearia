@@ -20,12 +20,12 @@ export default function NextNavbar() {
   const router = useRouter();
 
   return (
-    <div className="h-16 border-b border-border flex items-center px-4 justify-between bg-background">
+    <div className="h-16 border-b border-border flex items-center px-4 justify-between bg-primary">
       <div className="flex items-center">
         <Button variant="ghost" size="icon" onClick={toggle} className="mr-4">
           <Menu className="h-5 w-5" />
         </Button>
-        <div className="text-lg font-semibold text-ecoleta-primary hidden sm:block">E-coletas</div>
+        <div className="text-lg font-semibold text-ecoleta-primary hidden sm:block">Cash Alto</div>
       </div>
       <div className="flex items-center space-x-4">
         <Button variant="ghost" size="icon" className="relative">

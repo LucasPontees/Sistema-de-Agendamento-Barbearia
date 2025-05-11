@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cash App",
-  description: "Cash App",
+  title: "Cash Alto",
+  description: "Cash Alto",
 };
 
 export default function RootLayout({

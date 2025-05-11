@@ -60,17 +60,17 @@ export default function NextSidebar() {
   return (
     <div 
       className={cn(
-        "h-screen bg-[#30A386] fixed top-0 left-0 z-40 transition-all duration-300 ease-in-out flex flex-col border-r border-sidebar-border",
+        "h-screen bg-primary fixed top-0 left-0 z-40 transition-all duration-300 ease-in-out flex flex-col border-r border-sidebar-border",
         isOpen ? "w-64" : "w-16"
       )}
     >
       <div className="flex items-center h-16 px-4">
         <div className={cn("flex items-center", isOpen ? "justify-start" : "justify-center w-full")}>
           <div className="h-8 w-8 rounded-full flex items-center justify-center">
-            <span className="text-ecoleta-primary font-bold text-xl"><img src="/favicon.png" alt="E-coletas" className="w-full h-full" /></span>
+            <span className="text-ecoleta-primary font-bold text-xl"><img src="/favicon.ico" alt="Cash Alto" className="w-full h-full" /></span>
           </div>
           {isOpen && (
-            <span className="ml-3 font-semibold text-white text-lg">E-coletas</span>
+            <span className="ml-3 font-semibold text-white text-lg">Cash Alto</span>
           )}
         </div>
       </div>

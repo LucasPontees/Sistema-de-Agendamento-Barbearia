@@ -37,7 +37,7 @@ export default function ProtectedLayout({
           <div className="flex justify-between items-center text-sm text-muted-foreground px-1">
             <div className="flex items-center gap-1">
               <Copyright className="h-3.5 w-3.5" />
-              <span>2025 - ATX Tecnologia</span>
+              <span>2025 - Cash Alto</span>
             </div>
             <div>
               versão 1.0.0 | ambiente
