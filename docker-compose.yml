@@ -1,30 +1,16 @@
-version: '3.8'
-
 services:
-  db:
-    image: postgres:15
-    container_name: postgres_ecoleta
-    restart: always
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: ecoleta
+  postgres:
+    image: postgres:latest
+    container_name: api-postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: api_db
+    restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_ecoleta
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@local.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "5050:80"
-    depends_on:
-      - db
 
 volumes:
   postgres_data:
