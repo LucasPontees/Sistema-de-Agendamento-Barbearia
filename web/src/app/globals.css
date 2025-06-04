@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@config "../../tailwind.config.js";
+
+
+/* Estilos personalizados globais */
+:root {
+  --color-primary: #00b37e;
+  --color-primary-dark: #009168;
+  --color-background: #f9fafb;
+  --color-text: #111827;
+}
+
+html,
+body {
+  @apply bg-background text-text font-sans;
+  scroll-behavior: smooth;
+}
+
+a {
+  @apply text-primary hover:underline;
+}
+
+button {
+  @apply font-medium transition duration-200;
+}
