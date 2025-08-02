@@ -51,7 +51,7 @@ const Login: React.FC = () => {
             });
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userEmail', email);
-            router.push('/');
+            router.push('/homepage');
         } catch (error) {
             // In case of any errors in the Promise
             console.error('Login error:', error);
