@@ -63,3 +63,11 @@ Este projeto está aberto para contribuições. Caso queira contribuir, faça um
 - Dashboard com indicadores de desempenho.
 - Permitir avaliações de clientes sobre os serviços.
 - Integração com métodos de pagamento.
+
+## Idéia central
+
+- Eu como Cliente desejo acessar o Sistema para verificar Barbearias próximas a mim, então eu logo com usuário e senha, verifico se as barbearias próximas a mim estão com horário disponivel, e também posso verificar os serviços prestados.
+- Deve ter uma aba de comentários para aquela barbearia.
+- Deve ser possivel opinar sobre os serviços
+- Deve ser possivel fazer agendamentos
+- Deve ser possivel se registrar como Loja/Barbearia ou como Cliente.
