@@ -11,79 +11,56 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import NextNavbar from '@/components/NextNavbar';
 import NextFooter from '@/components/NextFooter';
+import { api } from '@/http/api'; // Adjust the import based on your API service setup
 
 const Login: React.FC = () => {
-    const [email, setEmail] = useState('');
+
+    const [form, setForm] = useState({
+        login: '',
+        password: ''
+    });
+
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { toast } = useToast();
+    const [carregando, setCarregando] = useState(false);
     const router = useRouter();
+    const [erro, setErro] = useState('');
+    const [mensagem, setMensagem] = useState("");
 
-    const handleLogin = async (e: React.FormEvent) => {
+
+
+    const { toast } = useToast();
+
+
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    }
+
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-
-        if (!email || !password) {
-            toast({
-                title: "Erro",
-                description: "Por favor, insira email e senha.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        setIsLoading(true);
-
+        if (!form.login || !form.password) return;
+        setCarregando(true);
+        setErro('');
         try {
-            // Simulate authentication - in a real app, this would be a Supabase auth call
-            await new Promise<void>((resolve) => {
+
+            await api.post("auth/login", {
+                json: { login: form.login, password: form.password },
+            });
+
+            setMensagem("Login realizado com sucesso!");
+            setTimeout(() => {
                 setTimeout(() => {
-                    console.log('Login attempt with:', { email, password });
-                    // Mock successful login for testing
-                    // For demonstration, any email/password combination will work
-                    resolve();
-                }, 1500);
-            });
-
-            // Login successful
-            toast({
-                title: "Login bem-sucedido",
-                description: "Bem-vindo de volta ao Barba VIP!",
-            });
-            localStorage.setItem('isAuthenticated', 'true');
-            localStorage.setItem('userEmail', email);
-            router.push('/homepage');
+                    router.push("/dashboard");
+                }, 1000);
+            }, 1000);
         } catch (error) {
-            // In case of any errors in the Promise
-            console.error('Login error:', error);
-            toast({
-                title: "Falha no login",
-                description: "Ocorreu um erro ao tentar fazer login.",
-                variant: "destructive",
-            });
+            setMensagem("Credenciais inválidas!");
+            setTimeout(() => (setMensagem("")), 1000);
         } finally {
-            setIsLoading(false);
+            setCarregando(false);
         }
-
-        // In a real implementation with Supabase:
-        // try {
-        //   const { error } = await supabase.auth.signInWithPassword({
-        //     email,
-        //     password
-        //   });
-        //   
-        //   if (error) throw error;
-        //   toast({ title: "Login Successful", description: "Welcome back to Barba VIP!" });
-        //   navigate('/');
-        // } catch (error) {
-        //   toast({
-        //     title: "Login Failed",
-        //     description: error.message,
-        //     variant: "destructive",
-        //   });
-        // } finally {
-        //   setIsLoading(false);
-        // }
-    };
+    }
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -100,17 +77,18 @@ const Login: React.FC = () => {
                         </CardHeader>
 
                         <CardContent>
-                            <form onSubmit={handleLogin}>
+                            <form onSubmit={handleSubmit}>
                                 <div className="space-y-4">
                                     <div className="space-y-2">
-                                        <Label htmlFor="email">Email</Label>
+                                        <Label htmlFor="login">Email</Label>
                                         <Input
-                                            id="email"
-                                            type="email"
-                                            placeholder="seu.email@exemplo.com"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            id="login"
+                                            type="login"
                                             required
+                                            name="login"
+                                            placeholder="Login"
+                                            value={form.login}
+                                            onChange={handleChange}
                                         />
                                     </div>
 
@@ -124,9 +102,11 @@ const Login: React.FC = () => {
                                         <Input
                                             id="password"
                                             type="password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
                                             required
+                                            placeholder="••••••••"
+                                            name="password"
+                                            value={form.password}
+                                            onChange={handleChange}
                                         />
                                     </div>
 
