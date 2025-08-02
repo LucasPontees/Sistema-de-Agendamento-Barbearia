@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import NextNavbar from '@/components/NextNavbar';
+import NextFooter from '@/components/NextFooter';
 
 const Register: React.FC = () => {
     const [name, setName] = useState('');
@@ -95,7 +97,7 @@ const Register: React.FC = () => {
 
     return (
         <div className="flex flex-col min-h-screen">
-
+            <NextNavbar />
             <main className="flex-grow flex items-center justify-center py-12">
                 <div className="container px-4">
                     <Card className="mx-auto max-w-md">
@@ -193,7 +195,7 @@ const Register: React.FC = () => {
                     </Card>
                 </div>
             </main>
-
+            <NextFooter />
         </div>
     );
 };
