@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated: propIsAuthenticated, o
                     <div className="flex items-center space-x-6">
                         <nav className="flex space-x-6">
                             <Link href="/" className="text-white hover:text-barber-gold">Home</Link>
-                            <Link href="/services" className="text-white hover:text-barber-gold">Serviços</Link>
+                            <Link href="/catalog" className="text-white hover:text-barber-gold">Serviços</Link>
                             <Link href="/appointments" className="text-white hover:text-barber-gold">Agendamentos</Link>
                             <Link href="/membership" className="text-white hover:text-barber-gold">Clube VIP</Link>
                             {isAuthenticated && (
