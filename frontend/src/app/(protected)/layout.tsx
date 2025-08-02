@@ -14,9 +14,9 @@ export default function ProtectedLayout({
 
             <NextNavbar />
 
-            <div className="container mx-auto py-4 flex-1">
+            <main >
                 {children}
-            </div>
+            </main>
 
             <NextFooter />
         </div>
