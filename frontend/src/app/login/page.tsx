@@ -1,7 +1,6 @@
 
 'use client';
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
@@ -19,8 +18,6 @@ const Login: React.FC = () => {
         login: '',
         password: ''
     });
-
-    const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [carregando, setCarregando] = useState(false);
     const router = useRouter();

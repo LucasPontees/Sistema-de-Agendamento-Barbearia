@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import NextNavbar from '@/components/NextNavbar';
 import NextFooter from '@/components/NextFooter';
