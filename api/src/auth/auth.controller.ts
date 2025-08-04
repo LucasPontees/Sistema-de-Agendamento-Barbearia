@@ -57,4 +57,16 @@ export class AuthController {
       return { isAuthenticated: false };
     }
   }
+
+  @Post("logout")
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.cookie("auth-token", "", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 0, // Remove cookie
+    });
+
+    return { message: "Logout realizado com sucesso" };
+  }
 }

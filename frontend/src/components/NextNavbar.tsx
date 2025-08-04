@@ -43,21 +43,17 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
 
 
 
-    const handleLogout = () => {
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('userEmail');
+    const handleLogout = async () => {
+        try {
+            await api.post('auth/logout'); // Faz o logout no backend
 
-        if (onLogout) {
-            onLogout();
+            router.push('/login'); // Redireciona após logout
+            toast({ title: 'Desconectado com sucesso!' });
+        } catch (error) {
+            console.error('Erro ao fazer logout', error);
         }
-
-        toast({
-            title: "Desconectado com sucesso",
-            description: "Esperamos vê-lo novamente em breve!",
-        });
-
-        router.push('/login');
     };
+
 
     const toggleMenu = () => setMenuOpen(!menuOpen);
 
