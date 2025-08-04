@@ -8,16 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserCog, Mail, Calendar, History } from 'lucide-react';
 
 const Profile = () => {
-  const router = useRouter();
-  // const userEmail = localStorage.getItem('userEmail') || '';
-
-  // Verifica se o usuário está autenticado
-  React.useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-    if (!isAuthenticated) {
-      router.push('/login');
-    }
-  }, [router]);
 
   return (
     <div className="min-h-screen bg-gray-100">

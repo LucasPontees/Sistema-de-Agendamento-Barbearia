@@ -39,8 +39,6 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     const isMobile = useIsMobile();
     const { toast } = useToast();
 
-    console.log("Header component rendered with isAuthenticated:", isAuthenticated);
-
     const router = useRouter();
 
 
