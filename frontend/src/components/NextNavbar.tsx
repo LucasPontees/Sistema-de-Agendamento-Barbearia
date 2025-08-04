@@ -6,26 +6,44 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
+import { api } from '@/http/api';
 
+function useAuth() {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const data = await api.get('auth/check').json<{ isAuthenticated: boolean }>();
+                setIsAuthenticated(data.isAuthenticated);
+            } catch (err) {
+                console.error('Erro ao verificar autenticação:', err);
+                setIsAuthenticated(false);
+            }
+        };
+
+        checkAuth();
+    }, []);
+
+    return isAuthenticated;
+}
 
 interface HeaderProps {
     isAuthenticated?: boolean;
     onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ isAuthenticated: propIsAuthenticated, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     const [menuOpen, setMenuOpen] = React.useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(propIsAuthenticated || false);
+    const isAuthenticated = useAuth(); // aqui você pega o estado atual via API
     const isMobile = useIsMobile();
     const { toast } = useToast();
 
+    console.log("Header component rendered with isAuthenticated:", isAuthenticated);
+
     const router = useRouter();
 
-    useEffect(() => {
-        // Check localStorage for authentication state
-        const authState = localStorage.getItem('isAuthenticated') === 'true';
-        setIsAuthenticated(authState);
-    }, [propIsAuthenticated]);
+
 
     const handleLogout = () => {
         localStorage.removeItem('isAuthenticated');

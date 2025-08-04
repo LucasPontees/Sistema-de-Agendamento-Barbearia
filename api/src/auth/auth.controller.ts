@@ -1,18 +1,23 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res } from "@nestjs/common";
 import { AuthService } from "@/auth/auth.service";
 import { LoginUserDto } from "@/users/dtos/users.user.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
+import { Request } from "express";
+import { JwtService } from "@nestjs/jwt";
 
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private jwtService: JwtService
+  ) {}
 
   @Post("login")
   public async login(
     @Body() loginUserDto: LoginUserDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ): Promise<any> {
     const { Authorization, expiresIn, data } =
       await this.authService.login(loginUserDto);
@@ -30,5 +35,26 @@ export class AuthController {
       data,
       token: Authorization,
     };
+  }
+
+  @Get("check")
+  checkAuth(@Req() request: Request) {
+    const token = request.cookies["auth-token"];
+
+    if (!token) {
+      return { isAuthenticated: false };
+    }
+
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new Error("JWT_SECRET is not defined");
+    }
+
+    try {
+      const payload = this.jwtService.verify(token);
+      return { isAuthenticated: true, user: payload };
+    } catch (err) {
+      return { isAuthenticated: false };
+    }
   }
 }

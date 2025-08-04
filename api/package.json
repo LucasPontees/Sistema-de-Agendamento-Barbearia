@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",    
+    "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "vitest",
     "test:watch": "vitest --watch"
   },
@@ -36,6 +36,8 @@
     "multer": "^2.0.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "@types/cookie-parser": "^1.4.8",
+    "cookie-parser": "^1.4.7",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },

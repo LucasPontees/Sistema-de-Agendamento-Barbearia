@@ -3,7 +3,7 @@ services:
     image: postgres:latest
     container_name: api-postgres
     ports:
-      - "5433:5432"
+      - "5434:5432" # porta alterada para evitar conflito com outro projeto
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
