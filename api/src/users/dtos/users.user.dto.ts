@@ -7,14 +7,14 @@ export class LoginUserDto {
     example: "john.doe",
   })
   @IsNotEmpty()
-  readonly login: string;
+  readonly email: string;
 
   @ApiProperty({
     description: "The password of the user",
     example: "password",
   })
   @IsNotEmpty()
-  readonly password: string;
+  readonly senha: string;
 }
 export class CreateUserDto {
   @IsNotEmpty()
@@ -22,24 +22,37 @@ export class CreateUserDto {
     description: "The name of the user",
     example: "John",
   })
-  name: string;
+  nome: string;
   @IsNotEmpty()
   @ApiProperty({
     description: "The surname of the user",
     example: "Doe",
   })
-  surname: string;
+  email: string;
   @IsNotEmpty()
   @ApiProperty({
     description: "The login of the user",
     example: "john.doe",
   })
-  login: string;
+  telefone: string;
 
   @ApiProperty({
     description: "The password of the user",
     example: "password",
   })
   @IsNotEmpty()
-  password: string;
+  senha: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "Data de Nascimento do Usuario",
+    example: "12/12/2000",
+  })
+  dataNascimento: Date;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "The role of the user",
+    example: "CLIENT",
+  })
+  fotoPerfil: string;
 }

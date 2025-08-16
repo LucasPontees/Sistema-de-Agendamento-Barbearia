@@ -4,14 +4,14 @@ import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto, LoginUserDto } from "@/users/dtos/users.user.dto";
 import { JwtPayload } from "@/auth/jwt.strategy";
 import { PrismaService } from "../../prisma/prisma.service";
-import { User } from "@prisma/client";
+import { Usuario } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersService
   ) {}
 
   async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
@@ -33,19 +33,19 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<any> {
     // find user in db
-    const user = await this.usersService.findByLogin(loginUserDto);
+    const usuario = await this.usersService.findByLogin(loginUserDto);
 
     // generate and sign token
-    const token = this._createToken(user);
+    const token = this._createToken(usuario);
 
     return {
       ...token,
-      data: user,
+      data: usuario,
     };
   }
 
-  private _createToken({ login }): any {
-    const user: JwtPayload = { login };
+  private _createToken({ email }): any {
+    const user: JwtPayload = { email };
     const Authorization = this.jwtService.sign(user);
     return {
       expiresIn: process.env.EXPIRESIN,
@@ -65,10 +65,10 @@ export class AuthService {
 export interface RegistrationStatus {
   success: boolean;
   message: string;
-  data?: User;
+  data?: Usuario;
 }
 export interface RegistrationSeederStatus {
   success: boolean;
   message: string;
-  data?: User[];
+  data?: Usuario[];
 }

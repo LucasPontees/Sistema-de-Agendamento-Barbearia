@@ -2,10 +2,10 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { CreateUserDto, LoginUserDto } from "@/users/dtos/users.user.dto";
 import { compare, hash } from "bcrypt";
 import { PrismaService } from "../../../prisma/prisma.service";
-import { User } from "@prisma/client";
+import { Usuario } from "@prisma/client";
 
-interface FormatLogin extends Partial<User> {
-  login: string;
+interface FormatLogin extends Partial<Usuario> {
+  email: string | null;
 }
 
 @Injectable()
@@ -14,45 +14,38 @@ export class UsersService {
 
   async create(userDto: CreateUserDto): Promise<any> {
     // // check if the user exists in the db
-    const userInDb = await this.prisma.user.findFirst({
-      where: { login: userDto.login },
+    const userInDb = await this.prisma.usuario.findFirst({
+      where: { email: userDto.email },
     });
     if (userInDb) {
       throw new HttpException("user_already_exist", HttpStatus.CONFLICT);
     }
-    return await this.prisma.user.create({
+    return await this.prisma.usuario.create({
       data: {
         ...userDto,
-        role: "CLIENT" as const,
-        password: await hash(userDto.password, 10),
+        senha: await hash(userDto.senha, 10),
       },
     });
   }
   //use by auth module to login user
-  async findByLogin({ login, password }: LoginUserDto): Promise<FormatLogin> {
-    const user = await this.prisma.user.findFirst({
-      where: { login },
+  async findByLogin({ email }: LoginUserDto): Promise<FormatLogin> {
+    const usuario = await this.prisma.usuario.findFirst({
+      where: { email },
     });
 
-    if (!user) {
+    if (!usuario) {
       throw new HttpException("invalid_credentials", HttpStatus.UNAUTHORIZED);
     }
 
-    // compare passwords
-    const areEqual = await compare(password, user.password);
+    const { senha: p, ...rest } = usuario;
 
-    if (!areEqual) {
-      throw new HttpException("invalid_credentials", HttpStatus.UNAUTHORIZED);
-    }
-
-    const { password: p, ...rest } = user;
     return rest;
   }
 
   //use by auth module to get user in database
-  async findByPayload({ login }: any): Promise<any> {
-    return await this.prisma.user.findFirst({
-      where: { login },
+  async findByPayload({ email }: any): Promise<any> {
+    return await this.prisma.usuario.findFirst({
+      where: { email },
     });
   }
 }

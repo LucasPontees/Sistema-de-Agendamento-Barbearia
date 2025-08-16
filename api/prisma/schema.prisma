@@ -12,24 +12,97 @@ generator client {
 
 //Here is a declaration of user Table and it properties 
 //configurations. 
-model User {
-  id       Int     @id @default(autoincrement())
-  login    String
-  password String
-  name     String
-  surname  String?
-  role     Role    @default(CLIENT)
+model Usuario {
+  id             Int       @id @default(autoincrement())
+  nome           String
+  email          String?   @unique
+  telefone       String
+  senha          String?
+  dataNascimento DateTime?
+  fotoPerfil     String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  @@map("user")
+  agendamentos Agendamento[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
-//That is a list of a role that we will use for this tutorial
-//we can extend this depend of your project.
-enum Role {
-  CLIENT
-  ADMIN
-  ROOT
+model Empresa {
+  id                    Int     @id @default(autoincrement())
+  nomeFantasia          String
+  cnpj                  String? @unique
+  telefone              String
+  email                 String?
+  endereco              String
+  descricao             String?
+  logo                  String?
+  horariosFuncionamento Json? // pode guardar como objeto JSON {seg: "08:00-18:00", sab: "09:00-14:00"}
+
+  barbeiros    Barbeiro[]
+  servicos     Servico[]
+  agendamentos Agendamento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Barbeiro {
+  id            Int     @id @default(autoincrement())
+  nome          String
+  telefone      String?
+  email         String?
+  especialidade String? // Ex: corte clássico, barba, etc.
+  fotoPerfil    String?
+
+  empresaId Int
+  empresa   Empresa @relation(fields: [empresaId], references: [id])
+
+  agendamentos Agendamento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Servico {
+  id         Int     @id @default(autoincrement())
+  nome       String
+  descricao  String?
+  duracaoMin Int // em minutos
+  preco      Float
+
+  empresaId Int
+  empresa   Empresa @relation(fields: [empresaId], references: [id])
+
+  agendamentos Agendamento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Agendamento {
+  id          Int               @id @default(autoincrement())
+  dataHora    DateTime
+  status      StatusAgendamento @default(PENDENTE)
+  observacoes String?
+
+  usuarioId Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+
+  empresaId Int
+  empresa   Empresa @relation(fields: [empresaId], references: [id])
+
+  barbeiroId Int?
+  barbeiro   Barbeiro? @relation(fields: [barbeiroId], references: [id])
+
+  servicoId Int
+  servico   Servico @relation(fields: [servicoId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum StatusAgendamento {
+  PENDENTE
+  CONFIRMADO
+  CANCELADO
+  CONCLUIDO
 }
