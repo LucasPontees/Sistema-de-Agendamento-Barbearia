@@ -1,6 +1,7 @@
 import { Injectable, Inject } from "@nestjs/common";
-import { IUserRepository } from "./repository/user.repository";
+import { IUserRepository, UserResponse } from "./repository/user.repository";
 import * as argon2 from "argon2";
+import { PrismaUserRepository } from "./repository/prisma-user.repository";
 
 interface CreateUserRequest {
   nome: string;
@@ -13,17 +14,14 @@ interface CreateUserRequest {
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(
-    @Inject("IUserRepository")
-    private readonly userRepository: IUserRepository
-  ) {}
+  constructor(private readonly prismaUserRepository: PrismaUserRepository) {}
 
-  async execute(request: CreateUserRequest) {
+  async execute(request: CreateUserRequest): Promise<UserResponse> {
     const { senha, dataNascimento, ...rest } = request;
 
     const senhaHash = await argon2.hash(senha);
 
-    return this.userRepository.create({
+    return this.prismaUserRepository.create({
       ...rest,
       senha: senhaHash,
       dataNascimento: new Date(dataNascimento).toISOString(),

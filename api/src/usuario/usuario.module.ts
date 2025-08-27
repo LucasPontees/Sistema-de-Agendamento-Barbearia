@@ -5,12 +5,6 @@ import { CreateUserUseCase } from "./create-user.usecase";
 
 @Module({
   controllers: [UsuarioController],
-  providers: [
-    CreateUserUseCase,
-    {
-      provide: "IUserRepository",
-      useClass: PrismaUserRepository,
-    },
-  ],
+  providers: [CreateUserUseCase, PrismaUserRepository],
 })
 export class UsuarioModule {}
