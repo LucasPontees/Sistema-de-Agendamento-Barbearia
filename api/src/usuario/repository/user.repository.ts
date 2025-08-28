@@ -1,20 +1,6 @@
-export interface UserResponse {
-  id: number;
-  nome: string;
-  email: string;
-  telefone: string;
-  senha: string;
-  dataNascimento?: Date | null;
-  fotoPerfil?: string | null;
-}
+import { Prisma, Usuario } from "@prisma/client";
 
-export interface IUserRepository {
-  create(data: {
-    nome: string;
-    email: string;
-    telefone: string;
-    senha: string;
-    dataNascimento: string;
-    fotoPerfil: string;
-  }): Promise<UserResponse>;
+export abstract class IUserRepository {
+  abstract create(data: Prisma.UsuarioCreateInput): Promise<Usuario>;
+  abstract findByEmail(email: string): Promise<Usuario | null>;
 }

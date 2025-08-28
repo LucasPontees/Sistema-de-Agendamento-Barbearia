@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import { IsDateString, IsEmail, IsString, MinLength } from "class-validator";
 
 export class CreateUsuarioDto {
@@ -35,6 +36,7 @@ export class CreateUsuarioDto {
     example: "1990-01-01",
   })
   @IsDateString()
+  @Transform(({ value }) => new Date(value).toISOString())
   dataNascimento: string;
 
   @ApiProperty({

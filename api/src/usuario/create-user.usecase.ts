@@ -1,30 +1,32 @@
-import { Injectable, Inject } from "@nestjs/common";
-import { IUserRepository, UserResponse } from "./repository/user.repository";
-import * as argon2 from "argon2";
-import { PrismaUserRepository } from "./repository/prisma-user.repository";
+import { ConflictException, Injectable } from "@nestjs/common";
+import { IUserRepository } from "./repository/user.repository";
+import { Prisma, Usuario } from "@prisma/client";
+import { Hasher } from "./hash/hasher";
 
-interface CreateUserRequest {
-  nome: string;
-  email: string;
-  telefone: string;
-  senha: string;
-  dataNascimento: string;
-  fotoPerfil: string;
-}
+interface CreateUserRequest extends Prisma.UsuarioCreateInput {}
 
 @Injectable()
 export class CreateUserUseCase {
-  constructor(private readonly prismaUserRepository: PrismaUserRepository) {}
+  constructor(
+    private readonly iUserRepository: IUserRepository,
+    private readonly hasher: Hasher
+  ) {}
 
-  async execute(request: CreateUserRequest): Promise<UserResponse> {
-    const { senha, dataNascimento, ...rest } = request;
+  async execute(request: CreateUserRequest): Promise<Usuario> {
+    const { senha, email, ...rest } = request;
 
-    const senhaHash = await argon2.hash(senha);
+    const userExists = await this.iUserRepository.findByEmail(email);
 
-    return this.prismaUserRepository.create({
+    if (userExists) {
+      throw new ConflictException("User already exists");
+    }
+
+    const senhaHash = await this.hasher.hash(senha);
+
+    return this.iUserRepository.create({
       ...rest,
       senha: senhaHash,
-      dataNascimento: new Date(dataNascimento).toISOString(),
+      email: email.toLowerCase(),
     });
   }
 }
