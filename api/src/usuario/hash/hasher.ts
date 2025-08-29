@@ -1,3 +1,3 @@
-export abstract class Hasher {
-  abstract hash(senha: string): Promise<string>;
+export interface IHasher {
+  hash(senha: string): Promise<string>;
 }

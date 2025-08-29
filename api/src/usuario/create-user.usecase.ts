@@ -1,15 +1,18 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { IUserRepository } from "./repository/user.repository";
 import { Prisma, Usuario } from "@prisma/client";
-import { Hasher } from "./hash/hasher";
+import { IHasher } from "./hash/hasher";
+import { TYPES } from "./types";
 
 interface CreateUserRequest extends Prisma.UsuarioCreateInput {}
 
 @Injectable()
 export class CreateUserUseCase {
   constructor(
+    @Inject(TYPES.UserRepository)
     private readonly iUserRepository: IUserRepository,
-    private readonly hasher: Hasher
+    @Inject(TYPES.Hasher)
+    private readonly hasher: IHasher
   ) {}
 
   async execute(request: CreateUserRequest): Promise<Usuario> {

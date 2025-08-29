@@ -2,20 +2,18 @@ import { Module } from "@nestjs/common";
 import { UsuarioController } from "./usuario.controller";
 import { PrismaUserRepository } from "./repository/prisma-user.repository";
 import { CreateUserUseCase } from "./create-user.usecase";
-import { IUserRepository } from "./repository/user.repository";
-import { Hasher } from "./hash/hasher";
 import { HashArgon2 } from "./hash/hash-argon2";
-
+import { TYPES } from "./types";
 @Module({
   controllers: [UsuarioController],
   providers: [
     CreateUserUseCase,
     {
-      provide: IUserRepository,
+      provide: TYPES.UserRepository,
       useClass: PrismaUserRepository,
     },
     {
-      provide: Hasher,
+      provide: TYPES.Hasher,
       useClass: HashArgon2,
     },
   ],
