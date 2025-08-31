@@ -1,6 +1,3 @@
-// you will need to create in a .env file at root of your project 
-// a DATABASE_URL property if is not already present. 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -10,8 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-//Here is a declaration of user Table and it properties 
-//configurations. 
 model Usuario {
   id             Int       @id @default(autoincrement())
   nome           String
@@ -35,7 +30,7 @@ model Empresa {
   endereco              String
   descricao             String?
   logo                  String?
-  horariosFuncionamento Json? // pode guardar como objeto JSON {seg: "08:00-18:00", sab: "09:00-14:00"}
+  horariosFuncionamento Json?
 
   barbeiros    Barbeiro[]
   servicos     Servico[]
@@ -50,7 +45,7 @@ model Barbeiro {
   nome          String
   telefone      String?
   email         String?
-  especialidade String? // Ex: corte clássico, barba, etc.
+  especialidade String?
   fotoPerfil    String?
 
   empresaId Int
@@ -66,7 +61,7 @@ model Servico {
   id         Int     @id @default(autoincrement())
   nome       String
   descricao  String?
-  duracaoMin Int // em minutos
+  duracaoMin Int
   preco      Float
 
   empresaId Int

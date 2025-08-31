@@ -21,7 +21,7 @@ export class CreateUserUseCase {
     const userExists = await this.iUserRepository.findByEmail(email);
 
     if (userExists) {
-      throw new ConflictException("User already exists");
+      throw new ConflictException(`User already exists with email ${email}`);
     }
 
     const senhaHash = await this.hasher.hash(senha);
