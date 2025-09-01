@@ -24,9 +24,9 @@ model Usuario {
 model Empresa {
   id                    Int     @id @default(autoincrement())
   nomeFantasia          String
-  cnpj                  String? @unique
+  cnpj                  String  @unique
   telefone              String
-  email                 String?
+  email                 String
   endereco              String
   descricao             String?
   logo                  String?
