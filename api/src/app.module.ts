@@ -4,7 +4,8 @@ import { join } from "path";
 import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "../prisma/prisma.module";
 import { UsuarioModule } from "./usuario/usuario.module";
-import { EmpresaModule } from './empresa/empresa.module';
+import { EmpresaModule } from "./empresa/empresa.module";
+import { BarbeiroModule } from "./barber/barber.module";
 
 @Module({
   imports: [
@@ -18,8 +19,7 @@ import { EmpresaModule } from './empresa/empresa.module';
     PrismaModule,
     UsuarioModule,
     EmpresaModule,
+    BarbeiroModule,
   ],
-  // controllers: [AppController],
-  // providers: [AppService],
 })
 export class AppModule {}

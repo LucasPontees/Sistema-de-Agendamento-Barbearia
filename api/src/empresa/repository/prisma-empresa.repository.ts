@@ -13,4 +13,8 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
   create(data: Prisma.EmpresaCreateInput) {
     return this.prisma.empresa.create({ data });
   }
+
+  findById(id: number): Promise<Empresa | null> {
+    return this.prisma.empresa.findUnique({ where: { id } });
+  }
 }
