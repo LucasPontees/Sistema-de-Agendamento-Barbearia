@@ -43,9 +43,9 @@ model Empresa {
 model Barbeiro {
   id            Int     @id @default(autoincrement())
   nome          String
-  telefone      String?
-  email         String?
-  especialidade String?
+  telefone      String
+  email         String  @unique
+  especialidade String
   fotoPerfil    String?
 
   empresaId Int
@@ -58,9 +58,9 @@ model Barbeiro {
 }
 
 model Servico {
-  id         Int     @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   nome       String
-  descricao  String?
+  descricao  String
   duracaoMin Int
   preco      Float
 
