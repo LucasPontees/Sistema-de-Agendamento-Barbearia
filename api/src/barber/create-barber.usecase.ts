@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { Barbeiro } from "@prisma/client";
 import { TYPES } from "../usuario/types";
 import { IBarberRepository } from "./repository/barber.repository";
@@ -27,13 +27,13 @@ export class CreateBarberUseCase {
     const barberExists = await this.iBarberRepository.findByEmail(email);
 
     if (barberExists) {
-      throw new Error(`Barber already exists with email ${email}`);
+      throw new ConflictException(`Barber already exists with email ${email}`);
     }
 
     const comapanyExists = await this.iEmpresaRepository.findById(empresaId);
 
     if (!comapanyExists) {
-      throw new BadRequestException(`Empresa with ID ${empresaId} not found`);
+      throw new ConflictException(`Empresa with ID ${empresaId} not found`);
     }
 
     return this.iBarberRepository.create({
