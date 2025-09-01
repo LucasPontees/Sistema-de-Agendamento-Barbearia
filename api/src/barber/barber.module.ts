@@ -4,6 +4,7 @@ import { BarberController } from "./barber.controller";
 import { TYPES } from "../usuario/types";
 import { PrismaBarberRepository } from "./repository/prisma-barber.repository";
 import { CreateEmpresaUseCase } from "@/empresa/create-empresa.usecase";
+import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
 
 @Module({
   controllers: [BarberController],
@@ -16,7 +17,7 @@ import { CreateEmpresaUseCase } from "@/empresa/create-empresa.usecase";
     CreateEmpresaUseCase,
     {
       provide: TYPES.EmpresaRepository,
-      useClass: PrismaBarberRepository,
+      useClass: PrismaEmpresaRepository,
     },
   ],
 })

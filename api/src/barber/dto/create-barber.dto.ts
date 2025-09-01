@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsString, MinLength } from "class-validator";
+import { IsEmail, IsInt, IsString, MinLength } from "class-validator";
 
 export class CreateBarberDto {
   @IsString()
@@ -32,5 +32,6 @@ export class CreateBarberDto {
   fotoPerfil: string;
 
   @ApiProperty({ description: "ID da empresa", example: "1" })
+  @IsInt()
   empresaId: number;
 }
