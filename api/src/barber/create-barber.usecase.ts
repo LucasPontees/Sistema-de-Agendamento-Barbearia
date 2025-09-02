@@ -1,6 +1,6 @@
 import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { Barbeiro } from "@prisma/client";
-import { TYPES } from "../usuario/types";
+import { TYPES } from "../types";
 import { IBarberRepository } from "./repository/barber.repository";
 import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
 
@@ -19,7 +19,7 @@ export class CreateBarberUseCase {
     @Inject(TYPES.BarberRepository)
     private readonly iBarberRepository: IBarberRepository,
     @Inject(TYPES.EmpresaRepository)
-    private readonly iEmpresaRepository: IEmpresaRepository
+    private readonly iEmpresaRepository: IEmpresaRepository,
   ) {}
   async execute(request: CreateBarberRequest): Promise<Barbeiro> {
     const { email, empresaId, ...rest } = request;
