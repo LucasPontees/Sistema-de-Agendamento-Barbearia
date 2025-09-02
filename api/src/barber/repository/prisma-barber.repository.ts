@@ -6,9 +6,15 @@ import { Prisma, Barbeiro } from "@prisma/client";
 @Injectable()
 export class PrismaBarberRepository implements IBarberRepository {
   constructor(private readonly prisma: PrismaService) {}
-
-  findByEmail(email: string): Promise<Barbeiro | null> {
-    return this.prisma.barbeiro.findUnique({ where: { email } });
+  findByEmail(email: string, companyId: number): Promise<Barbeiro | null> {
+    return this.prisma.barbeiro.findFirst({
+      where: {
+        email,
+        empresa: {
+          id: companyId,
+        },
+      },
+    });
   }
 
   create(data: Prisma.BarbeiroCreateInput): Promise<Barbeiro> {

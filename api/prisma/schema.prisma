@@ -44,7 +44,7 @@ model Barbeiro {
   id            Int     @id @default(autoincrement())
   nome          String
   telefone      String
-  email         String  @unique
+  email         String
   especialidade String
   fotoPerfil    String?
 
