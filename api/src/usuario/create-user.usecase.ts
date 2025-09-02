@@ -4,7 +4,9 @@ import { Prisma, Usuario } from "@prisma/client";
 import { IHasher } from "./hash/hasher";
 import { TYPES } from "../types";
 
-interface CreateUserRequest extends Prisma.UsuarioCreateInput {}
+interface CreateUserRequest extends Prisma.UsuarioCreateInput {
+  fotoPerfil?: string;
+}
 
 @Injectable()
 export class CreateUserUseCase {
