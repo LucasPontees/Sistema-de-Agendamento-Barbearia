@@ -11,7 +11,7 @@ interface CreateEmpresaRequest extends Prisma.EmpresaCreateInput {
 export class CreateEmpresaUseCase {
   constructor(
     @Inject(TYPES.EmpresaRepository)
-    private readonly iEmpresaRepository: IEmpresaRepository
+    private readonly iEmpresaRepository: IEmpresaRepository,
   ) {}
   async execute(request: CreateEmpresaRequest): Promise<Empresa> {
     const { cnpj, ...rest } = request;

@@ -19,14 +19,14 @@ export class CreateBarberUseCase {
     @Inject(TYPES.BarberRepository)
     private readonly iBarberRepository: IBarberRepository,
     @Inject(TYPES.EmpresaRepository)
-    private readonly iEmpresaRepository: IEmpresaRepository
+    private readonly iEmpresaRepository: IEmpresaRepository,
   ) {}
   async execute(request: CreateBarberRequest): Promise<Barbeiro> {
     const { email, empresaId, ...rest } = request;
 
     const barberExists = await this.iBarberRepository.findByEmail(
       email,
-      empresaId
+      empresaId,
     );
 
     if (barberExists) {
