@@ -20,4 +20,16 @@ export class PrismaBarberRepository implements IBarberRepository {
   create(data: Prisma.BarbeiroCreateInput): Promise<Barbeiro> {
     return this.prisma.barbeiro.create({ data });
   }
+
+  updateBarber(
+    id: number,
+    data: Partial<Prisma.BarbeiroUpdateInput>
+  ): Promise<Barbeiro> {
+    return this.prisma.barbeiro.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
 }
