@@ -8,7 +8,7 @@ import { UpdateBarberDto } from "./dto/update-barber.dto";
 export class BarberController {
   constructor(
     private readonly createBarberUseCase: CreateBarberUseCase,
-    private readonly updateBarberUseCase: UpdateBarberUseCase,
+    private readonly updateBarberUseCase: UpdateBarberUseCase
   ) {}
 
   @Post()

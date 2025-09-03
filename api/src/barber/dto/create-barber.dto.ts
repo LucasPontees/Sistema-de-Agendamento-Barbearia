@@ -1,9 +1,42 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsInt, IsString, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsEmail,
+  IsInt,
+  IsOptional,
+  IsString,
+  MinLength,
+  ValidateNested,
+} from "class-validator";
+
+class CreateEspecialidadeDto {
+  @IsString()
+  @ApiProperty({ description: "Nome da especialidade", example: "Degradê" })
+  nome: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description: "Descrição da especialidade",
+    example: "Corte com efeito degradê",
+    required: false,
+  })
+  descricao: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description: "Foto ilustrativa",
+    example: "image.url",
+    required: false,
+  })
+  foto?: string;
+}
 
 export class CreateBarberDto {
   @IsString()
-  @ApiProperty({ description: "Nome do barbeiro", example: "Joaquim" })
+  @ApiProperty({ description: "Nome do barbeiro", example: "johndoe" })
   @MinLength(3)
   nome: string;
 
@@ -15,16 +48,22 @@ export class CreateBarberDto {
   @IsString()
   @ApiProperty({
     description: "Email do barbeiro",
-    example: "joaquim@gmail.com",
+    example: "johndoe@gmail.com",
   })
   @MinLength(3)
   @IsEmail()
   email: string;
 
-  @IsString()
-  @ApiProperty({ description: "Especialidade", example: "Degrade" })
-  @MinLength(3)
-  especialidade: string;
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateEspecialidadeDto)
+  @ApiProperty({
+    description: "Lista de especialidades do barbeiro",
+    type: [CreateEspecialidadeDto],
+    required: false,
+  })
+  especialidade?: CreateEspecialidadeDto[];
 
   @IsString()
   @ApiProperty({ description: "Foto do barbeiro", example: "image.url" })
