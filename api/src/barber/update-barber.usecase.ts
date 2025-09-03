@@ -2,15 +2,28 @@ import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { Barbeiro } from "@prisma/client";
 import { TYPES } from "../types";
 import { IBarberRepository } from "./repository/barber.repository";
-import { CreateBarberRequest } from "./create-barber.usecase";
 
-export interface UpdateBarberRequest extends CreateBarberRequest {}
+import { Prisma } from "@prisma/client";
+
+export interface UpdateBarberRequest {
+  nome?: string;
+  telefone?: string;
+  empresaId: number;
+  email?: string;
+  especialidade?: Array<{
+    id?: number;
+    nome: string;
+    descricao: string;
+    foto: string;
+  }>;
+  especialidadesIdsParaRemover?: number[];
+}
 
 @Injectable()
 export class UpdateBarberUseCase {
   constructor(
     @Inject(TYPES.BarberRepository)
-    private readonly iBarberRepository: IBarberRepository
+    private readonly iBarberRepository: IBarberRepository,
   ) {}
 
   async execute(request: UpdateBarberRequest, id: number): Promise<Barbeiro> {
@@ -19,12 +32,11 @@ export class UpdateBarberUseCase {
     if (email) {
       const barberExists = await this.iBarberRepository.findByEmail(
         email,
-        empresaId
+        empresaId,
       );
-
       if (barberExists && barberExists.id !== id) {
         throw new ConflictException(
-          `Barber already exists with email ${email}`
+          `Barber already exists with email ${email}`,
         );
       }
     }
@@ -34,7 +46,14 @@ export class UpdateBarberUseCase {
       telefone: request.telefone,
       email: request.email,
       especialidade: {
-        create: request.especialidade,
+        create: request.especialidade?.filter((e) => !e.id),
+        update: request.especialidade
+          ?.filter((e) => e.id)
+          .map((e) => ({
+            where: { id: e.id! },
+            data: { nome: e.nome, descricao: e.descricao, foto: e.foto },
+          })) as Prisma.EspecialidadesUpdateWithWhereUniqueWithoutBarbeiroInput[],
+        deleteMany: request.especialidadesIdsParaRemover?.map((id) => ({ id })),
       },
     });
   }

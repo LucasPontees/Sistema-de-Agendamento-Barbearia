@@ -4,6 +4,7 @@ import {
   IsArray,
   IsEmail,
   IsInt,
+  IsNumber,
   IsOptional,
   IsString,
   MinLength,
@@ -31,7 +32,7 @@ class CreateEspecialidadeDto {
     example: "image.url",
     required: false,
   })
-  foto?: string;
+  foto: string;
 }
 
 export class UpdateBarberDto {
@@ -77,4 +78,9 @@ export class UpdateBarberDto {
   @ApiProperty({ description: "ID da empresa", example: "1" })
   @IsInt()
   empresaId: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  especialidadesIdsParaRemover?: number[];
 }
