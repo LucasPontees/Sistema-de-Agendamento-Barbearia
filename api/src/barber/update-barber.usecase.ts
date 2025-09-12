@@ -3,8 +3,6 @@ import { Barbeiro } from "@prisma/client";
 import { TYPES } from "../types";
 import { IBarberRepository } from "./repository/barber.repository";
 
-import { Prisma } from "@prisma/client";
-
 export interface UpdateBarberRequest {
   nome?: string;
   telefone?: string;
@@ -23,7 +21,7 @@ export interface UpdateBarberRequest {
 export class UpdateBarberUseCase {
   constructor(
     @Inject(TYPES.BarberRepository)
-    private readonly iBarberRepository: IBarberRepository
+    private readonly iBarberRepository: IBarberRepository,
   ) {}
 
   async execute(request: UpdateBarberRequest, id: number): Promise<Barbeiro> {
@@ -32,11 +30,11 @@ export class UpdateBarberUseCase {
     if (email) {
       const barberExists = await this.iBarberRepository.findByEmail(
         email,
-        empresaId
+        empresaId,
       );
       if (barberExists && barberExists.id !== id) {
         throw new ConflictException(
-          `Barber already exists with email ${email}`
+          `Barber already exists with email ${email}`,
         );
       }
     }

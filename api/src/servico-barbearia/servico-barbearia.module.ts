@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ServicoBarbeariaUseCase } from "./servico-barbearia.usecase";
 import { ServicoBarbeariaController } from "./servico-barbearia.controller";
 import { TYPES } from "@/types";
+import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
 import { PrismaServicoBarbeariaRepository } from "./repository/prisma-servico-barbearia.repository";
 @Module({
   controllers: [ServicoBarbeariaController],
@@ -10,6 +11,10 @@ import { PrismaServicoBarbeariaRepository } from "./repository/prisma-servico-ba
     {
       provide: TYPES.ServicoBarbeariaRepository,
       useClass: PrismaServicoBarbeariaRepository,
+    },
+    {
+      provide: TYPES.EmpresaRepository,
+      useClass: PrismaEmpresaRepository,
     },
   ],
 })

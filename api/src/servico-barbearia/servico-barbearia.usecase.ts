@@ -1,7 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { Servico } from "@prisma/client";
 import { TYPES } from "@/types";
 import { IServicoBarbeariaRepository } from "./repository/servico-barbearia.repository";
+import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
 
 interface createServicoBarbeariaRequest {
   nome: string;
@@ -16,9 +17,17 @@ export class ServicoBarbeariaUseCase {
   constructor(
     @Inject(TYPES.ServicoBarbeariaRepository)
     private readonly iServicoBarbeariaRepository: IServicoBarbeariaRepository,
+    @Inject(TYPES.EmpresaRepository)
+    private readonly iEmpresaRepository: IEmpresaRepository,
   ) {}
-  execute(request: createServicoBarbeariaRequest): Promise<Servico> {
+  async execute(request: createServicoBarbeariaRequest): Promise<Servico> {
     const { nome, descricao, duracaoMin, preco, empresaId } = request;
+
+    const comapanyExists = await this.iEmpresaRepository.findById(empresaId);
+
+    if (!comapanyExists) {
+      throw new ConflictException(`Empresa with ID ${empresaId} not found`);
+    }
 
     return this.iServicoBarbeariaRepository.create({
       nome: nome,
