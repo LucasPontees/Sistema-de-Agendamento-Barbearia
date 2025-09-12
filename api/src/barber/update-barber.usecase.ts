@@ -23,7 +23,7 @@ export interface UpdateBarberRequest {
 export class UpdateBarberUseCase {
   constructor(
     @Inject(TYPES.BarberRepository)
-    private readonly iBarberRepository: IBarberRepository,
+    private readonly iBarberRepository: IBarberRepository
   ) {}
 
   async execute(request: UpdateBarberRequest, id: number): Promise<Barbeiro> {
@@ -32,11 +32,11 @@ export class UpdateBarberUseCase {
     if (email) {
       const barberExists = await this.iBarberRepository.findByEmail(
         email,
-        empresaId,
+        empresaId
       );
       if (barberExists && barberExists.id !== id) {
         throw new ConflictException(
-          `Barber already exists with email ${email}`,
+          `Barber already exists with email ${email}`
         );
       }
     }
@@ -45,16 +45,6 @@ export class UpdateBarberUseCase {
       nome: request.nome,
       telefone: request.telefone,
       email: request.email,
-      especialidade: {
-        create: request.especialidade?.filter((e) => !e.id),
-        update: request.especialidade
-          ?.filter((e) => e.id)
-          .map((e) => ({
-            where: { id: e.id! },
-            data: { nome: e.nome, descricao: e.descricao, foto: e.foto },
-          })) as Prisma.EspecialidadesUpdateWithWhereUniqueWithoutBarbeiroInput[],
-        deleteMany: request.especialidadesIdsParaRemover?.map((id) => ({ id })),
-      },
     });
   }
 }

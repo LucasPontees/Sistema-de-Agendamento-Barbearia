@@ -41,29 +41,20 @@ model Empresa {
 }
 
 model Barbeiro {
-  id            Int              @id @default(autoincrement())
-  nome          String
-  telefone      String
-  email         String
-  especialidade Especialidades[]
-  fotoPerfil    String?
+  id         Int     @id @default(autoincrement())
+  nome       String
+  telefone   String
+  email      String
+  fotoPerfil String?
 
   empresaId Int
   empresa   Empresa @relation(fields: [empresaId], references: [id])
 
   agendamentos Agendamento[]
+  servicos     Servico[]     @relation("BarbeiroServicos")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Especialidades {
-  id         Int      @id @default(autoincrement())
-  nome       String
-  descricao  String
-  foto       String?
-  Barbeiro   Barbeiro @relation(fields: [barbeiroId], references: [id], onDelete: Cascade)
-  barbeiroId Int
 }
 
 model Servico {
@@ -77,6 +68,7 @@ model Servico {
   empresa   Empresa @relation(fields: [empresaId], references: [id])
 
   agendamentos Agendamento[]
+  barbeiros    Barbeiro[]    @relation("BarbeiroServicos")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
