@@ -12,10 +12,11 @@ export class PrismaServicoBarbeariaRepository
     return this.prisma.servico.create({ data });
   }
 
-  findById(id: number): Promise<Servico | null> {
-    return this.prisma.servico.findUnique({
+  async findById(empresaId: number, id: number): Promise<Servico | null> {
+    return this.prisma.servico.findFirst({
       where: {
         id,
+        empresaId,
       },
     });
   }
