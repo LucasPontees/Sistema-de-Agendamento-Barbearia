@@ -4,10 +4,12 @@ import { EmpresaController } from "./empresa.controller";
 import { TYPES } from "../types";
 import { PrismaEmpresaRepository } from "./repository/prisma-empresa.repository";
 import { ListarTodasEmpresasUseCase } from "./listar-todas-empresas.usecase";
+import { ListarEmpresaIdUseCase } from "./listar_empresa-id.usecase";
 
 @Module({
   controllers: [EmpresaController],
   providers: [
+    ListarEmpresaIdUseCase,
     ListarTodasEmpresasUseCase,
     CreateEmpresaUseCase,
     {

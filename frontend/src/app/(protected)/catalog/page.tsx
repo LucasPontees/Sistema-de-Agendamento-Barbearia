@@ -1,6 +1,7 @@
 import React from "react";
 import { api } from "@/http/api";
 import { z } from "zod";
+import Link from "next/link";
 
 // schema de validação
 export const empresaSchema = z.object({
@@ -13,7 +14,7 @@ export const empresaSchema = z.object({
   descricao: z.string(),
   logo: z.string(),
   horariosFuncionamento: z.string(),
-  createdAt: z.string().datetime(), 
+  createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
 export const empresasSchema = z.array(empresaSchema);
@@ -39,12 +40,11 @@ export default async function Services() {
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl font-bold mb-4">Nossas Barbearias</h1>
             <p className="text-xl max-w-2xl mx-auto">
-              Descubra serviços premium de cuidados pessoais, adaptados
-              para atender às necessidades do cavalheiro moderno.
+              Descubra serviços premium de cuidados pessoais, adaptados para
+              atender às necessidades do cavalheiro moderno.
             </p>
           </div>
         </section>
-
         {/* Services Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4">
@@ -55,11 +55,14 @@ export default async function Services() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {empresas.map((empresa) => (
-                  <div
+                  <Link
                     key={empresa.id}
-                    className="p-6 bg-white shadow-md rounded-2xl border"
+                    href={`/empresa/${empresa.id}`} // página da empresa
+                    className="block p-6 bg-white shadow-md rounded-2xl border hover:shadow-xl transition cursor-pointer"
                   >
-                    <h2 className="text-lg font-bold mb-2">{empresa.nomeFantasia}</h2>
+                    <h2 className="text-lg font-bold mb-2">
+                      {empresa.nomeFantasia}
+                    </h2>
                     <p className="text-sm text-gray-600">
                       Telefone: {empresa.telefone}
                     </p>
@@ -72,8 +75,7 @@ export default async function Services() {
                     <p className="text-sm text-gray-600">
                       Horário de funcionamento: {empresa.horariosFuncionamento}
                     </p>
-
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

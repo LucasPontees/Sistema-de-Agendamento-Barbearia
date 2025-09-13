@@ -12,7 +12,7 @@ export class PrismaServicoBarbeariaRepository
     return this.prisma.servico.create({ data });
   }
 
-  async findById(empresaId: number, id: number): Promise<Servico | null> {
+  async findById(id: number, empresaId: number): Promise<Servico | null> {
     return this.prisma.servico.findFirst({
       where: {
         id,
