@@ -1,37 +1,48 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsInt, IsOptional, IsString } from "class-validator";
 
 export class CreateAgendamentoDto {
-  @ApiProperty({ description: "ID do usuário", example: "1" })
+  @ApiProperty({
+    example: "2023-10-15T14:30:00Z",
+    description: "Data e hora do agendamento",
+  })
+  @IsDateString()
+  dataHora: string;
+
+  @ApiProperty({
+    example: "1",
+    description: "ID do usuário que está fazendo o agendamento",
+  })
   @IsInt()
   usuarioId: number;
 
-  @ApiProperty({ description: "ID do barbeiro", example: "1" })
-  @IsInt()
-  @IsOptional()
-  barbeiroId: number;
-
-  @ApiProperty({ description: "ID do serviço", example: "1" })
-  @IsInt()
-  servicoId: number;
-
-  @ApiProperty({ description: "ID da empresa", example: "1" })
+  @ApiProperty({
+    example: "1",
+    description: "ID da empresa onde o agendamento será realizado",
+  })
   @IsInt()
   empresaId: number;
 
   @ApiProperty({
-    description: "Data e hora do agendamento",
-    example: "2023-10-10T14:30:00Z",
-    type: String,
+    example: "1",
+    description: "ID do serviço a ser realizado",
   })
-  dataHora: Date;
+  @IsInt()
+  servicoId: number;
 
-  status: string;
-
-  @IsString()
   @ApiProperty({
-    description: "Observações adicionais para o agendamento",
-    example: "Observação 1\nObservação 2",
+    example: "1",
+    description: "ID do barbeiro a ser contratado",
   })
+  @IsOptional()
+  @IsInt()
+  barbeiroId?: number;
+
+  @ApiProperty({
+    example: "Observações do agendamento",
+    description: "Observações do agendamento",
+  })
+  @IsOptional()
+  @IsString()
   observacoes?: string;
 }

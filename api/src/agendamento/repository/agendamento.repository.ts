@@ -1,0 +1,5 @@
+import { Agendamento, Prisma } from "@prisma/client";
+
+export interface IAgendamentoRepository {
+  create(data: Prisma.AgendamentoCreateInput): Promise<Agendamento>;
+}

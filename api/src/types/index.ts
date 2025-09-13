@@ -4,4 +4,5 @@ export const TYPES = {
   EmpresaRepository: Symbol.for("IEmpresaRepository"),
   BarberRepository: Symbol.for("IBarberRepository"),
   ServicoBarbeariaRepository: Symbol.for("IServicoBarbeariaRepository"),
+  AgendamentoRepository: Symbol.for("IAgendamentoRepository"),
 };

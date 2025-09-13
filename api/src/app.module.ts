@@ -7,7 +7,7 @@ import { UsuarioModule } from "./usuario/usuario.module";
 import { EmpresaModule } from "./empresa/empresa.module";
 import { BarbeiroModule } from "./barber/barber.module";
 import { ServicoBarbeariaModule } from "./servico-barbearia/servico-barbearia.module";
-import { AgendamentoModule } from './agendamento/agendamento.module';
+import { AgendamentoModule } from "./agendamento/agendamento.module";
 
 @Module({
   imports: [

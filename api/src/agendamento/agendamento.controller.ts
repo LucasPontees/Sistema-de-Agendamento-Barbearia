@@ -5,11 +5,11 @@ import { CreateAgendamentoDto } from "./dto/create-agendamento.dto";
 @Controller("agendamento")
 export class AgendamentoController {
   constructor(
-    private readonly createAgendamentoUsecase: CreateAgendamentoUsecase
+    private readonly createAgendamentoUsecase: CreateAgendamentoUsecase,
   ) {}
 
   @Post()
-  create(@Body() createAgendamentoDto: CreateAgendamentoDto) {
-    return this.createAgendamentoUsecase.create(createAgendamentoDto);
+  create(@Body() dto: CreateAgendamentoDto) {
+    return this.createAgendamentoUsecase.create(dto);
   }
 }
