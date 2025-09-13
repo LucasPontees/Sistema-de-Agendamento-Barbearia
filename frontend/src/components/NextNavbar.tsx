@@ -76,7 +76,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                             <div className="absolute top-16 left-0 right-0 bg-barber-dark p-4 z-50 animate-fade-in">
                                 <nav className="flex flex-col space-y-4">
                                     <Link href="/" className="text-white hover:text-barber-gold" onClick={toggleMenu}>Home</Link>
-                                    <Link href="/services" className="text-white hover:text-barber-gold" onClick={toggleMenu}>Serviços</Link>
+                                    <Link href="/services" className="text-white hover:text-barber-gold" onClick={toggleMenu}>Barbearias</Link>
                                     <Link href="/appointments" className="text-white hover:text-barber-gold" onClick={toggleMenu}>Agendamentos</Link>
                                     <Link href="/membership" className="text-white hover:text-barber-gold" onClick={toggleMenu}>Clube VIP</Link>
                                     {isAuthenticated ? (
@@ -100,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                     <div className="flex items-center space-x-6">
                         <nav className="flex space-x-6">
                             <Link href="/homepage" className="text-white hover:text-barber-gold">Home</Link>
-                            <Link href="/catalog" className="text-white hover:text-barber-gold">Serviços</Link>
+                            <Link href="/catalog" className="text-white hover:text-barber-gold">Barbearias</Link>
                             <Link href="/appointments" className="text-white hover:text-barber-gold">Agendamentos</Link>
                             <Link href="/membership" className="text-white hover:text-barber-gold">Clube VIP</Link>
                             {isAuthenticated && (
