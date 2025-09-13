@@ -9,10 +9,12 @@ import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.rep
 import { PrismaUserRepository } from "@/usuario/repository/prisma-user.repository";
 import { RetornaAgendamentosEmpresaUsecase } from "./retorna-agendamentos-empresa.usecase";
 import { ReturnAgendamentosPorIdUsecase } from "./retorna-agendamentos-por-id.usecase";
+import { AceitarRejeitarAgendamentoUsecase } from "./aceitar-rejeitar-agendamento.usecase";
 @Module({
   controllers: [AgendamentoController],
   providers: [
     RetornaAgendamentosEmpresaUsecase,
+    AceitarRejeitarAgendamentoUsecase,
     ReturnAgendamentosPorIdUsecase,
     CreateAgendamentoUsecase,
     {

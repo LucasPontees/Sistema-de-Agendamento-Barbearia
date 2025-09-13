@@ -3,8 +3,9 @@ import { Agendamento, Prisma } from "@prisma/client";
 export interface IAgendamentoRepository {
   create(data: Prisma.AgendamentoCreateInput): Promise<Agendamento>;
   returnAgendamentoPorEmpresa(empresaId: number): Promise<Agendamento[]>;
-  returnAgendamentoPorId(
+  returnAgendamentoPorId(agendamentoId: number): Promise<Agendamento | null>;
+  aceitarRejeitarAgendamento(
     agendamentoId: number,
-    empresa: number
-  ): Promise<Agendamento | null>;
+    acao: "CONFIRMADO" | "CANCELADO" | "REJEITADO"
+  ): Promise<Agendamento>;
 }

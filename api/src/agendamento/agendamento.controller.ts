@@ -1,15 +1,26 @@
-import { Controller, Post, Body, Get, Query, Param } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  Param,
+  Patch,
+} from "@nestjs/common";
 import { CreateAgendamentoUsecase } from "./agendamento.usecase";
 import { CreateAgendamentoDto } from "./dto/create-agendamento.dto";
 import { RetornaAgendamentosEmpresaUsecase } from "./retorna-agendamentos-empresa.usecase";
 import { ReturnAgendamentosPorIdUsecase } from "./retorna-agendamentos-por-id.usecase";
+import { AceitarRejeitarAgendamentoUsecase } from "./aceitar-rejeitar-agendamento.usecase";
+import { AtualizaStatusAgendamentoDto } from "./dto/status-agendamento.dto";
 
 @Controller("agendamento")
 export class AgendamentoController {
   constructor(
     private readonly createAgendamentoUsecase: CreateAgendamentoUsecase,
     private readonly retornaAgendamentosEmpresaUsecase: RetornaAgendamentosEmpresaUsecase,
-    private readonly returnAgendamentosPorIdUsecase: ReturnAgendamentosPorIdUsecase
+    private readonly returnAgendamentosPorIdUsecase: ReturnAgendamentosPorIdUsecase,
+    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase
   ) {}
 
   @Post()
@@ -24,13 +35,18 @@ export class AgendamentoController {
     );
   }
   @Get(":id")
-  getAgendamentosById(
+  getAgendamentosById(@Param("id") id: number) {
+    return this.returnAgendamentosPorIdUsecase.returnAgendamentoPorId(id);
+  }
+
+  @Patch("status/:id")
+  aceitarRejeitarAgendamento(
     @Param("id") id: number,
-    @Query("empresaId") empresaId: number
+    @Body() dto: AtualizaStatusAgendamentoDto
   ) {
-    return this.returnAgendamentosPorIdUsecase.returnAgendamentoPorId(
+    return this.aceitarRejeitarAgendamentoUsecase.aceitarRejeitarAgendamento(
       id,
-      empresaId
+      dto.acao
     );
   }
 }

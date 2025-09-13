@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { IAgendamentoRepository } from "./agendamento.repository";
-import { Prisma, Agendamento } from "@prisma/client";
+import { Prisma, Agendamento, StatusAgendamento } from "@prisma/client";
 import { PrismaService } from "prisma/prisma.service";
 @Injectable()
 export class PrismaAgendamentoRepository implements IAgendamentoRepository {
@@ -35,11 +35,10 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
   }
 
   async returnAgendamentoPorId(
-    agendamentoId: number,
-    empresa: number
+    agendamentoId: number
   ): Promise<Agendamento | null> {
     return this.prisma.agendamento.findFirst({
-      where: { empresaId: empresa, id: agendamentoId },
+      where: { id: agendamentoId },
       include: {
         usuario: {
           select: {
@@ -57,6 +56,28 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
           select: { nome: true, descricao: true, preco: true },
         },
       },
+    });
+  }
+
+  async aceitarRejeitarAgendamento(
+    agendamentoId: number,
+    acao: Extract<StatusAgendamento, "CONFIRMADO" | "CANCELADO" | "REJEITADO">
+  ): Promise<Agendamento> {
+    return this.prisma.agendamento.update({
+      where: { id: agendamentoId },
+      include: {
+        usuario: {
+          select: {
+            nome: true,
+          },
+        },
+        servico: {
+          select: {
+            nome: true,
+          },
+        },
+      },
+      data: { status: acao },
     });
   }
 }

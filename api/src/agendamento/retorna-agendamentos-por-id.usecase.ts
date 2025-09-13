@@ -11,22 +11,15 @@ export class ReturnAgendamentosPorIdUsecase {
   ) {}
 
   async returnAgendamentoPorId(
-    agendamentoId: number,
-    empresa: number
+    agendamentoId: number
   ): Promise<Agendamento | null> {
     const agendamento =
-      await this.iAgendamentoRepository.returnAgendamentoPorId(
-        agendamentoId,
-        empresa
-      );
+      await this.iAgendamentoRepository.returnAgendamentoPorId(agendamentoId);
 
     if (!agendamento) {
       throw new ConflictException("Agendamento não encontrado");
     }
 
-    return this.iAgendamentoRepository.returnAgendamentoPorId(
-      agendamentoId,
-      empresa
-    );
+    return this.iAgendamentoRepository.returnAgendamentoPorId(agendamentoId);
   }
 }
