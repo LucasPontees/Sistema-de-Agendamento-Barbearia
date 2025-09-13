@@ -8,7 +8,7 @@ export class PrismaBarberRepository implements IBarberRepository {
   constructor(private readonly prisma: PrismaService) {}
   async findByEmail(
     email: string,
-    companyId: number
+    companyId: number,
   ): Promise<Barbeiro | null> {
     return this.prisma.barbeiro.findFirst({
       where: {
@@ -28,7 +28,7 @@ export class PrismaBarberRepository implements IBarberRepository {
 
   async updateBarber(
     id: number,
-    data: Partial<Prisma.BarbeiroUpdateInput>
+    data: Partial<Prisma.BarbeiroUpdateInput>,
   ): Promise<Barbeiro> {
     return this.prisma.barbeiro.update({
       where: {

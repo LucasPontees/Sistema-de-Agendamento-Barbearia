@@ -28,7 +28,7 @@ export class CreateAgendamentoUsecase {
     @Inject(TYPES.EmpresaRepository)
     private readonly iEmpresaRepository: IEmpresaRepository,
     @Inject(TYPES.UserRepository)
-    private readonly iUserRepository: IUserRepository
+    private readonly iUserRepository: IUserRepository,
   ) {}
   async create(request: CreateAgendamentoRequest): Promise<Agendamento> {
     const barberExists = request.barbeiroId
@@ -37,27 +37,27 @@ export class CreateAgendamentoUsecase {
 
     if (!barberExists && request.barbeiroId) {
       throw new ConflictException(
-        `Barber with ID ${request.barbeiroId} not found`
+        `Barber with ID ${request.barbeiroId} not found`,
       );
     }
 
     const servicoExists = await this.iServicoBarbeariaRepository.findById(
-      request.servicoId
+      request.servicoId,
     );
 
     if (!servicoExists) {
       throw new ConflictException(
-        `Service with ID ${request.servicoId} not found`
+        `Service with ID ${request.servicoId} not found`,
       );
     }
 
     const empresaExists = await this.iEmpresaRepository.findById(
-      request.empresaId
+      request.empresaId,
     );
 
     if (!empresaExists) {
       throw new ConflictException(
-        `Company with ID ${request.empresaId} not found`
+        `Company with ID ${request.empresaId} not found`,
       );
     }
 
@@ -65,7 +65,7 @@ export class CreateAgendamentoUsecase {
 
     if (!userExists) {
       throw new ConflictException(
-        `User with ID ${request.usuarioId} not found`
+        `User with ID ${request.usuarioId} not found`,
       );
     }
 

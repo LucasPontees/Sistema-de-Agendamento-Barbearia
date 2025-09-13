@@ -5,9 +5,7 @@ import { TYPES } from "@/types";
 import { PrismaAgendamentoRepository } from "./repository/prisma-agendamento.repository";
 import { PrismaBarberRepository } from "@/barber/repository/prisma-barber.repository";
 import { PrismaServicoBarbeariaRepository } from "@/servico-barbearia/repository/prisma-servico-barbearia.repository";
-import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
 import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
-import { IUserRepository } from "@/usuario/repository/user.repository";
 import { PrismaUserRepository } from "@/usuario/repository/prisma-user.repository";
 @Module({
   controllers: [AgendamentoController],
