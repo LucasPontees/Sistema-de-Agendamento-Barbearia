@@ -6,11 +6,11 @@ import { IAgendamentoRepository } from "../agendamento/repository/agendamento.re
 export class AceitarRejeitarAgendamentoUsecase {
   constructor(
     @Inject(TYPES.AgendamentoRepository)
-    private readonly iAgendamentoRepository: IAgendamentoRepository
+    private readonly iAgendamentoRepository: IAgendamentoRepository,
   ) {}
   async aceitarRejeitarAgendamento(
     agendamentoId: number,
-    acao: "CONFIRMADO" | "CANCELADO" | "REJEITADO"
+    acao: "CONFIRMADO" | "CANCELADO" | "REJEITADO",
   ) {
     const existeAgendamento =
       await this.iAgendamentoRepository.returnAgendamentoPorId(agendamentoId);
@@ -21,7 +21,7 @@ export class AceitarRejeitarAgendamentoUsecase {
     const agendamento =
       await this.iAgendamentoRepository.aceitarRejeitarAgendamento(
         agendamentoId,
-        acao
+        acao,
       );
 
     return {

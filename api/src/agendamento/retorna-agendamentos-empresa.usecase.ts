@@ -7,7 +7,7 @@ import { Agendamento } from "@prisma/client";
 export class RetornaAgendamentosEmpresaUsecase {
   constructor(
     @Inject(TYPES.AgendamentoRepository)
-    private readonly iAgendamentoRepository: IAgendamentoRepository
+    private readonly iAgendamentoRepository: IAgendamentoRepository,
   ) {}
 
   async retornaAgendamentos(empresaId: number): Promise<Agendamento[]> {

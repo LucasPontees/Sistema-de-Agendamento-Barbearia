@@ -17,4 +17,8 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
   findById(id: number): Promise<Empresa | null> {
     return this.prisma.empresa.findUnique({ where: { id } });
   }
+
+  findAll(): Promise<Empresa[]> {
+    return this.prisma.empresa.findMany();
+  }
 }

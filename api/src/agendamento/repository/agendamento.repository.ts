@@ -6,6 +6,6 @@ export interface IAgendamentoRepository {
   returnAgendamentoPorId(agendamentoId: number): Promise<Agendamento | null>;
   aceitarRejeitarAgendamento(
     agendamentoId: number,
-    acao: "CONFIRMADO" | "CANCELADO" | "REJEITADO"
+    acao: "CONFIRMADO" | "CANCELADO" | "REJEITADO",
   ): Promise<Agendamento>;
 }

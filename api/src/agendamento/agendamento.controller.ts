@@ -20,7 +20,7 @@ export class AgendamentoController {
     private readonly createAgendamentoUsecase: CreateAgendamentoUsecase,
     private readonly retornaAgendamentosEmpresaUsecase: RetornaAgendamentosEmpresaUsecase,
     private readonly returnAgendamentosPorIdUsecase: ReturnAgendamentosPorIdUsecase,
-    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase
+    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase,
   ) {}
 
   @Post()
@@ -31,7 +31,7 @@ export class AgendamentoController {
   @Get()
   getAll(@Query("empresaId") empresaId: number) {
     return this.retornaAgendamentosEmpresaUsecase.retornaAgendamentos(
-      empresaId
+      empresaId,
     );
   }
   @Get(":id")
@@ -42,11 +42,11 @@ export class AgendamentoController {
   @Patch("status/:id")
   aceitarRejeitarAgendamento(
     @Param("id") id: number,
-    @Body() dto: AtualizaStatusAgendamentoDto
+    @Body() dto: AtualizaStatusAgendamentoDto,
   ) {
     return this.aceitarRejeitarAgendamentoUsecase.aceitarRejeitarAgendamento(
       id,
-      dto.acao
+      dto.acao,
     );
   }
 }

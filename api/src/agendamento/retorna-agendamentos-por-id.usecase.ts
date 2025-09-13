@@ -7,11 +7,11 @@ import { Agendamento } from "@prisma/client";
 export class ReturnAgendamentosPorIdUsecase {
   constructor(
     @Inject(TYPES.AgendamentoRepository)
-    private readonly iAgendamentoRepository: IAgendamentoRepository
+    private readonly iAgendamentoRepository: IAgendamentoRepository,
   ) {}
 
   async returnAgendamentoPorId(
-    agendamentoId: number
+    agendamentoId: number,
   ): Promise<Agendamento | null> {
     const agendamento =
       await this.iAgendamentoRepository.returnAgendamentoPorId(agendamentoId);
