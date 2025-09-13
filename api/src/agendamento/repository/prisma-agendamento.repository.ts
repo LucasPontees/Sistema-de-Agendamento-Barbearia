@@ -10,4 +10,27 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
       data,
     });
   }
+
+  async returnAgendamentoPorEmpresa(empresaId: number): Promise<Agendamento[]> {
+    return this.prisma.agendamento.findMany({
+      where: { empresaId },
+      include: {
+        usuario: {
+          select: {
+            nome: true,
+            email: true,
+            telefone: true,
+            dataNascimento: true,
+            fotoPerfil: true,
+          },
+        },
+        barbeiro: {
+          select: { nome: true, fotoPerfil: true },
+        },
+        servico: {
+          select: { nome: true, descricao: true, preco: true },
+        },
+      },
+    });
+  }
 }
