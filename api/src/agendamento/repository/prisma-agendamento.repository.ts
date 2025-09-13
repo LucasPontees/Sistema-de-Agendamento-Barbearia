@@ -5,7 +5,7 @@ import { PrismaService } from "prisma/prisma.service";
 @Injectable()
 export class PrismaAgendamentoRepository implements IAgendamentoRepository {
   constructor(private readonly prisma: PrismaService) {}
-  create(data: Prisma.AgendamentoCreateInput): Promise<Agendamento> {
+  async create(data: Prisma.AgendamentoCreateInput): Promise<Agendamento> {
     return this.prisma.agendamento.create({
       data,
     });

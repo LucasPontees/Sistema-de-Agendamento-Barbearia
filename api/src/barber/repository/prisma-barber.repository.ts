@@ -6,7 +6,10 @@ import { Prisma, Barbeiro } from "@prisma/client";
 @Injectable()
 export class PrismaBarberRepository implements IBarberRepository {
   constructor(private readonly prisma: PrismaService) {}
-  findByEmail(email: string, companyId: number): Promise<Barbeiro | null> {
+  async findByEmail(
+    email: string,
+    companyId: number
+  ): Promise<Barbeiro | null> {
     return this.prisma.barbeiro.findFirst({
       where: {
         email,
@@ -17,21 +20,29 @@ export class PrismaBarberRepository implements IBarberRepository {
     });
   }
 
-  create(data: Prisma.BarbeiroCreateInput): Promise<Barbeiro> {
+  async create(data: Prisma.BarbeiroCreateInput): Promise<Barbeiro> {
     return this.prisma.barbeiro.create({
       data,
     });
   }
 
-  updateBarber(
+  async updateBarber(
     id: number,
-    data: Partial<Prisma.BarbeiroUpdateInput>,
+    data: Partial<Prisma.BarbeiroUpdateInput>
   ): Promise<Barbeiro> {
     return this.prisma.barbeiro.update({
       where: {
         id,
       },
       data,
+    });
+  }
+
+  async findById(id: number): Promise<Barbeiro | null> {
+    return this.prisma.barbeiro.findUnique({
+      where: {
+        id,
+      },
     });
   }
 }

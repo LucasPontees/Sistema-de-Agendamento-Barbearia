@@ -11,4 +11,12 @@ export class PrismaServicoBarbeariaRepository
   create(data: Prisma.ServicoCreateInput): Promise<Servico> {
     return this.prisma.servico.create({ data });
   }
+
+  findById(id: number): Promise<Servico | null> {
+    return this.prisma.servico.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 }

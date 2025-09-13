@@ -3,7 +3,12 @@ import { CreateAgendamentoUsecase } from "./agendamento.usecase";
 import { AgendamentoController } from "./agendamento.controller";
 import { TYPES } from "@/types";
 import { PrismaAgendamentoRepository } from "./repository/prisma-agendamento.repository";
-
+import { PrismaBarberRepository } from "@/barber/repository/prisma-barber.repository";
+import { PrismaServicoBarbeariaRepository } from "@/servico-barbearia/repository/prisma-servico-barbearia.repository";
+import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
+import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
+import { IUserRepository } from "@/usuario/repository/user.repository";
+import { PrismaUserRepository } from "@/usuario/repository/prisma-user.repository";
 @Module({
   controllers: [AgendamentoController],
   providers: [
@@ -11,6 +16,22 @@ import { PrismaAgendamentoRepository } from "./repository/prisma-agendamento.rep
     {
       provide: TYPES.AgendamentoRepository,
       useClass: PrismaAgendamentoRepository,
+    },
+    {
+      provide: TYPES.BarberRepository,
+      useClass: PrismaBarberRepository,
+    },
+    {
+      provide: TYPES.ServicoBarbeariaRepository,
+      useClass: PrismaServicoBarbeariaRepository,
+    },
+    {
+      provide: TYPES.EmpresaRepository,
+      useClass: PrismaEmpresaRepository,
+    },
+    {
+      provide: TYPES.UserRepository,
+      useClass: PrismaUserRepository,
     },
   ],
 })

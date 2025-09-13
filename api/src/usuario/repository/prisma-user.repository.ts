@@ -13,4 +13,8 @@ export class PrismaUserRepository implements IUserRepository {
   create(data: Prisma.UsuarioCreateInput) {
     return this.prisma.usuario.create({ data });
   }
+
+  findById(id: number): Promise<Usuario | null> {
+    return this.prisma.usuario.findUnique({ where: { id } });
+  }
 }
