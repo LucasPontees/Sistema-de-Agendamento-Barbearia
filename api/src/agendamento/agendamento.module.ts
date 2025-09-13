@@ -8,10 +8,12 @@ import { PrismaServicoBarbeariaRepository } from "@/servico-barbearia/repository
 import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
 import { PrismaUserRepository } from "@/usuario/repository/prisma-user.repository";
 import { RetornaAgendamentosEmpresaUsecase } from "./retorna-agendamentos-empresa.usecase";
+import { ReturnAgendamentosPorIdUsecase } from "./retorna-agendamentos-por-id.usecase";
 @Module({
   controllers: [AgendamentoController],
   providers: [
     RetornaAgendamentosEmpresaUsecase,
+    ReturnAgendamentosPorIdUsecase,
     CreateAgendamentoUsecase,
     {
       provide: TYPES.AgendamentoRepository,

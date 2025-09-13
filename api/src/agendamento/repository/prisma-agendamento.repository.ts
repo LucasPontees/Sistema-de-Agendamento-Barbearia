@@ -33,4 +33,30 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
       },
     });
   }
+
+  async returnAgendamentoPorId(
+    agendamentoId: number,
+    empresa: number
+  ): Promise<Agendamento | null> {
+    return this.prisma.agendamento.findFirst({
+      where: { empresaId: empresa, id: agendamentoId },
+      include: {
+        usuario: {
+          select: {
+            nome: true,
+            email: true,
+            telefone: true,
+            dataNascimento: true,
+            fotoPerfil: true,
+          },
+        },
+        barbeiro: {
+          select: { nome: true, fotoPerfil: true },
+        },
+        servico: {
+          select: { nome: true, descricao: true, preco: true },
+        },
+      },
+    });
+  }
 }
