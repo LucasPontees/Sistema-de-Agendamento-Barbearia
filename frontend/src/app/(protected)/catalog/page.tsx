@@ -3,7 +3,7 @@ import { api } from "@/http/api";
 import { z } from "zod";
 import Link from "next/link";
 
-// schema de validação
+// schema de validação com Zod
 export const empresaSchema = z.object({
   id: z.number(),
   nomeFantasia: z.string(),
@@ -11,27 +11,27 @@ export const empresaSchema = z.object({
   telefone: z.string(),
   email: z.string(),
   endereco: z.string(),
-  descricao: z.string(),
-  logo: z.string(),
-  horariosFuncionamento: z.string(),
+  descricao: z.string().nullable(), // pode ser nulo
+  logo: z.string().nullable(),
+  horariosFuncionamento: z.string().nullable(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
+
 export const empresasSchema = z.array(empresaSchema);
 
+// Função para buscar empresas da API
 export async function getEmpresas() {
   const data = await api.get("empresa").json();
   return empresasSchema.parse(data);
 }
 
-type Empresa = {
-  id: number;
-  nome: string;
-  cnpj: string;
-};
+// Usamos o infer do Zod para tipar automaticamente
+export type Empresa = z.infer<typeof empresaSchema>;
 
 export default async function Services() {
-  const empresas = await getEmpresas();
+  const empresas: Empresa[] = await getEmpresas();
+
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
@@ -45,6 +45,7 @@ export default async function Services() {
             </p>
           </div>
         </section>
+
         {/* Services Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4">
@@ -57,24 +58,28 @@ export default async function Services() {
                 {empresas.map((empresa) => (
                   <Link
                     key={empresa.id}
-                    href={`/empresa/${empresa.id}`} // página da empresa
+                    href={`empresa/${empresa.id}`} // leva para a página da empresa
                     className="block p-6 bg-white shadow-md rounded-2xl border hover:shadow-xl transition cursor-pointer"
                   >
                     <h2 className="text-lg font-bold mb-2">
                       {empresa.nomeFantasia}
                     </h2>
+                    {empresa.descricao && (
+                      <p className="text-sm text-gray-600">
+                        {empresa.descricao}
+                      </p>
+                    )}
                     <p className="text-sm text-gray-600">
                       Telefone: {empresa.telefone}
                     </p>
                     <p className="text-sm text-gray-600">
-                      Descrição: {empresa.descricao}
-                    </p>
-                    <p className="text-sm text-gray-600">
                       Endereço: {empresa.endereco}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      Horário de funcionamento: {empresa.horariosFuncionamento}
-                    </p>
+                    {empresa.horariosFuncionamento && (
+                      <p className="text-sm text-gray-600">
+                        Horário: {empresa.horariosFuncionamento}
+                      </p>
+                    )}
                   </Link>
                 ))}
               </div>

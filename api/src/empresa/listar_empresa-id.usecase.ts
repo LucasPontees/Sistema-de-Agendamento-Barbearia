@@ -6,7 +6,7 @@ import { IEmpresaRepository } from "./repository/empresa.repository";
 export class ListarEmpresaIdUseCase {
   constructor(
     @Inject(TYPES.EmpresaRepository)
-    private readonly iEmpresaRepository: IEmpresaRepository,
+    private readonly iEmpresaRepository: IEmpresaRepository
   ) {}
   async execute(id: number) {
     const empresa = await this.iEmpresaRepository.findById(id);

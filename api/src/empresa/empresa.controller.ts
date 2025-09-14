@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get, Query } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  BadRequestException,
+  Param,
+} from "@nestjs/common";
 import { CreateEmpresaDto } from "./dto/create-empresa.dto";
 import { CreateEmpresaUseCase } from "./create-empresa.usecase";
 import { ListarTodasEmpresasUseCase } from "./listar-todas-empresas.usecase";
@@ -9,7 +16,7 @@ export class EmpresaController {
   constructor(
     private readonly createEmpresaUseCase: CreateEmpresaUseCase,
     private readonly listarTodasEmpresasUseCase: ListarTodasEmpresasUseCase,
-    private readonly listarEmpresaIdUseCase: ListarEmpresaIdUseCase,
+    private readonly listarEmpresaIdUseCase: ListarEmpresaIdUseCase
   ) {}
 
   @Post()
@@ -23,7 +30,7 @@ export class EmpresaController {
   }
 
   @Get(":id")
-  findOne(@Query("id") id: number) {
+  findOne(@Param("id") id: number) {
     return this.listarEmpresaIdUseCase.execute(id);
   }
 }
