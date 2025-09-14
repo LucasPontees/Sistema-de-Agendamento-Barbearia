@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { api } from "@/http/api";
+import ServicesListClient from "../EmpresaServerPage";
 
 export const empresaSchema = z.object({
   id: z.number(),
@@ -26,82 +27,29 @@ export const servicoSchema = z.object({
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
-export const servicosSchema = z.array(servicoSchema);
 export type Servico = z.infer<typeof servicoSchema>;
+export const servicosSchema = z.array(servicoSchema);
 
-export async function getEmpresaById(id: number): Promise<Empresa> {
+async function getEmpresaById(id: number): Promise<Empresa> {
   const data = await api.get(`empresa/${id}`).json();
   return empresaSchema.parse(data);
 }
 
-export async function getServicosByEmpresaId(
-  empresaId: number
-): Promise<Servico[]> {
-  // Faz a requisição com query param
+async function getServicosByEmpresaId(empresaId: number): Promise<Servico[]> {
   const data = await api
     .get("servico-barbearia", { searchParams: { empresaID: empresaId } })
     .json();
-
-  // Parse usando Zod; se o backend retornar { servicos: [...] }, use data.servicos
   return servicosSchema.parse(data);
 }
 
 type EmpresaPageProps = {
-  params: Promise<{ id: string }>; // 👈 precisa ser Promise
+  params: { id: string };
 };
 
 export default async function EmpresaPage({ params }: EmpresaPageProps) {
-  const { id } = await params;
+  const empresaId = Number(params.id);
+  const empresa = await getEmpresaById(empresaId);
+  const servicos = await getServicosByEmpresaId(empresaId);
 
-  const empresa = await getEmpresaById(Number(id)).catch(() => null);
-
-  const servicos = await getServicosByEmpresaId(Number(id)).catch(() => []);
-  console.log("Servicos: ", servicos);
-
-  return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-grow container mx-auto px-4 py-12">
-        {/* Header Empresa */}
-        <section className="mb-12">
-          <h1 className="text-4xl font-bold mb-4">{empresa?.nomeFantasia}</h1>
-          {empresa?.descricao && (
-            <p className="text-gray-700 mb-2">{empresa.descricao}</p>
-          )}
-          <p className="text-gray-500 mb-2">Telefone: {empresa?.telefone}</p>
-          <p className="text-gray-500 mb-2">Endereço: {empresa?.endereco}</p>
-          {empresa?.horariosFuncionamento && (
-            <p className="text-gray-500 mb-2">
-              Horário: {empresa?.horariosFuncionamento}
-            </p>
-          )}
-        </section>
-
-        {/* Serviços */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Serviços Disponíveis</h2>
-          {servicos.length === 0 ? (
-            <p>Nenhum serviço disponível.</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {servicos.map((servico) => (
-                <div
-                  key={servico.id}
-                  className="p-6 bg-white shadow-md rounded-2xl border hover:shadow-xl transition cursor-pointer"
-                >
-                  <h3 className="text-lg font-semibold mb-2">{servico.nome}</h3>
-                  <p className="text-gray-600 mb-2">{servico.descricao}</p>
-                  <p className="text-gray-600 mb-2">
-                    Duração: {servico.duracaoMin} min
-                  </p>
-                  <p className="text-gray-600 font-bold">
-                    Preço: R$ {servico.preco}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-      </main>
-    </div>
-  );
+  return <ServicesListClient empresa={empresa} servicos={servicos} />;
 }
