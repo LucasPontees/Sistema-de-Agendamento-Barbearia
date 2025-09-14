@@ -6,7 +6,7 @@ import { IServicoBarbeariaRepository } from "./repository/servico-barbearia.repo
 export class ListarServicoIdUseCase {
   constructor(
     @Inject(TYPES.ServicoBarbeariaRepository)
-    private readonly iServicoBarbeariaRepository: IServicoBarbeariaRepository
+    private readonly iServicoBarbeariaRepository: IServicoBarbeariaRepository,
   ) {}
   async execute(empresaId: number) {
     const servico =

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query, Param } from "@nestjs/common";
+import { Controller, Post, Body, Get, Query } from "@nestjs/common";
 import { ServicoBarbeariaUseCase } from "./servico-barbearia.usecase";
 import { CreateServicoBarbeariaDto } from "./dto/create-servico-barbearia.dto";
 import { ListarServicoIdUseCase } from "./listar-servico-id-company.usecase";
@@ -7,7 +7,7 @@ import { ListarServicoIdUseCase } from "./listar-servico-id-company.usecase";
 export class ServicoBarbeariaController {
   constructor(
     private readonly servicoBarbeariaUseCase: ServicoBarbeariaUseCase,
-    private readonly listarServicoIdUseCase: ListarServicoIdUseCase
+    private readonly listarServicoIdUseCase: ListarServicoIdUseCase,
   ) {}
 
   @Post()

@@ -8,6 +8,7 @@ import { EmpresaModule } from "./empresa/empresa.module";
 import { BarbeiroModule } from "./barber/barber.module";
 import { ServicoBarbeariaModule } from "./servico-barbearia/servico-barbearia.module";
 import { AgendamentoModule } from "./agendamento/agendamento.module";
+import { LoginModule } from "./login/login.module";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AgendamentoModule } from "./agendamento/agendamento.module";
     BarbeiroModule,
     ServicoBarbeariaModule,
     AgendamentoModule,
+    LoginModule,
   ],
 })
 export class AppModule {}

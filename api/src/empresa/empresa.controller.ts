@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  BadRequestException,
-  Param,
-} from "@nestjs/common";
+import { Controller, Post, Body, Get, Param } from "@nestjs/common";
 import { CreateEmpresaDto } from "./dto/create-empresa.dto";
 import { CreateEmpresaUseCase } from "./create-empresa.usecase";
 import { ListarTodasEmpresasUseCase } from "./listar-todas-empresas.usecase";
@@ -16,7 +9,7 @@ export class EmpresaController {
   constructor(
     private readonly createEmpresaUseCase: CreateEmpresaUseCase,
     private readonly listarTodasEmpresasUseCase: ListarTodasEmpresasUseCase,
-    private readonly listarEmpresaIdUseCase: ListarEmpresaIdUseCase
+    private readonly listarEmpresaIdUseCase: ListarEmpresaIdUseCase,
   ) {}
 
   @Post()
