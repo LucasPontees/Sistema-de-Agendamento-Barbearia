@@ -1,13 +1,13 @@
 import { Controller, Post, Body, Get, Query, Param } from "@nestjs/common";
 import { ServicoBarbeariaUseCase } from "./servico-barbearia.usecase";
 import { CreateServicoBarbeariaDto } from "./dto/create-servico-barbearia.dto";
-import { ListarServicoIdUseCase } from "./listar_servico-id.usecase";
+import { ListarServicoIdUseCase } from "./listar-servico-id-company.usecase";
 
 @Controller("servico-barbearia")
 export class ServicoBarbeariaController {
   constructor(
     private readonly servicoBarbeariaUseCase: ServicoBarbeariaUseCase,
-    private readonly listarServicoIdUseCase: ListarServicoIdUseCase,
+    private readonly listarServicoIdUseCase: ListarServicoIdUseCase
   ) {}
 
   @Post()
@@ -15,8 +15,8 @@ export class ServicoBarbeariaController {
     return this.servicoBarbeariaUseCase.execute(dto);
   }
 
-  @Get(":id")
-  findOne(@Query("empresaID") empresaID: number, @Param("id") id: number) {
-    return this.listarServicoIdUseCase.execute(id, empresaID);
+  @Get()
+  findOne(@Query("empresaID") empresaID: number) {
+    return this.listarServicoIdUseCase.execute(empresaID);
   }
 }

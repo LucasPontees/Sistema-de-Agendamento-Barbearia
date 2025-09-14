@@ -1,11 +1,6 @@
-import { notFound } from "next/navigation";
 import { z } from "zod";
 import { api } from "@/http/api";
-import { da } from "zod/v4/locales";
 
-// =========================
-// Schema Empresa
-// =========================
 export const empresaSchema = z.object({
   id: z.number(),
   nomeFantasia: z.string(),
@@ -21,9 +16,6 @@ export const empresaSchema = z.object({
 });
 export type Empresa = z.infer<typeof empresaSchema>;
 
-// =========================
-// Schema Serviço
-// =========================
 export const servicoSchema = z.object({
   id: z.number(),
   nome: z.string(),
@@ -37,38 +29,34 @@ export const servicoSchema = z.object({
 export const servicosSchema = z.array(servicoSchema);
 export type Servico = z.infer<typeof servicoSchema>;
 
-// =========================
-// Funções tipadas
-// =========================
 export async function getEmpresaById(id: number): Promise<Empresa> {
   const data = await api.get(`empresa/${id}`).json();
-  console.log("listando data:", data);
   return empresaSchema.parse(data);
 }
 
-export async function getServicosByEmpresaId(id: number): Promise<Servico[]> {
-  const data = await api.get(`servico/empresa/${id}`).json();
+export async function getServicosByEmpresaId(
+  empresaId: number
+): Promise<Servico[]> {
+  // Faz a requisição com query param
+  const data = await api
+    .get("servico-barbearia", { searchParams: { empresaID: empresaId } })
+    .json();
+
+  // Parse usando Zod; se o backend retornar { servicos: [...] }, use data.servicos
   return servicosSchema.parse(data);
 }
 
-// =========================
-// Página
-// =========================
 type EmpresaPageProps = {
   params: Promise<{ id: string }>; // 👈 precisa ser Promise
 };
 
 export default async function EmpresaPage({ params }: EmpresaPageProps) {
-  const { id } = await params; // 👈 await antes de usar
-  const empresaId = Number(id);
+  const { id } = await params;
 
-  // Busca a empresa
-  const empresa = await getEmpresaById(empresaId).catch(() => null);
-  console.log("listando empresa:", empresa);
-  // if (!empresa) return notFound();
+  const empresa = await getEmpresaById(Number(id)).catch(() => null);
 
-  // Busca serviços
-  const servicos = await getServicosByEmpresaId(empresaId).catch(() => []);
+  const servicos = await getServicosByEmpresaId(Number(id)).catch(() => []);
+  console.log("Servicos: ", servicos);
 
   return (
     <div className="flex flex-col min-h-screen">

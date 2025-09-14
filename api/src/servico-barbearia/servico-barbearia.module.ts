@@ -4,7 +4,7 @@ import { ServicoBarbeariaController } from "./servico-barbearia.controller";
 import { TYPES } from "@/types";
 import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
 import { PrismaServicoBarbeariaRepository } from "./repository/prisma-servico-barbearia.repository";
-import { ListarServicoIdUseCase } from "./listar_servico-id.usecase";
+import { ListarServicoIdUseCase } from "./listar-servico-id-company.usecase";
 @Module({
   controllers: [ServicoBarbeariaController],
   providers: [
