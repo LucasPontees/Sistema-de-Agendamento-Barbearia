@@ -3,6 +3,7 @@ import { ILogin, LoginData, LoginResponse } from "./login-repository";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { PrismaUserRepository } from "../../usuario/repository/prisma-user.repository";
 import { TYPES } from "@/types";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class PrismaLoginRepository implements ILogin {
@@ -10,6 +11,7 @@ export class PrismaLoginRepository implements ILogin {
     @Inject(TYPES.UserRepository)
     private readonly userRepository: PrismaUserRepository,
     private readonly prisma: PrismaService,
+    private configService: ConfigService
   ) {}
   async login(data: LoginData): Promise<LoginResponse> {
     const user = await this.userRepository.findByEmail(data.email);
@@ -17,12 +19,18 @@ export class PrismaLoginRepository implements ILogin {
       throw new UnauthorizedException("Credenciais inválidas");
     }
 
-    const token = "seu_token_jwt";
-    const refreshToken = "refresh_token";
+    const token = process.env.JWT_SECRET;
+    if (!token) {
+      throw new UnauthorizedException("Credenciais inválidas");
+    }
+    // const refreshToken = process.env.JWT_REFRESH_TOKEN_SECRET;
 
+    // if (!refreshToken) {
+    //   throw new UnauthorizedException("Credenciais inválidas");
+    // }
     return {
       token,
-      refreshToken,
+      // refreshToken,
       user: {
         id: user.id,
         name: user.nome,
