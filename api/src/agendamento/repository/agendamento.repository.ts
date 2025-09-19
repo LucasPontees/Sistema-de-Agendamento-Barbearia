@@ -1,7 +1,8 @@
-import { Agendamento, Prisma } from "@prisma/client";
+import { Agendamento } from "@prisma/client";
+import { CreateAgendamentoDto } from "../dto/create-agendamento.dto";
 
 export interface IAgendamentoRepository {
-  create(data: Prisma.AgendamentoCreateInput): Promise<Agendamento>;
+  create(data: CreateAgendamentoDto): Promise<Agendamento>;
   returnAgendamentoPorEmpresa(empresaId: number): Promise<Agendamento[]>;
   returnAgendamentoPorId(agendamentoId: number): Promise<Agendamento | null>;
   aceitarRejeitarAgendamento(

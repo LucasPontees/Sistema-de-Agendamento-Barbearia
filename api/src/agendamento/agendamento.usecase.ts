@@ -41,17 +41,6 @@ export class CreateAgendamentoUsecase {
       );
     }
 
-    // const servicoExists = await this.iServicoBarbeariaRepository.findById(
-    //   request.empresaId,
-    //   request.servicoId,
-    // );
-
-    // if (!servicoExists) {
-    //   throw new ConflictException(
-    //     `Service with ID ${request.servicoId} not found`,
-    //   );
-    // }
-
     const empresaExists = await this.iEmpresaRepository.findById(
       request.empresaId,
     );
@@ -72,15 +61,6 @@ export class CreateAgendamentoUsecase {
       );
     }
 
-    return this.iAgendamentoRepository.create({
-      dataHora: new Date(request.dataHora),
-      usuario: { connect: { id: request.usuarioId } },
-      empresa: { connect: { id: request.empresaId } },
-      barbeiro: request.barbeiroId
-        ? { connect: { id: request.barbeiroId } }
-        : undefined,
-      servico: { connect: { id: request.servicoId } },
-      observacoes: request.observacoes,
-    });
+    return this.iAgendamentoRepository.create(request);
   }
 }

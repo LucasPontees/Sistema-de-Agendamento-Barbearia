@@ -1,13 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { IAgendamentoRepository } from "./agendamento.repository";
-import { Prisma, Agendamento, StatusAgendamento } from "@prisma/client";
+import { Agendamento, StatusAgendamento } from "@prisma/client";
 import { PrismaService } from "prisma/prisma.service";
+import { CreateAgendamentoRequest } from "../agendamento.usecase";
 @Injectable()
 export class PrismaAgendamentoRepository implements IAgendamentoRepository {
   constructor(private readonly prisma: PrismaService) {}
-  async create(data: Prisma.AgendamentoCreateInput): Promise<Agendamento> {
+  async create(data: CreateAgendamentoRequest): Promise<Agendamento> {
     return this.prisma.agendamento.create({
-      data,
+      data: {
+        dataHora: new Date(data.dataHora),
+        usuario: { connect: { id: data.usuarioId } },
+        empresa: { connect: { id: data.empresaId } },
+        barbeiro: data.barbeiroId
+          ? { connect: { id: data.barbeiroId } }
+          : undefined,
+        servico: { connect: { id: data.servicoId } },
+        observacoes: data.observacoes,
+      },
     });
   }
 
