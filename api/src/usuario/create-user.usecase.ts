@@ -1,12 +1,9 @@
 import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { IUserRepository } from "./repository/user.repository";
-import { Prisma, Usuario } from "@prisma/client";
 import { IHasher } from "./hash/hasher";
 import { TYPES } from "../types";
-
-interface CreateUserRequest extends Prisma.UsuarioCreateInput {
-  fotoPerfil?: string;
-}
+import { User } from "./entities/user.entity";
+import { CreateUsuarioDto } from "./dto/create-usuario.dto";
 
 @Injectable()
 export class CreateUserUseCase {
@@ -14,10 +11,10 @@ export class CreateUserUseCase {
     @Inject(TYPES.UserRepository)
     private readonly iUserRepository: IUserRepository,
     @Inject(TYPES.Hasher)
-    private readonly hasher: IHasher,
+    private readonly hasher: IHasher
   ) {}
 
-  async execute(request: CreateUserRequest): Promise<Usuario> {
+  async execute(request: CreateUsuarioDto): Promise<User> {
     const { senha, email, ...rest } = request;
 
     const userExists = await this.iUserRepository.findByEmail(email);
@@ -28,10 +25,12 @@ export class CreateUserUseCase {
 
     const senhaHash = await this.hasher.hash(senha);
 
-    return this.iUserRepository.create({
+    const user = this.iUserRepository.create({
       ...rest,
       senha: senhaHash,
-      email: email.toLowerCase(),
+      email: email,
     });
+
+    return user;
   }
 }

@@ -1,5 +1,6 @@
+import { UserRole } from "@/usuario/enum/role";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MinLength } from "class-validator";
+import { IsEnum, IsString, MinLength } from "class-validator";
 
 export class CreateEmpresaDto {
   @IsString()
@@ -30,6 +31,13 @@ export class CreateEmpresaDto {
   })
   @MinLength(3)
   email: string;
+
+  @ApiProperty({
+    description: "Cargo do usuário",
+    example: "USUARIO",
+  })
+  @IsEnum(UserRole)
+  role: UserRole;
 
   @IsString()
   @ApiProperty({

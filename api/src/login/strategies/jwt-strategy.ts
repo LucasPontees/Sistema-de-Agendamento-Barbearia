@@ -11,10 +11,11 @@ export interface JwtPayload {
   name: string;
   iat?: number;
   exp?: number;
+  role?: string;
 }
 
 function extractJwtFromCookie(
-  req: Request & { cookies?: Record<string, string> },
+  req: Request & { cookies?: Record<string, string> }
 ): string | null {
   return typeof req?.cookies?.access_token === "string"
     ? req.cookies.access_token
@@ -46,6 +47,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       sub: payload.sub,
       email: payload.email,
       name: payload.name,
+      role: payload.role,
     };
   }
 }

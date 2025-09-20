@@ -2,6 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { IUserRepository } from "./user.repository";
 import { Prisma, Usuario } from "@prisma/client";
+import { CreateUsuarioDto } from "../dto/create-usuario.dto";
+import { User } from "../entities/user.entity";
+import { UserRole } from "../enum/role";
 
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
@@ -10,8 +13,29 @@ export class PrismaUserRepository implements IUserRepository {
     return this.prisma.usuario.findUnique({ where: { email } });
   }
 
-  create(data: Prisma.UsuarioCreateInput) {
-    return this.prisma.usuario.create({ data });
+  async create(data: CreateUsuarioDto): Promise<User> {
+    const usuario = await this.prisma.usuario.create({
+      data: {
+        email: data.email,
+        senha: data.senha,
+        nome: data.nome,
+        role: data.role,
+        telefone: data.telefone,
+        fotoPerfil: data.fotoPerfil,
+        dataNascimento: data.dataNascimento,
+      },
+    });
+
+    return new User(
+      usuario.id,
+      usuario.email,
+      usuario.role as UserRole,
+      usuario.nome,
+      usuario.senha,
+      usuario.telefone,
+      usuario.fotoPerfil || undefined,
+      usuario.dataNascimento || undefined
+    );
   }
 
   findUserById(id: number): Promise<Usuario | null> {

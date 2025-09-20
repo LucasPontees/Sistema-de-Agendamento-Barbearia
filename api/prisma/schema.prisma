@@ -15,6 +15,7 @@ model Usuario {
   senha          String
   dataNascimento DateTime?
   fotoPerfil     String?
+  role           Role
 
   agendamentos Agendamento[]
   createdAt    DateTime      @default(now())
@@ -31,6 +32,7 @@ model Empresa {
   descricao             String?
   logo                  String?
   horariosFuncionamento Json?
+  role                  Role
 
   barbeiros    Barbeiro[]
   servicos     Servico[]
@@ -102,4 +104,9 @@ enum StatusAgendamento {
   CONFIRMADO
   CANCELADO
   CONCLUIDO
+}
+
+enum Role {
+  EMPRESA
+  USUARIO
 }
