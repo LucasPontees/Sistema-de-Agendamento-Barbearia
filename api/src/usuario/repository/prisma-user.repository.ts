@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { IUserRepository } from "./user.repository";
-import { Prisma, Usuario } from "@prisma/client";
 import { CreateUsuarioDto } from "../dto/create-usuario.dto";
 import { User } from "../entities/user.entity";
 import { UserRole } from "../enum/role";
@@ -9,9 +8,6 @@ import { UserRole } from "../enum/role";
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaService) {}
-  findByEmail(email: string): Promise<Usuario | null> {
-    return this.prisma.usuario.findUnique({ where: { email } });
-  }
 
   async create(data: CreateUsuarioDto): Promise<User> {
     const usuario = await this.prisma.usuario.create({
@@ -34,11 +30,40 @@ export class PrismaUserRepository implements IUserRepository {
       usuario.senha,
       usuario.telefone,
       usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined
+      usuario.dataNascimento || undefined,
     );
   }
 
-  findUserById(id: number): Promise<Usuario | null> {
-    return this.prisma.usuario.findUnique({ where: { id } });
+  async findByEmail(email: string): Promise<User | null> {
+    const usuario = await this.prisma.usuario.findFirst({ where: { email } });
+    if (!usuario) return null;
+
+    return new User(
+      usuario.id,
+      usuario.email,
+      usuario.role as UserRole,
+      usuario.nome,
+      usuario.senha,
+      usuario.telefone,
+      usuario.fotoPerfil || undefined,
+      usuario.dataNascimento || undefined,
+    );
+  }
+
+  async findUserById(id: number): Promise<User | null> {
+    const usuario = await this.prisma.usuario.findUnique({ where: { id } });
+
+    if (!usuario) return null;
+
+    return new User(
+      usuario.id,
+      usuario.email,
+      usuario.role as UserRole,
+      usuario.nome,
+      usuario.senha,
+      usuario.telefone,
+      usuario.fotoPerfil || undefined,
+      usuario.dataNascimento || undefined,
+    );
   }
 }

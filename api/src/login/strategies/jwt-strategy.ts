@@ -15,7 +15,7 @@ export interface JwtPayload {
 }
 
 function extractJwtFromCookie(
-  req: Request & { cookies?: Record<string, string> }
+  req: Request & { cookies?: Record<string, string> },
 ): string | null {
   return typeof req?.cookies?.access_token === "string"
     ? req.cookies.access_token

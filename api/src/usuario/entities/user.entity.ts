@@ -9,6 +9,6 @@ export class User {
     public readonly senha: string,
     public readonly telefone?: string,
     public readonly fotoPerfil?: string,
-    public readonly dataNascimento?: Date
+    public readonly dataNascimento?: Date,
   ) {}
 }

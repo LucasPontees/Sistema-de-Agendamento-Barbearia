@@ -11,7 +11,7 @@ export class CreateUserUseCase {
     @Inject(TYPES.UserRepository)
     private readonly iUserRepository: IUserRepository,
     @Inject(TYPES.Hasher)
-    private readonly hasher: IHasher
+    private readonly hasher: IHasher,
   ) {}
 
   async execute(request: CreateUsuarioDto): Promise<User> {
