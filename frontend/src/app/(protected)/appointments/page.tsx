@@ -1,13 +1,7 @@
 "use client";
-import React, { useState } from "react";
-
-import AppointmentForm from "@/components/AppointmentForm";
+import React from "react";
 
 const Appointments: React.FC = () => {
-  // Estado para controlar o modal
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedService, setSelectedService] = useState<string>("");
-
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow pt-8 pb-16">
@@ -23,22 +17,10 @@ const Appointments: React.FC = () => {
 
           {/* Botão para abrir o modal */}
           <div className="flex justify-center mb-8">
-            <button
-              onClick={() => {
-                setSelectedService("Corte de Cabelo"); // 👈 exemplo de serviço inicial
-                setOpenModal(true);
-              }}
-              className="px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow hover:bg-primary/90 transition"
-            >
+            <button className="px-6 py-3 bg-primary text-white font-semibold rounded-lg shadow hover:bg-primary/90 transition">
               Agendar Agora
             </button>
           </div>
-
-          <AppointmentForm
-            open={openModal}
-            onOpenChange={setOpenModal}
-            initialService={selectedService}
-          />
         </div>
       </main>
     </div>

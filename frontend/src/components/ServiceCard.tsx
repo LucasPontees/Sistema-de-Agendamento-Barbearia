@@ -1,7 +1,13 @@
-import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Link from 'next/link';
+import Link from "next/link";
 
 interface ServiceCardProps {
   title: string;
@@ -16,19 +22,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   title,
   description,
   price,
-  image,
   duration,
-  slug
+  slug,
 }) => {
   return (
     <Card className="overflow-hidden card-hover border-2 border-barber-brown/10">
-      <div className="h-48 overflow-hidden">
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-        />
-      </div>
+      <div className="h-48 overflow-hidden"></div>
 
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
@@ -46,7 +45,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
       <CardFooter className="flex justify-between">
         <Link href={`/services/${slug}`}>
-          <Button variant="outline" className="border-barber-brown text-barber-brown hover:bg-barber-brown hover:text-white">
+          <Button
+            variant="outline"
+            className="border-barber-brown text-barber-brown hover:bg-barber-brown hover:text-white"
+          >
             Detalhes
           </Button>
         </Link>

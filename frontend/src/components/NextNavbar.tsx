@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { UserCircle2, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -8,32 +8,12 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter } from "next/navigation";
 import { api } from "@/http/api";
 
-// function useAuth() {
-//     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-//     useEffect(() => {
-//         const checkAuth = async () => {
-//             try {
-//                 const data = await api.get('auth/check').json<{ isAuthenticated: boolean }>();
-//                 setIsAuthenticated(data.isAuthenticated);
-//             } catch (err) {
-//                 console.error('Erro ao verificar autenticação:', err);
-//                 setIsAuthenticated(false);
-//             }
-//         };
-
-//         checkAuth();
-//     }, []);
-
-//     return isAuthenticated;
-// }
-
 interface HeaderProps {
   isAuthenticated?: boolean;
   onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogout }) => {
+const Header: React.FC<HeaderProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   //   const isAuthenticated = useAuth(); // aqui você pega o estado atual via API
   const isMobile = useIsMobile();
@@ -58,13 +38,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     <header className="bg-barber-dark text-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <Link href="/">
-            <img
-              src="/favicon.ico"
-              alt="Barber VIP Club"
-              className="h-10 w-10"
-            />
-          </Link>
+          <Link href="/"></Link>
         </div>
 
         {isMobile ? (

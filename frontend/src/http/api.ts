@@ -1,5 +1,4 @@
 import ky from "ky";
-import { z } from "zod";
 
 // Criando instância
 export const api = ky.create({

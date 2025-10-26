@@ -1,14 +1,22 @@
-
-import React from 'react';
+import React from "react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { timeSlots } from '@/data/appointmentData';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { timeSlots } from "@/data/appointmentData";
 
 interface DateTimeTabProps {
   date: Date | undefined;
@@ -20,10 +28,9 @@ interface DateTimeTabProps {
 
 const DateTimeTab: React.FC<DateTimeTabProps> = ({
   date,
-  setDate,
   timeSlot,
   setTimeSlot,
-  onContinue
+  onContinue,
 }) => {
   return (
     <div className="space-y-6">
@@ -42,21 +49,10 @@ const DateTimeTab: React.FC<DateTimeTabProps> = ({
               {date ? format(date, "PPP") : <span>Selecione uma data</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-              disabled={(date) => 
-                date < new Date(new Date().setHours(0, 0, 0, 0)) ||
-                date.getDay() === 0
-              }
-            />
-          </PopoverContent>
+          <PopoverContent className="w-auto p-0"></PopoverContent>
         </Popover>
       </div>
-      
+
       <div>
         <Label htmlFor="time">Selecione o Horário</Label>
         <Select value={timeSlot} onValueChange={setTimeSlot}>
@@ -65,12 +61,14 @@ const DateTimeTab: React.FC<DateTimeTabProps> = ({
           </SelectTrigger>
           <SelectContent>
             {timeSlots.map((time) => (
-              <SelectItem key={time} value={time}>{time}</SelectItem>
+              <SelectItem key={time} value={time}>
+                {time}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
-      
+
       <Button type="button" className="w-full" onClick={onContinue}>
         Continuar para Serviços
       </Button>

@@ -1,10 +1,14 @@
-
-import React from 'react';
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { services, barbers } from '@/data/appointmentData';
-import { ServiceOption } from '@/types/appointment';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { services, barbers } from "@/data/appointmentData";
 
 interface ServiceBarberTabProps {
   service: string;
@@ -21,11 +25,11 @@ const ServiceBarberTab: React.FC<ServiceBarberTabProps> = ({
   barber,
   setBarber,
   onBack,
-  onContinue
+  onContinue,
 }) => {
-  const selectedService = services.find(s => s.id === service);
-  const availableBarbers = service 
-    ? barbers.filter(b => b.specialties.includes(service))
+  const selectedService = services.find((s) => s.id === service);
+  const availableBarbers = service
+    ? barbers.filter((b) => b.specialties.includes(service))
     : barbers;
 
   return (
@@ -45,22 +49,28 @@ const ServiceBarberTab: React.FC<ServiceBarberTabProps> = ({
           </SelectContent>
         </Select>
       </div>
-      
+
       {selectedService && (
         <div className="bg-muted p-3 rounded-md text-sm">
-          <div className="font-medium text-barber-brown">{selectedService.name}</div>
+          <div className="font-medium text-barber-brown">
+            {selectedService.name}
+          </div>
           <div className="flex justify-between mt-1">
             <span>Duration: {selectedService.duration} minutes</span>
             <span>Price: ${selectedService.price}</span>
           </div>
         </div>
       )}
-      
+
       <div>
         <Label htmlFor="barber">Select Barber</Label>
         <Select value={barber} onValueChange={setBarber} disabled={!service}>
           <SelectTrigger className="w-full mt-2">
-            <SelectValue placeholder={service ? "Choose a barber" : "Select a service first"} />
+            <SelectValue
+              placeholder={
+                service ? "Choose a barber" : "Select a service first"
+              }
+            />
           </SelectTrigger>
           <SelectContent>
             {availableBarbers.map((barber) => (
@@ -71,12 +81,16 @@ const ServiceBarberTab: React.FC<ServiceBarberTabProps> = ({
           </SelectContent>
         </Select>
       </div>
-      
+
       <div className="flex justify-between">
         <Button type="button" variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button type="button" onClick={onContinue} disabled={!service || !barber}>
+        <Button
+          type="button"
+          onClick={onContinue}
+          disabled={!service || !barber}
+        >
           Continue to Details
         </Button>
       </div>

@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
 import NextNavbar from "@/components/NextNavbar";
 import NextFooter from "@/components/NextFooter";
 import { api } from "@/http/api"; // Adjust the import based on your API service setup
@@ -23,13 +22,7 @@ const Login: React.FC = () => {
     email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [carregando, setCarregando] = useState(false);
   const router = useRouter();
-  const [erro, setErro] = useState("");
-  const [mensagem, setMensagem] = useState("");
-
-  const { toast } = useToast();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,24 +31,19 @@ const Login: React.FC = () => {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.email || !form.password) return;
-    setCarregando(true);
-    setErro("");
+
     try {
       await api.post("auth/login", {
         json: { email: form.email, password: form.password },
       });
 
-      setMensagem("Login realizado com sucesso!");
       setTimeout(() => {
         setTimeout(() => {
           router.push("/dashboard");
         }, 1000);
       }, 1000);
     } catch (error) {
-      setMensagem("Credenciais inválidas!");
-      setTimeout(() => setMensagem(""), 1000);
-    } finally {
-      setCarregando(false);
+      console.error("Login failed:", error);
     }
   }
 
@@ -114,10 +102,7 @@ const Login: React.FC = () => {
                   <Button
                     type="submit"
                     className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Entrando..." : "Entrar"}
-                  </Button>
+                  ></Button>
                 </div>
               </form>
             </CardContent>
