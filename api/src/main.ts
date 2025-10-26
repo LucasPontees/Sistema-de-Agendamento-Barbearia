@@ -25,7 +25,7 @@ async function bootstrap(): Promise<void> {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-    }),
+    })
   );
 
   const config = new DocumentBuilder()
@@ -38,5 +38,6 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup("api", app, documentFactory);
 
   await app.listen(port, "0.0.0.0");
+  console.log(`Application is running on: ${port} 🔥`);
 }
 void bootstrap();
