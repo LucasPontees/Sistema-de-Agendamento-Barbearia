@@ -20,7 +20,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ) {
     const { token, refreshToken, user } =
       await this.authService.login(loginDto);
@@ -33,7 +33,7 @@ export class AuthController {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
     });
 
@@ -42,7 +42,7 @@ export class AuthController {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       });
     }
