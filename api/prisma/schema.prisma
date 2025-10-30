@@ -17,6 +17,9 @@ model Usuario {
   fotoPerfil     String?
   role           Role
 
+  empresaId Int
+  empresa   Empresa @relation(fields: [empresaId], references: [id])
+
   agendamentos Agendamento[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
@@ -37,6 +40,7 @@ model Empresa {
   barbeiros    Barbeiro[]
   servicos     Servico[]
   agendamentos Agendamento[]
+  usuarios     Usuario[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

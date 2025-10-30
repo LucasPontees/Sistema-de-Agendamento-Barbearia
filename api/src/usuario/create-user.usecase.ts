@@ -11,11 +11,11 @@ export class CreateUserUseCase {
     @Inject(TYPES.UserRepository)
     private readonly iUserRepository: IUserRepository,
     @Inject(TYPES.Hasher)
-    private readonly hasher: IHasher,
+    private readonly hasher: IHasher
   ) {}
 
   async execute(request: CreateUsuarioDto): Promise<User> {
-    const { senha, email, ...rest } = request;
+    const { senha, email, empresaId, ...rest } = request;
 
     const userExists = await this.iUserRepository.findByEmail(email);
 
@@ -29,6 +29,7 @@ export class CreateUserUseCase {
       ...rest,
       senha: senhaHash,
       email: email,
+      empresaId,
     });
 
     return user;
