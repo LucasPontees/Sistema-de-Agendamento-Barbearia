@@ -19,6 +19,7 @@ export class PrismaUserRepository implements IUserRepository {
         telefone: data.telefone,
         fotoPerfil: data.fotoPerfil,
         dataNascimento: data.dataNascimento,
+        empresaId: data.empresaId,
       },
     });
 
@@ -30,7 +31,7 @@ export class PrismaUserRepository implements IUserRepository {
       usuario.senha,
       usuario.telefone,
       usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined,
+      usuario.dataNascimento || undefined
     );
   }
 
@@ -46,7 +47,7 @@ export class PrismaUserRepository implements IUserRepository {
       usuario.senha,
       usuario.telefone,
       usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined,
+      usuario.dataNascimento || undefined
     );
   }
 
@@ -63,7 +64,7 @@ export class PrismaUserRepository implements IUserRepository {
       usuario.senha,
       usuario.telefone,
       usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined,
+      usuario.dataNascimento || undefined
     );
   }
 }

@@ -4,6 +4,7 @@ import { IHasher } from "./hash/hasher";
 import { TYPES } from "../types";
 import { User } from "./entities/user.entity";
 import { CreateUsuarioDto } from "./dto/create-usuario.dto";
+import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
 
 @Injectable()
 export class CreateUserUseCase {
@@ -12,10 +13,18 @@ export class CreateUserUseCase {
     private readonly iUserRepository: IUserRepository,
     @Inject(TYPES.Hasher)
     private readonly hasher: IHasher,
+    @Inject(TYPES.EmpresaRepository)
+    private readonly iEmpresaRepository: IEmpresaRepository
   ) {}
 
   async execute(request: CreateUsuarioDto): Promise<User> {
-    const { senha, email, ...rest } = request;
+    const { senha, email, empresaId, ...rest } = request;
+
+    const companyExists = await this.iEmpresaRepository.findById(empresaId);
+
+    if (!companyExists) {
+      throw new ConflictException(`Company with ID ${empresaId} not found`);
+    }
 
     const userExists = await this.iUserRepository.findByEmail(email);
 
@@ -29,6 +38,7 @@ export class CreateUserUseCase {
       ...rest,
       senha: senhaHash,
       email: email,
+      empresaId,
     });
 
     return user;
