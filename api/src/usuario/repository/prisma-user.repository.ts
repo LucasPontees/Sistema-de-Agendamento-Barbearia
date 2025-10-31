@@ -36,7 +36,20 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const usuario = await this.prisma.usuario.findFirst({ where: { email } });
+    const usuario = await this.prisma.usuario.findFirst({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        nome: true,
+        senha: true,
+        telefone: true,
+        fotoPerfil: true,
+        dataNascimento: true,
+        empresaId: true,
+      },
+    });
     if (!usuario) return null;
 
     return new User(
@@ -47,7 +60,8 @@ export class PrismaUserRepository implements IUserRepository {
       usuario.senha,
       usuario.telefone,
       usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined
+      usuario.dataNascimento || undefined,
+      usuario.empresaId || undefined
     );
   }
 

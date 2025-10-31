@@ -10,5 +10,6 @@ export class User {
     public readonly telefone?: string,
     public readonly fotoPerfil?: string,
     public readonly dataNascimento?: Date,
+    public readonly empresaId?: number
   ) {}
 }
