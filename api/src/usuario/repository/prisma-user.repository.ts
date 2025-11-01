@@ -80,7 +80,8 @@ export class PrismaUserRepository implements IUserRepository {
       usuario.senha,
       usuario.telefone,
       usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined
+      usuario.dataNascimento || undefined,
+      usuario.empresaId || undefined
     );
   }
 }
