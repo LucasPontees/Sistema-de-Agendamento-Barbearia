@@ -1,6 +1,9 @@
-import { UserRole } from "@/usuario/enum/role";
+import { CreateUsuarioDto } from "@/usuario/dto/create-usuario.dto";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsString, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import { IsString, MinLength, ValidateNested } from "class-validator";
+
+export class createUserLinkedToCompany extends CreateUsuarioDto {}
 
 export class CreateEmpresaDto {
   @IsString()
@@ -32,13 +35,6 @@ export class CreateEmpresaDto {
   @MinLength(3)
   email: string;
 
-  @ApiProperty({
-    description: "Cargo do usuário",
-    example: "USUARIO",
-  })
-  @IsEnum(UserRole)
-  role: UserRole;
-
   @IsString()
   @ApiProperty({
     description: "Endereço da empresa",
@@ -68,4 +64,12 @@ export class CreateEmpresaDto {
   })
   @MinLength(3)
   horariosFuncionamento: string;
+
+  @ApiProperty({
+    type: CreateUsuarioDto,
+    description: "Dados do usuário administrador",
+  })
+  @Type(() => createUserLinkedToCompany)
+  @ValidateNested()
+  usuario: createUserLinkedToCompany;
 }

@@ -9,7 +9,7 @@ import { UserRole } from "../enum/role";
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateUsuarioDto): Promise<User> {
+  async create(data: CreateUsuarioDto, empresaId: number): Promise<User> {
     const usuario = await this.prisma.usuario.create({
       data: {
         email: data.email,
@@ -19,7 +19,7 @@ export class PrismaUserRepository implements IUserRepository {
         telefone: data.telefone,
         fotoPerfil: data.fotoPerfil,
         dataNascimento: data.dataNascimento,
-        empresaId: data.empresaId,
+        empresaId: empresaId,
       },
     });
 

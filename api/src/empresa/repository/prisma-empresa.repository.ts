@@ -4,6 +4,7 @@ import { IEmpresaRepository } from "./empresa.repository";
 import { CreateEmpresaDto } from "../dto/create-empresa.dto";
 import { UserRole } from "@/usuario/enum/role";
 import { Empresa } from "../entities/empresa.entity";
+
 @Injectable()
 export class PrismaEmpresaRepository implements IEmpresaRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -16,23 +17,21 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
         endereco: data.endereco,
         telefone: data.telefone,
         nomeFantasia: data.nomeFantasia,
-        role: data.role,
-        descricao: data.descricao,
+        descricao: data.descricao || null,
         logo: data.logo,
         horariosFuncionamento: data.horariosFuncionamento,
+        usuarios: {
+          create: {
+            nome: data.usuario.nome,
+            email: data.usuario.email,
+            senha: data.usuario.senha,
+            role: UserRole.EMPRESA,
+            telefone: data.usuario.telefone,
+          },
+        },
       },
     });
-    return new Empresa(
-      empresa.id,
-      empresa.nomeFantasia,
-      empresa.cnpj,
-      empresa.telefone,
-      empresa.email,
-      empresa.endereco,
-      empresa.role as UserRole,
-      empresa.descricao || undefined,
-      empresa.logo || undefined,
-    );
+    return empresa;
   }
 
   async findByCnpj(cnpj: string): Promise<Empresa | null> {
@@ -46,9 +45,8 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
       empresa.telefone,
       empresa.email,
       empresa.endereco,
-      empresa.role as UserRole,
-      empresa.descricao || undefined,
-      empresa.logo || undefined,
+      empresa.descricao || null,
+      empresa.logo || undefined
     );
   }
   async findById(id: number): Promise<Empresa | null> {
@@ -62,9 +60,8 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
       empresa.telefone,
       empresa.email,
       empresa.endereco,
-      empresa.role as UserRole,
-      empresa.descricao || undefined,
-      empresa.logo || undefined,
+      empresa.descricao || null,
+      empresa.logo || null
     );
   }
 
@@ -79,9 +76,8 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
         empresa.telefone,
         empresa.email,
         empresa.endereco,
-        empresa.role as UserRole,
-        empresa.descricao || undefined,
-        empresa.logo || undefined,
+        empresa.descricao || null,
+        empresa.logo || null
       );
     });
   }
