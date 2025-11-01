@@ -1,11 +1,10 @@
-import React from 'react';
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCog, Mail, Calendar, History } from 'lucide-react';
+import { UserCog, Mail, Calendar, History } from "lucide-react";
 
-const Profile = () => {
-
+export default function Profile() {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="container mx-auto px-4 py-8">
@@ -48,14 +47,18 @@ const Profile = () => {
                   <Calendar className="h-8 w-8 text-muted-foreground" />
                   <div>
                     <p className="font-medium">Corte de Cabelo</p>
-                    <p className="text-sm text-muted-foreground">15/04/2025 - 14:00</p>
+                    <p className="text-sm text-muted-foreground">
+                      15/04/2025 - 14:00
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <Calendar className="h-8 w-8 text-muted-foreground" />
                   <div>
                     <p className="font-medium">Barba</p>
-                    <p className="text-sm text-muted-foreground">10/04/2025 - 15:30</p>
+                    <p className="text-sm text-muted-foreground">
+                      10/04/2025 - 15:30
+                    </p>
                   </div>
                 </div>
               </div>
@@ -65,6 +68,4 @@ const Profile = () => {
       </div>
     </div>
   );
-};
-
-export default Profile;
+}

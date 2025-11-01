@@ -30,6 +30,8 @@ export function middleware(request: NextRequest) {
     console.log("token nao encontrado");
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
+  } else {
+    console.log("token encontrado");
   }
 
   return response;
