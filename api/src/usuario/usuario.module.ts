@@ -7,6 +7,7 @@ import { TYPES } from "../types";
 import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
 @Module({
   controllers: [UsuarioController],
+  exports: [CreateUserUseCase],
   providers: [
     CreateUserUseCase,
     {

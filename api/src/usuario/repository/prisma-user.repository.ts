@@ -9,7 +9,7 @@ import { UserRole } from "../enum/role";
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateUsuarioDto): Promise<User> {
+  async create(data: CreateUsuarioDto, empresaId: number): Promise<User> {
     const usuario = await this.prisma.usuario.create({
       data: {
         email: data.email,
@@ -19,7 +19,7 @@ export class PrismaUserRepository implements IUserRepository {
         telefone: data.telefone,
         fotoPerfil: data.fotoPerfil,
         dataNascimento: data.dataNascimento,
-        empresaId: data.empresaId,
+        empresaId: empresaId,
       },
     });
 
@@ -36,7 +36,20 @@ export class PrismaUserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const usuario = await this.prisma.usuario.findFirst({ where: { email } });
+    const usuario = await this.prisma.usuario.findFirst({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        nome: true,
+        senha: true,
+        telefone: true,
+        fotoPerfil: true,
+        dataNascimento: true,
+        empresaId: true,
+      },
+    });
     if (!usuario) return null;
 
     return new User(
@@ -47,7 +60,8 @@ export class PrismaUserRepository implements IUserRepository {
       usuario.senha,
       usuario.telefone,
       usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined
+      usuario.dataNascimento || undefined,
+      usuario.empresaId || undefined
     );
   }
 

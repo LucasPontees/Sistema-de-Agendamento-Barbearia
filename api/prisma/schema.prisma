@@ -35,7 +35,6 @@ model Empresa {
   descricao             String?
   logo                  String?
   horariosFuncionamento Json?
-  role                  Role
 
   barbeiros    Barbeiro[]
   servicos     Servico[]

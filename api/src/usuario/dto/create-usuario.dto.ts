@@ -60,11 +60,4 @@ export class CreateUsuarioDto {
   })
   @IsString()
   fotoPerfil: string;
-
-  @ApiProperty({
-    description: "ID da empresa à qual o usuário pertence",
-    example: 1,
-  })
-  @IsInt()
-  empresaId: number;
 }

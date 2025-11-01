@@ -1,4 +1,3 @@
-import { UserRole } from "@/usuario/enum/role";
 export class Empresa {
   constructor(
     public readonly id: number,
@@ -7,8 +6,8 @@ export class Empresa {
     public readonly telefone: string,
     public readonly email: string,
     public readonly endereco: string,
-    public readonly role: UserRole,
-    public readonly descricao?: string,
-    public readonly logo?: string,
+    public readonly descricao: string | null,
+    public readonly logo?: string | null,
+    public readonly usarios?: any[]
   ) {}
 }

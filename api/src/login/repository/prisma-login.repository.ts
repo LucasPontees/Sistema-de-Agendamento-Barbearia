@@ -1,6 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ILogin, LoginData, LoginResponse } from "./login-repository";
-import { PrismaService } from "../../../prisma/prisma.service";
 import { PrismaUserRepository } from "../../usuario/repository/prisma-user.repository";
 import { TYPES } from "@/types";
 import { ConfigService } from "@nestjs/config";
@@ -11,8 +10,7 @@ export class PrismaLoginRepository implements ILogin {
   constructor(
     @Inject(TYPES.UserRepository)
     private readonly userRepository: PrismaUserRepository,
-    private readonly prisma: PrismaService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {}
 
   async login(data: LoginData): Promise<LoginResponse> {
@@ -25,7 +23,7 @@ export class PrismaLoginRepository implements ILogin {
     const secret = this.configService.get<string>("JWT_SECRET");
     if (!secret) {
       throw new UnauthorizedException(
-        "Configuração inválida: JWT_SECRET ausente",
+        "Configuração inválida: JWT_SECRET ausente"
       );
     }
 
@@ -34,9 +32,11 @@ export class PrismaLoginRepository implements ILogin {
         sub: user.id, // subject do token
         email: user.email,
         name: user.nome,
+        empresaId: user.empresaId,
+        role: user.role,
       },
       secret,
-      { expiresIn: "1d" }, // expira em 1 dia
+      { expiresIn: "1d" } // expira em 1 dia
     );
 
     return {

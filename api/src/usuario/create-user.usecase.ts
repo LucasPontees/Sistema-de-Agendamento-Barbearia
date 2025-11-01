@@ -17,8 +17,9 @@ export class CreateUserUseCase {
     private readonly iEmpresaRepository: IEmpresaRepository
   ) {}
 
-  async execute(request: CreateUsuarioDto): Promise<User> {
-    const { senha, email, empresaId, ...rest } = request;
+  async execute(request: CreateUsuarioDto, empresaId: number) {
+    console.log("Teste: ", empresaId);
+    const { senha, email, ...rest } = request;
 
     const companyExists = await this.iEmpresaRepository.findById(empresaId);
 
@@ -34,12 +35,14 @@ export class CreateUserUseCase {
 
     const senhaHash = await this.hasher.hash(senha);
 
-    const user = this.iUserRepository.create({
-      ...rest,
-      senha: senhaHash,
-      email: email,
-      empresaId,
-    });
+    const user = this.iUserRepository.create(
+      {
+        ...rest,
+        senha: senhaHash,
+        email: email,
+      },
+      empresaId
+    );
 
     return user;
   }
