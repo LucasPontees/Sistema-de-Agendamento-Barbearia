@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
   if (unprotectedRoutes.includes(pathname)) {
     return response;
   }
-  const token = request.cookies.get("token");
+  const token = request.cookies.get("access_token");
 
   if (!token) {
     const loginUrl = new URL("/login", request.url);
