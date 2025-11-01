@@ -11,7 +11,7 @@ export class UsuarioController {
   constructor(private readonly createUserUseCase: CreateUserUseCase) {}
 
   @Post()
-  // @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard("jwt"))
   async create(@Req() req: RequestWithUser, @Body() data: CreateUsuarioDto) {
     const empresaId = req.user.empresaId;
     console.log("Empresa ID do usuário autenticado:", empresaId);

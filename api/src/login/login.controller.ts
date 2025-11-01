@@ -30,7 +30,7 @@ export class AuthController {
     }
 
     // Armazena o token em cookie httpOnly
-    res.cookie("token", token, {
+    res.cookie("access_token", token, {
       httpOnly: true,
       path: "/",
       secure: process.env.NODE_ENV === "production",
