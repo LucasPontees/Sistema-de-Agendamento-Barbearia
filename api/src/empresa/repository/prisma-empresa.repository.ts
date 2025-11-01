@@ -6,6 +6,7 @@ import { UserRole } from "@/usuario/enum/role";
 import { Empresa } from "../entities/empresa.entity";
 import { IHasher } from "@/usuario/hash/hasher";
 import { TYPES } from "@/types";
+import { User } from "@/usuario/entities/user.entity";
 
 @Injectable()
 export class PrismaEmpresaRepository implements IEmpresaRepository {
@@ -15,7 +16,7 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
     private readonly hasher: IHasher
   ) {}
 
-  async create(data: Omit<CreateEmpresaDto, "usuario">): Promise<Empresa> {
+  async create(data: CreateEmpresaDto): Promise<Empresa> {
     const empresa = await this.prisma.empresa.create({
       data: {
         email: data.email,
@@ -26,6 +27,17 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
         descricao: data.descricao || null,
         logo: data.logo,
         horariosFuncionamento: data.horariosFuncionamento,
+        usuarios: {
+          create: {
+            email: data.usuario.email,
+            nome: data.usuario.nome,
+            senha: await this.hasher.hash(data.usuario.senha),
+            role: UserRole.EMPRESA,
+            telefone: data.usuario.telefone,
+            fotoPerfil: data.usuario.fotoPerfil,
+            dataNascimento: data.usuario.dataNascimento || null,
+          },
+        },
       },
     });
     return new Empresa(
