@@ -1,15 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { IEmpresaRepository } from "./empresa.repository";
 import { CreateEmpresaDto } from "../dto/create-empresa.dto";
 import { UserRole } from "@/usuario/enum/role";
 import { Empresa } from "../entities/empresa.entity";
+import { IHasher } from "@/usuario/hash/hasher";
+import { TYPES } from "@/types";
 
 @Injectable()
 export class PrismaEmpresaRepository implements IEmpresaRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(TYPES.Hasher)
+    private readonly hasher: IHasher
+  ) {}
 
   async create(data: CreateEmpresaDto): Promise<Empresa> {
+    const senhaHash = await this.hasher.hash(data.usuario.senha);
+
     const empresa = await this.prisma.empresa.create({
       data: {
         email: data.email,
@@ -24,7 +32,7 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
           create: {
             nome: data.usuario.nome,
             email: data.usuario.email,
-            senha: data.usuario.senha,
+            senha: senhaHash,
             role: UserRole.EMPRESA,
             telefone: data.usuario.telefone,
           },

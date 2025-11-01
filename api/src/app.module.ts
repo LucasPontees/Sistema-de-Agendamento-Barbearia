@@ -5,8 +5,8 @@ import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "../prisma/prisma.module";
 import { UsuarioModule } from "./usuario/usuario.module";
 import { EmpresaModule } from "./empresa/empresa.module";
-import { BarbeiroModule } from "./barber/barber.module";
-import { ServicoBarbeariaModule } from "./servico-barbearia/servico-barbearia.module";
+// import { BarbeiroModule } from "./barber/barber.module";
+// import { ServicoBarbeariaModule } from "./servico-barbearia/servico-barbearia.module";
 import { AgendamentoModule } from "./agendamento/agendamento.module";
 import { LoginModule } from "./login/login.module";
 
@@ -21,11 +21,11 @@ import { LoginModule } from "./login/login.module";
     }),
     PrismaModule,
     UsuarioModule,
-    EmpresaModule,
-    BarbeiroModule,
-    ServicoBarbeariaModule,
-    AgendamentoModule,
+    // BarbeiroModule,
+    // ServicoBarbeariaModule,
+    // AgendamentoModule,
     LoginModule,
+    EmpresaModule,
   ],
 })
 export class AppModule {}
