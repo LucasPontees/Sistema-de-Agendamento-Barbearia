@@ -15,9 +15,7 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
     private readonly hasher: IHasher
   ) {}
 
-  async create(data: CreateEmpresaDto): Promise<Empresa> {
-    const senhaHash = await this.hasher.hash(data.usuario.senha);
-
+  async create(data: Omit<CreateEmpresaDto, "usuario">): Promise<Empresa> {
     const empresa = await this.prisma.empresa.create({
       data: {
         email: data.email,
@@ -28,18 +26,18 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
         descricao: data.descricao || null,
         logo: data.logo,
         horariosFuncionamento: data.horariosFuncionamento,
-        usuarios: {
-          create: {
-            nome: data.usuario.nome,
-            email: data.usuario.email,
-            senha: senhaHash,
-            role: UserRole.EMPRESA,
-            telefone: data.usuario.telefone,
-          },
-        },
       },
     });
-    return empresa;
+    return new Empresa(
+      empresa.id,
+      empresa.nomeFantasia,
+      empresa.cnpj,
+      empresa.telefone,
+      empresa.email,
+      empresa.endereco,
+      empresa.descricao || null,
+      empresa.logo || undefined
+    );
   }
 
   async findByCnpj(cnpj: string): Promise<Empresa | null> {

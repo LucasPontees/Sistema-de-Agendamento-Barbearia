@@ -7,6 +7,7 @@ import { ListarTodasEmpresasUseCase } from "./listar-todas-empresas.usecase";
 import { ListarEmpresaIdUseCase } from "./listar_empresa-id.usecase";
 import { PrismaUserRepository } from "@/usuario/repository/prisma-user.repository";
 import { HashArgon2 } from "@/usuario/hash/hash-argon2";
+import { CreateUserUseCase } from "@/usuario/create-user.usecase";
 
 @Module({
   controllers: [EmpresaController],
@@ -14,6 +15,7 @@ import { HashArgon2 } from "@/usuario/hash/hash-argon2";
     ListarEmpresaIdUseCase,
     ListarTodasEmpresasUseCase,
     CreateEmpresaUseCase,
+    CreateUserUseCase,
     {
       provide: TYPES.EmpresaRepository,
       useClass: PrismaEmpresaRepository,
