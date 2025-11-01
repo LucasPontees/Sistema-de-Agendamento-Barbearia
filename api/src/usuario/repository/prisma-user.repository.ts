@@ -4,6 +4,7 @@ import { IUserRepository } from "./user.repository";
 import { CreateUsuarioDto } from "../dto/create-usuario.dto";
 import { User } from "../entities/user.entity";
 import { UserRole } from "../enum/role";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
@@ -20,7 +21,7 @@ export class PrismaUserRepository implements IUserRepository {
         fotoPerfil: data.fotoPerfil,
         dataNascimento: data.dataNascimento,
         empresaId: empresaId,
-      },
+      } as Prisma.UsuarioUncheckedCreateInput,
     });
 
     return new User(
