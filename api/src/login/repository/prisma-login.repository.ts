@@ -33,6 +33,7 @@ export class PrismaLoginRepository implements ILogin {
         email: user.email,
         name: user.nome,
         empresaId: user.empresaId,
+        role: user.role,
       },
       secret,
       { expiresIn: "1d" } // expira em 1 dia
