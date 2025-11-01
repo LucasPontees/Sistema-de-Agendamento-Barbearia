@@ -27,6 +27,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("access_token");
 
   if (!token) {
+    console.log("token nao encontrado");
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
