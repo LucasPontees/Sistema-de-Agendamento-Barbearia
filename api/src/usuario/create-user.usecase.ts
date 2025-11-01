@@ -18,7 +18,6 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(request: CreateUsuarioDto, empresaId: number) {
-    console.log("Teste: ", empresaId);
     const { senha, email, ...rest } = request;
 
     const companyExists = await this.iEmpresaRepository.findById(empresaId);

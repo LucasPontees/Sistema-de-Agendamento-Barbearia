@@ -4,40 +4,23 @@ import { IUserRepository } from "./user.repository";
 import { CreateUsuarioDto } from "../dto/create-usuario.dto";
 import { User } from "../entities/user.entity";
 import { UserRole } from "../enum/role";
-import { Prisma } from "@prisma/client";
+import { Usuario } from "@prisma/client";
 
 @Injectable()
 export class PrismaUserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateUsuarioDto, empresaId: number): Promise<User> {
-    const usuario = await this.prisma.usuario.create({
+  async create(data: CreateUsuarioDto, empresaId: number): Promise<Usuario> {
+    return this.prisma.usuario.create({
       data: {
-        email: data.email,
-        senha: data.senha,
-        nome: data.nome,
-        role: data.role,
-        telefone: data.telefone,
-        fotoPerfil: data.fotoPerfil,
-        dataNascimento: data.dataNascimento,
-        empresaId: empresaId,
-      } as Prisma.UsuarioUncheckedCreateInput,
+        ...data,
+        role: "USUARIO",
+        empresaId,
+      },
     });
-
-    return new User(
-      usuario.id,
-      usuario.email,
-      usuario.role as UserRole,
-      usuario.nome,
-      usuario.senha,
-      usuario.telefone,
-      usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined,
-      usuario.empresaId || undefined
-    );
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<Usuario | null> {
     const usuario = await this.prisma.usuario.findFirst({
       where: { email },
       select: {
@@ -50,38 +33,20 @@ export class PrismaUserRepository implements IUserRepository {
         fotoPerfil: true,
         dataNascimento: true,
         empresaId: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
     if (!usuario) return null;
 
-    return new User(
-      usuario.id,
-      usuario.email,
-      usuario.role as UserRole,
-      usuario.nome,
-      usuario.senha,
-      usuario.telefone,
-      usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined,
-      usuario.empresaId || undefined
-    );
+    return usuario;
   }
 
-  async findUserById(id: number): Promise<User | null> {
+  async findUserById(id: number): Promise<Usuario | null> {
     const usuario = await this.prisma.usuario.findUnique({ where: { id } });
 
     if (!usuario) return null;
 
-    return new User(
-      usuario.id,
-      usuario.email,
-      usuario.role as UserRole,
-      usuario.nome,
-      usuario.senha,
-      usuario.telefone,
-      usuario.fotoPerfil || undefined,
-      usuario.dataNascimento || undefined,
-      usuario.empresaId || undefined
-    );
+    return usuario;
   }
 }
