@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -13,16 +13,42 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import NextNavbar from "@/components/NextNavbar";
 import NextFooter from "@/components/NextFooter";
-import { api } from "@/http/api"; // Adjust the import based on your API service setup
+import { api } from "@/http/api";
 
 const Login: React.FC = () => {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  const [statusList, setStatusList] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [loadingStatus, setLoadingStatus] = useState(true);
   const router = useRouter();
+
+  // 🔹 Buscar lista de status na API
+  useEffect(() => {
+    async function fetchStatus() {
+      try {
+        const response = await api.get("users/status").json<string[]>();
+        setStatusList(response);
+      } catch (error) {
+        console.error("Erro ao carregar status:", error);
+      } finally {
+        setLoadingStatus(false);
+      }
+    }
+    fetchStatus();
+  }, []);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -60,6 +86,7 @@ const Login: React.FC = () => {
             <CardContent>
               <form onSubmit={handleSubmit}>
                 <div className="space-y-4">
+                  {/* Email */}
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -74,6 +101,7 @@ const Login: React.FC = () => {
                     />
                   </div>
 
+                  {/* Senha */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password">Senha</Label>
@@ -95,10 +123,39 @@ const Login: React.FC = () => {
                     />
                   </div>
 
+                  {/* Botão de login */}
                   <Button
                     type="submit"
                     className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black"
-                  ></Button>
+                  >
+                    Entrar
+                  </Button>
+
+                  {/* Dropdown de status */}
+                  <div className="space-y-2">
+                    <Label>Status</Label>
+                    {loadingStatus ? (
+                      <div className="w-full p-2 text-center border rounded text-gray-500">
+                        Carregando status...
+                      </div>
+                    ) : (
+                      <Select
+                        value={selectedStatus}
+                        onValueChange={(value) => setSelectedStatus(value)}
+                      >
+                        <SelectTrigger className="w-full border border-gray-300 rounded-lg bg-white">
+                          <SelectValue placeholder="Selecione um status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {statusList.map((status) => (
+                            <SelectItem key={status} value={status}>
+                              {status.charAt(0) + status.slice(1).toLowerCase()}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  </div>
                 </div>
               </form>
             </CardContent>

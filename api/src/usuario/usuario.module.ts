@@ -5,11 +5,13 @@ import { CreateUserUseCase } from "./create-user.usecase";
 import { HashArgon2 } from "./hash/hash-argon2";
 import { TYPES } from "../types";
 import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.repository";
+import { StatusAgendamentoService } from "./agendamento.service";
 @Module({
   controllers: [UsuarioController],
   exports: [CreateUserUseCase],
   providers: [
     CreateUserUseCase,
+    StatusAgendamentoService,
     {
       provide: TYPES.UserRepository,
       useClass: PrismaUserRepository,
