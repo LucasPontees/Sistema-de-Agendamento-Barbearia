@@ -63,7 +63,9 @@ const Login: React.FC = () => {
         json: { email: form.email, password: form.password },
       });
 
-      router.push("/profile");
+      setTimeout(() => {
+        router.push("/profile");
+      }, 50);
     } catch (error) {
       console.error("Login failed:", error);
     }
