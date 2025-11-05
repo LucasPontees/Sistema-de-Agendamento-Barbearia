@@ -34,10 +34,10 @@ export class AuthController {
       httpOnly: true,
       path: "/",
       domain:
-        process.env.NODE_ENV === "production"
+        process.env.APP_ENV === "production"
           ? process.env.DOMAIN_URL
           : undefined,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.APP_ENV === "production",
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
     });
@@ -48,10 +48,10 @@ export class AuthController {
         httpOnly: true,
         path: "/",
         domain:
-          process.env.NODE_ENV === "production"
+          process.env.APP_ENV === "production"
             ? process.env.DOMAIN_URL
             : undefined,
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.APP_ENV === "production",
         sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       });
