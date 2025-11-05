@@ -37,7 +37,7 @@ export class AuthController {
           ? process.env.DOMAIN_URL
           : undefined,
       secure: process.env.APP_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24,
     });
 
@@ -50,7 +50,7 @@ export class AuthController {
           ? process.env.DOMAIN_URL
           : undefined,
       secure: process.env.APP_ENV === "production",
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
     });
 
@@ -64,7 +64,7 @@ export class AuthController {
             ? process.env.DOMAIN_URL
             : undefined,
         secure: process.env.APP_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       });
     }
