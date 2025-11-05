@@ -59,20 +59,12 @@ const Login: React.FC = () => {
     if (!form.email || !form.password) return;
 
     try {
-      const response = await api.post("auth/login", {
+      await api.post("auth/login", {
         json: { email: form.email, password: form.password },
       });
 
-      const data = await response.json();
-      console.log("Login successful:", data);
-
-      const { headers, status } = await api.get("empresa");
-      console.log("headers:", headers);
-      console.log("status:", status);
-
       setTimeout(() => {
-        console.log("Redirecionando para /profile");
-        // router.push("/profile");
+        router.push("/profile");
       }, 50);
     } catch (error) {
       console.error("Login failed:", error);

@@ -33,7 +33,11 @@ export class AuthController {
     res.cookie("access_token", token, {
       httpOnly: true,
       path: "/",
-      secure: true,
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.DOMAIN_URL
+          : undefined,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
     });
@@ -41,9 +45,13 @@ export class AuthController {
     // Opcional: refresh token
     if (refreshToken) {
       res.cookie("refreshToken", refreshToken, {
-        path: "/",
         httpOnly: true,
-        secure: true,
+        path: "/",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? process.env.DOMAIN_URL
+            : undefined,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       });
