@@ -66,9 +66,13 @@ const Login: React.FC = () => {
       const data = await response.json();
       console.log("Login successful:", data);
 
+      const { headers, status } = await api.get("empresa");
+      console.log("headers:", headers);
+      console.log("status:", status);
+
       setTimeout(() => {
         console.log("Redirecionando para /profile");
-        router.push("/profile");
+        // router.push("/profile");
       }, 50);
     } catch (error) {
       console.error("Login failed:", error);
