@@ -29,28 +29,12 @@ export class AuthController {
       throw new BadRequestException("Credenciais inválidas");
     }
 
-    console.log({
-      httpOnly: true,
-      path: "/",
-      domain:
-        process.env.APP_ENV === "production"
-          ? process.env.DOMAIN_URL
-          : undefined,
-      secure: process.env.APP_ENV === "production",
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24,
-    });
-
     // Armazena o token em cookie httpOnly
     res.cookie("access_token", token, {
       httpOnly: true,
-      path: "/",
-      domain:
-        process.env.APP_ENV === "production"
-          ? process.env.DOMAIN_URL
-          : undefined,
       secure: process.env.APP_ENV === "production",
-      sameSite: "none",
+      sameSite: "lax",
+      path: "/",
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
     });
 
@@ -58,13 +42,9 @@ export class AuthController {
     if (refreshToken) {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        path: "/",
-        domain:
-          process.env.APP_ENV === "production"
-            ? process.env.DOMAIN_URL
-            : undefined,
         secure: process.env.APP_ENV === "production",
-        sameSite: "none",
+        path: "/",
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       });
     }
