@@ -29,27 +29,15 @@ export class AuthController {
       throw new BadRequestException("Credenciais inválidas");
     }
 
-    console.log({
-      httpOnly: true,
-      path: "/",
-      domain:
-        process.env.APP_ENV === "production"
-          ? process.env.DOMAIN_URL
-          : undefined,
-      secure: process.env.APP_ENV === "production",
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24,
-    });
+    const cookieDomain = this.resolveCookieDomain();
+    const isProduction = process.env.APP_ENV === "production";
 
     // Armazena o token em cookie httpOnly
     res.cookie("access_token", token, {
       httpOnly: true,
       path: "/",
-      domain:
-        process.env.APP_ENV === "production"
-          ? process.env.DOMAIN_URL
-          : undefined,
-      secure: process.env.APP_ENV === "production",
+      domain: cookieDomain,
+      secure: isProduction,
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
     });
@@ -59,16 +47,35 @@ export class AuthController {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         path: "/",
-        domain:
-          process.env.APP_ENV === "production"
-            ? process.env.DOMAIN_URL
-            : undefined,
-        secure: process.env.APP_ENV === "production",
+        domain: cookieDomain,
+        secure: isProduction,
         sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       });
     }
 
     return { user };
+  }
+
+  private resolveCookieDomain(): string | undefined {
+    if (process.env.APP_ENV !== "production") {
+      return undefined;
+    }
+
+    const rawDomain = process.env.DOMAIN_URL?.trim();
+    if (!rawDomain) {
+      return undefined;
+    }
+
+    const sanitized = rawDomain
+      .replace(/^(https?:\/\/)/i, "")
+      .split("/")[0]
+      .trim();
+
+    if (!sanitized || sanitized === "localhost") {
+      return undefined;
+    }
+
+    return sanitized;
   }
 }
