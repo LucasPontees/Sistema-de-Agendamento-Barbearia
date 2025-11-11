@@ -32,8 +32,8 @@ export class AuthController {
     // Armazena o token em cookie httpOnly
     res.cookie("access_token", token, {
       httpOnly: true,
-      secure: process.env.APP_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       path: "/",
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
     });
@@ -42,9 +42,9 @@ export class AuthController {
     if (refreshToken) {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.APP_ENV === "production",
+        secure: true,
         path: "/",
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
       });
     }
