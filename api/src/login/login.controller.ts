@@ -25,7 +25,7 @@ export class AuthController {
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
-  ): Promise<{ user: { id: string; name: string; email: string } }> {
+  ): Promise<{ user: { id: number; name: string; email: string } }> {
     const { token, refreshToken, user } =
       await this.authService.login(loginDto);
 
