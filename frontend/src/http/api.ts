@@ -2,7 +2,7 @@ import ky from "ky";
 
 // Criando instância
 export const api = ky.create({
-  prefixUrl: "/api",
+  prefixUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
