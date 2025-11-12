@@ -1,9 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import type { JwtFromRequestFunction } from "passport-jwt";
 import { ConfigService } from "@nestjs/config";
-import { Request } from "express";
 
 export interface JwtPayload {
   sub: string;
@@ -15,14 +13,6 @@ export interface JwtPayload {
   empresaId: number;
 }
 
-function extractJwtFromCookie(
-  req: Request & { cookies?: Record<string, string> }
-): string | null {
-  return typeof req?.cookies?.access_token === "string"
-    ? req.cookies.access_token
-    : null;
-}
-
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(configService: ConfigService) {
@@ -31,13 +21,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new Error("JWT_SECRET is not defined in environment variables");
     }
 
-    const jwtExtractor: JwtFromRequestFunction = ExtractJwt.fromExtractors([
-      extractJwtFromCookie,
-      ExtractJwt.fromAuthHeaderAsBearerToken(),
-    ]);
-
     super({
-      jwtFromRequest: jwtExtractor,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: secret,
     });

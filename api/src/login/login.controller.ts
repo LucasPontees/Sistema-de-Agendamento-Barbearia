@@ -1,4 +1,3 @@
-// src/auth/auth.controller.ts
 import {
   Controller,
   Post,
@@ -22,33 +21,12 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response
   ) {
-    const { token, refreshToken, user } =
-      await this.authService.login(loginDto);
+    const { token, user } = await this.authService.login(loginDto);
 
     if (!token) {
       throw new BadRequestException("Credenciais inválidas");
     }
 
-    // Armazena o token em cookie httpOnly
-    res.cookie("access_token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-      maxAge: 1000 * 60 * 60 * 24, // 1 dia
-    });
-
-    // Opcional: refresh token
-    if (refreshToken) {
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        path: "/",
-        sameSite: "none",
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
-      });
-    }
-
-    return { user };
+    return { token, user };
   }
 }

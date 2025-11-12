@@ -23,6 +23,7 @@ import {
 import NextNavbar from "@/components/NextNavbar";
 import NextFooter from "@/components/NextFooter";
 import { api } from "@/http/api";
+import { handleLogin } from "./action";
 
 const Login: React.FC = () => {
   const [form, setForm] = useState({
@@ -54,22 +55,34 @@ const Login: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!form.email || !form.password) return;
+  // async function handleLogin(formdata: FormData) {
+  //   "use server";
+  //   const form = {
+  //     email: formdata.get("email")?.toString() || "",
+  //     password: formdata.get("password")?.toString() || "",
+  //   };
+  //   if (!form.email || !form.password) return;
 
-    try {
-      await api.post("auth/login", {
-        json: { email: form.email, password: form.password },
-      });
+  //   try {
+  //     const response = await api.post("auth/login", {
+  //       json: { email: form.email, password: form.password },
+  //     });
 
-      setTimeout(() => {
-        router.push("/profile");
-      }, 50);
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
-  }
+  //     const { token } = await response.json();
+
+  //     const cookiesStore = await cookies();
+  //     cookiesStore.set("access_token", token, {
+  //       path: "/",
+  //       maxAge: 60 * 60 * 24,
+  //     });
+
+  //     // setTimeout(() => {
+  //     //   router.push("/profile");
+  //     // }, 50);
+  //   } catch (error) {
+  //     console.error("Login failed:", error);
+  //   }
+  // }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -86,7 +99,7 @@ const Login: React.FC = () => {
             </CardHeader>
 
             <CardContent>
-              <form onSubmit={handleSubmit}>
+              <form action={handleLogin}>
                 <div className="space-y-4">
                   {/* Email */}
                   <div className="space-y-2">
