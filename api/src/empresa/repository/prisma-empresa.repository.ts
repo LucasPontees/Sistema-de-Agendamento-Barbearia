@@ -6,14 +6,13 @@ import { UserRole } from "@/usuario/enum/role";
 import { Empresa } from "../entities/empresa.entity";
 import { IHasher } from "@/usuario/hash/hasher";
 import { TYPES } from "@/types";
-import { User } from "@/usuario/entities/user.entity";
 
 @Injectable()
 export class PrismaEmpresaRepository implements IEmpresaRepository {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(TYPES.Hasher)
-    private readonly hasher: IHasher
+    private readonly hasher: IHasher,
   ) {}
 
   async create(data: CreateEmpresaDto): Promise<Empresa> {
@@ -48,7 +47,7 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
       empresa.email,
       empresa.endereco,
       empresa.descricao || null,
-      empresa.logo || undefined
+      empresa.logo || undefined,
     );
   }
 
@@ -64,7 +63,7 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
       empresa.email,
       empresa.endereco,
       empresa.descricao || null,
-      empresa.logo || undefined
+      empresa.logo || undefined,
     );
   }
   async findById(id: number): Promise<Empresa | null> {
@@ -79,7 +78,7 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
       empresa.email,
       empresa.endereco,
       empresa.descricao || null,
-      empresa.logo || null
+      empresa.logo || null,
     );
   }
 
@@ -95,7 +94,7 @@ export class PrismaEmpresaRepository implements IEmpresaRepository {
         empresa.email,
         empresa.endereco,
         empresa.descricao || null,
-        empresa.logo || null
+        empresa.logo || null,
       );
     });
   }

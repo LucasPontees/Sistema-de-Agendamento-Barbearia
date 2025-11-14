@@ -25,13 +25,22 @@ async function bootstrap(): Promise<void> {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-    })
+    }),
   );
 
   const config = new DocumentBuilder()
     .setTitle("api-service")
     .setDescription("API para objetos de estudo")
     .setVersion("1.0")
+    .addBearerAuth(
+      {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        in: "header",
+      },
+      "JWT-auth",
+    )
     .addTag("cats")
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);

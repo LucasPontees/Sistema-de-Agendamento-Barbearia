@@ -1,6 +1,7 @@
-import { Prisma, Servico } from "@prisma/client";
+import { Servico } from "@prisma/client";
+import { CreateServicoBarbeariaDto } from "../dto/create-servico-barbearia.dto";
 
 export interface IServicoBarbeariaRepository {
-  create(data: Prisma.ServicoCreateInput): Promise<Servico>;
+  create(data: CreateServicoBarbeariaDto, empresaId: number): Promise<Servico>;
   findServicoByIdCompany(empresaId: number): Promise<Servico[] | null>;
 }

@@ -31,11 +31,4 @@ export class CreateServicoBarbeariaDto {
   })
   @IsInt()
   preco: number;
-
-  @ApiProperty({
-    description: "Empresa que registra o Serviço",
-    example: "1",
-  })
-  @IsInt()
-  empresaId: number;
 }

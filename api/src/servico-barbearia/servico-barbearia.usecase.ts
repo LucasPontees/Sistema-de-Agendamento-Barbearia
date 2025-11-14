@@ -3,14 +3,7 @@ import { Servico } from "@prisma/client";
 import { TYPES } from "@/types";
 import { IServicoBarbeariaRepository } from "./repository/servico-barbearia.repository";
 import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
-
-interface createServicoBarbeariaRequest {
-  nome: string;
-  descricao: string;
-  duracaoMin: number;
-  preco: number;
-  empresaId: number;
-}
+import { CreateServicoBarbeariaDto } from "./dto/create-servico-barbearia.dto";
 
 @Injectable()
 export class ServicoBarbeariaUseCase {
@@ -20,8 +13,11 @@ export class ServicoBarbeariaUseCase {
     @Inject(TYPES.EmpresaRepository)
     private readonly iEmpresaRepository: IEmpresaRepository,
   ) {}
-  async execute(request: createServicoBarbeariaRequest): Promise<Servico> {
-    const { nome, descricao, duracaoMin, preco, empresaId } = request;
+  async execute(
+    request: CreateServicoBarbeariaDto,
+    empresaId: number,
+  ): Promise<Servico> {
+    const { nome, descricao, duracaoMin, preco } = request;
 
     const comapanyExists = await this.iEmpresaRepository.findById(empresaId);
 
@@ -29,12 +25,14 @@ export class ServicoBarbeariaUseCase {
       throw new ConflictException(`Empresa with ID ${empresaId} not found`);
     }
 
-    return this.iServicoBarbeariaRepository.create({
-      nome: nome,
-      descricao: descricao,
-      duracaoMin: duracaoMin,
-      preco: preco,
-      empresa: { connect: { id: empresaId } },
-    });
+    return this.iServicoBarbeariaRepository.create(
+      {
+        nome: nome,
+        descricao: descricao,
+        duracaoMin: duracaoMin,
+        preco: preco,
+      },
+      empresaId,
+    );
   }
 }
