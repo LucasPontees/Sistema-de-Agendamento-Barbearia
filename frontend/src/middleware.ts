@@ -37,3 +37,4 @@ export function middleware(request: NextRequest) {
 
 //regra de token é válido
 //
+// se tiver token ao acessar o site, ele redireciona para o dashboard
