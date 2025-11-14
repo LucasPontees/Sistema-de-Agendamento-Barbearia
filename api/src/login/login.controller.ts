@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  Res,
   HttpCode,
   HttpStatus,
   BadRequestException,
@@ -17,10 +16,7 @@ export class AuthController {
 
   @Post("login")
   @HttpCode(HttpStatus.OK)
-  async login(
-    @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async login(@Body() loginDto: LoginDto) {
     const { token, user } = await this.authService.login(loginDto);
 
     if (!token) {

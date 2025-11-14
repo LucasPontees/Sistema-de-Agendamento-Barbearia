@@ -9,7 +9,7 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
   async create(
     data: CreateAgendamentoDto,
     usuarioId: number,
-    empresaId,
+    empresaId: number,
   ): Promise<Agendamento> {
     return this.prisma.agendamento.create({
       data: {
