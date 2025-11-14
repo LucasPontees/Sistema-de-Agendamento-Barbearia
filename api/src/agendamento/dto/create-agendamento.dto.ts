@@ -11,13 +11,6 @@ export class CreateAgendamentoDto {
 
   @ApiProperty({
     example: "1",
-    description: "ID da empresa onde o agendamento será realizado",
-  })
-  @IsInt()
-  empresaId: number;
-
-  @ApiProperty({
-    example: "1",
     description: "ID do serviço a ser realizado",
   })
   @IsInt()

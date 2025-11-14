@@ -6,15 +6,7 @@ import { IBarberRepository } from "../barber/repository/barber.repository";
 import { IServicoBarbeariaRepository } from "@/servico-barbearia/repository/servico-barbearia.repository";
 import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
 import { IUserRepository } from "@/usuario/repository/user.repository";
-
-export interface CreateAgendamentoRequest {
-  dataHora: string;
-  usuarioId: number;
-  empresaId: number;
-  barbeiroId?: number;
-  servicoId: number;
-  observacoes?: string;
-}
+import { CreateAgendamentoDto } from "./dto/create-agendamento.dto";
 
 @Injectable()
 export class CreateAgendamentoUsecase {
@@ -28,39 +20,43 @@ export class CreateAgendamentoUsecase {
     @Inject(TYPES.EmpresaRepository)
     private readonly iEmpresaRepository: IEmpresaRepository,
     @Inject(TYPES.UserRepository)
-    private readonly iUserRepository: IUserRepository,
+    private readonly iUserRepository: IUserRepository
   ) {}
-  async create(request: CreateAgendamentoRequest): Promise<Agendamento> {
+  async create(
+    request: CreateAgendamentoDto,
+    usuarioId: number,
+    empresaId: number
+  ): Promise<Agendamento> {
+    const { ...rest } = request;
+
     const barberExists = request.barbeiroId
       ? await this.iBarberRepository.findById(request.barbeiroId)
       : null;
 
     if (!barberExists && request.barbeiroId) {
       throw new ConflictException(
-        `Barber with ID ${request.barbeiroId} not found`,
+        `Barber with ID ${request.barbeiroId} not found`
       );
     }
 
-    const empresaExists = await this.iEmpresaRepository.findById(
-      request.empresaId,
-    );
+    const empresaExists = await this.iEmpresaRepository.findById(empresaId);
 
     if (!empresaExists) {
-      throw new ConflictException(
-        `Company with ID ${request.empresaId} not found`,
-      );
+      throw new ConflictException(`Company with ID ${empresaId} not found`);
     }
 
-    const userExists = await this.iUserRepository.findUserById(
-      request.usuarioId,
-    );
+    const userExists = await this.iUserRepository.findUserById(usuarioId);
 
     if (!userExists) {
-      throw new ConflictException(
-        `User with ID ${request.usuarioId} not found`,
-      );
+      throw new ConflictException(`User with ID ${usuarioId} not found`);
     }
 
-    return this.iAgendamentoRepository.create(request);
+    const agendamento = this.iAgendamentoRepository.create(
+      { ...rest },
+      usuarioId,
+      empresaId
+    );
+
+    return agendamento;
   }
 }
