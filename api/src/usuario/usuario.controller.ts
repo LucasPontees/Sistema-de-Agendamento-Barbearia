@@ -6,6 +6,8 @@ import { JwtPayload } from "@/login/strategies/jwt-strategy";
 import { RolesGuard } from "@/login/strategies/roles.guard";
 import { Roles } from "@/login/strategies/roles.decorator";
 import { StatusAgendamentoService } from "./agendamento.service";
+import { UserRole } from "./enum/role";
+import { ApiBearerAuth } from "@nestjs/swagger";
 
 interface RequestWithUser extends Request {
   user: JwtPayload;
@@ -19,14 +21,13 @@ export class UsuarioController {
 
   @Post()
   @UseGuards(AuthGuard("jwt"), RolesGuard)
-  @Roles("EMPRESA")
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.EMPRESA)
   async create(@Req() req: RequestWithUser, @Body() data: CreateUsuarioDto) {
-    const empresaId = req.user.empresaId;
-    return this.createUserUseCase.execute(data, empresaId);
-  }
+    console.log("REQ.USER NO CONTROLLER:", req.user); // 👈 coloque aqui
 
-  @Get("status")
-  listarStatus() {
-    return this.agendamentoService.listarStatus();
+    const empresaId = req.user.empresaId;
+    console.log("Empresa ID:", empresaId);
+    return this.createUserUseCase.execute(data, empresaId);
   }
 }

@@ -32,6 +32,15 @@ async function bootstrap(): Promise<void> {
     .setTitle("api-service")
     .setDescription("API para objetos de estudo")
     .setVersion("1.0")
+    .addBearerAuth(
+      {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        in: "header",
+      },
+      "JWT-auth"
+    )
     .addTag("cats")
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
