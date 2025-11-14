@@ -10,6 +10,7 @@ import { PrismaUserRepository } from "@/usuario/repository/prisma-user.repositor
 import { RetornaAgendamentosEmpresaUsecase } from "./retorna-agendamentos-empresa.usecase";
 import { ReturnAgendamentosPorIdUsecase } from "./retorna-agendamentos-por-id.usecase";
 import { AceitarRejeitarAgendamentoUsecase } from "./aceitar-rejeitar-agendamento.usecase";
+import { HashArgon2 } from "@/usuario/hash/hash-argon2";
 @Module({
   controllers: [AgendamentoController],
   providers: [
@@ -36,6 +37,10 @@ import { AceitarRejeitarAgendamentoUsecase } from "./aceitar-rejeitar-agendament
     {
       provide: TYPES.UserRepository,
       useClass: PrismaUserRepository,
+    },
+    {
+      provide: TYPES.Hasher,
+      useClass: HashArgon2,
     },
   ],
 })
