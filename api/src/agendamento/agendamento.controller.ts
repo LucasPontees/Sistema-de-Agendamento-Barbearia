@@ -15,7 +15,6 @@ import { RetornaAgendamentosEmpresaUsecase } from "./retorna-agendamentos-empres
 import { ReturnAgendamentosPorIdUsecase } from "./retorna-agendamentos-por-id.usecase";
 import { AceitarRejeitarAgendamentoUsecase } from "./aceitar-rejeitar-agendamento.usecase";
 import { AtualizaStatusAgendamentoDto } from "./dto/status-agendamento.dto";
-import { JwtAuthGuard } from "@/login/strategies/jwt-guard";
 import { Request } from "express";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "@/login/strategies/roles.guard";
@@ -34,7 +33,7 @@ export class AgendamentoController {
     private readonly createAgendamentoUsecase: CreateAgendamentoUsecase,
     private readonly retornaAgendamentosEmpresaUsecase: RetornaAgendamentosEmpresaUsecase,
     private readonly returnAgendamentosPorIdUsecase: ReturnAgendamentosPorIdUsecase,
-    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase
+    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase,
   ) {}
 
   @Post()
@@ -51,7 +50,7 @@ export class AgendamentoController {
   @Get()
   getAll(@Query("empresaId") empresaId: number) {
     return this.retornaAgendamentosEmpresaUsecase.retornaAgendamentos(
-      empresaId
+      empresaId,
     );
   }
   @Get(":id")
@@ -62,11 +61,11 @@ export class AgendamentoController {
   @Patch("status/:id")
   aceitarRejeitarAgendamento(
     @Param("id") id: number,
-    @Body() dto: AtualizaStatusAgendamentoDto
+    @Body() dto: AtualizaStatusAgendamentoDto,
   ) {
     return this.aceitarRejeitarAgendamentoUsecase.aceitarRejeitarAgendamento(
       id,
-      dto.acao
+      dto.acao,
     );
   }
 }

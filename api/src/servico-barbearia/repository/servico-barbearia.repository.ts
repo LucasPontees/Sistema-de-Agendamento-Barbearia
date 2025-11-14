@@ -1,4 +1,4 @@
-import { Prisma, Servico } from "@prisma/client";
+import { Servico } from "@prisma/client";
 import { CreateServicoBarbeariaDto } from "../dto/create-servico-barbearia.dto";
 
 export interface IServicoBarbeariaRepository {

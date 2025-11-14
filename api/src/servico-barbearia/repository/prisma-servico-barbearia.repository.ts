@@ -1,4 +1,4 @@
-import { Prisma, Servico } from "@prisma/client";
+import { Servico } from "@prisma/client";
 import { IServicoBarbeariaRepository } from "./servico-barbearia.repository";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { Injectable } from "@nestjs/common";

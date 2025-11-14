@@ -11,11 +11,11 @@ export class ServicoBarbeariaUseCase {
     @Inject(TYPES.ServicoBarbeariaRepository)
     private readonly iServicoBarbeariaRepository: IServicoBarbeariaRepository,
     @Inject(TYPES.EmpresaRepository)
-    private readonly iEmpresaRepository: IEmpresaRepository
+    private readonly iEmpresaRepository: IEmpresaRepository,
   ) {}
   async execute(
     request: CreateServicoBarbeariaDto,
-    empresaId: number
+    empresaId: number,
   ): Promise<Servico> {
     const { nome, descricao, duracaoMin, preco } = request;
 
@@ -32,7 +32,7 @@ export class ServicoBarbeariaUseCase {
         duracaoMin: duracaoMin,
         preco: preco,
       },
-      empresaId
+      empresaId,
     );
   }
 }

@@ -25,7 +25,7 @@ async function bootstrap(): Promise<void> {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-    })
+    }),
   );
 
   const config = new DocumentBuilder()
@@ -39,7 +39,7 @@ async function bootstrap(): Promise<void> {
         bearerFormat: "JWT",
         in: "header",
       },
-      "JWT-auth"
+      "JWT-auth",
     )
     .addTag("cats")
     .build();

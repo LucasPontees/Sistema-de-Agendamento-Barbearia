@@ -8,6 +8,6 @@ export class Empresa {
     public readonly endereco: string,
     public readonly descricao: string | null,
     public readonly logo?: string | null,
-    public readonly usarios?: any[]
+    public readonly usarios?: any[],
   ) {}
 }

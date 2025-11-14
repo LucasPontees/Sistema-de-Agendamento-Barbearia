@@ -5,12 +5,12 @@ export interface IAgendamentoRepository {
   create(
     data: CreateAgendamentoDto,
     usuarioId: number,
-    empresaId: number
+    empresaId: number,
   ): Promise<Agendamento>;
   returnAgendamentoPorEmpresa(empresaId: number): Promise<Agendamento[]>;
   returnAgendamentoPorId(agendamentoId: number): Promise<Agendamento | null>;
   aceitarRejeitarAgendamento(
     agendamentoId: number,
-    acao: "CONFIRMADO" | "CANCELADO" | "REJEITADO"
+    acao: "CONFIRMADO" | "CANCELADO" | "REJEITADO",
   ): Promise<Agendamento>;
 }

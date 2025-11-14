@@ -2,7 +2,6 @@ import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { IUserRepository } from "./repository/user.repository";
 import { IHasher } from "./hash/hasher";
 import { TYPES } from "../types";
-import { User } from "./entities/user.entity";
 import { CreateUsuarioDto } from "./dto/create-usuario.dto";
 import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
 
@@ -14,7 +13,7 @@ export class CreateUserUseCase {
     @Inject(TYPES.Hasher)
     private readonly hasher: IHasher,
     @Inject(TYPES.EmpresaRepository)
-    private readonly iEmpresaRepository: IEmpresaRepository
+    private readonly iEmpresaRepository: IEmpresaRepository,
   ) {}
 
   async execute(request: CreateUsuarioDto, empresaId: number) {
@@ -40,7 +39,7 @@ export class CreateUserUseCase {
         senha: senhaHash,
         email: email,
       },
-      empresaId
+      empresaId,
     );
 
     return user;

@@ -4,7 +4,6 @@ import { IEmpresaRepository } from "./repository/empresa.repository";
 import { CreateEmpresaDto } from "./dto/create-empresa.dto";
 import { Empresa } from "./entities/empresa.entity";
 import { IUserRepository } from "@/usuario/repository/user.repository";
-import { IHasher } from "@/usuario/hash/hasher";
 
 @Injectable()
 export class CreateEmpresaUseCase {
@@ -12,7 +11,7 @@ export class CreateEmpresaUseCase {
     @Inject(TYPES.EmpresaRepository)
     private readonly iEmpresaRepository: IEmpresaRepository,
     @Inject(TYPES.UserRepository)
-    private readonly iUserRepository: IUserRepository
+    private readonly iUserRepository: IUserRepository,
   ) {}
   async execute(request: CreateEmpresaDto): Promise<Empresa> {
     const { cnpj, ...rest } = request;
@@ -24,7 +23,7 @@ export class CreateEmpresaUseCase {
     }
 
     const userExists = await this.iUserRepository.findByEmail(
-      rest.usuario.email
+      rest.usuario.email,
     );
 
     if (userExists) {

@@ -25,7 +25,7 @@ interface RequestWithUser extends Request {
 export class ServicoBarbeariaController {
   constructor(
     private readonly servicoBarbeariaUseCase: ServicoBarbeariaUseCase,
-    private readonly listarServicoIdUseCase: ListarServicoIdUseCase
+    private readonly listarServicoIdUseCase: ListarServicoIdUseCase,
   ) {}
 
   @Post()

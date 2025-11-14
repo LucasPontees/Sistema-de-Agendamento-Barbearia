@@ -20,12 +20,12 @@ export class CreateAgendamentoUsecase {
     @Inject(TYPES.EmpresaRepository)
     private readonly iEmpresaRepository: IEmpresaRepository,
     @Inject(TYPES.UserRepository)
-    private readonly iUserRepository: IUserRepository
+    private readonly iUserRepository: IUserRepository,
   ) {}
   async create(
     request: CreateAgendamentoDto,
     usuarioId: number,
-    empresaId: number
+    empresaId: number,
   ): Promise<Agendamento> {
     const { ...rest } = request;
 
@@ -35,7 +35,7 @@ export class CreateAgendamentoUsecase {
 
     if (!barberExists && request.barbeiroId) {
       throw new ConflictException(
-        `Barber with ID ${request.barbeiroId} not found`
+        `Barber with ID ${request.barbeiroId} not found`,
       );
     }
 
@@ -54,7 +54,7 @@ export class CreateAgendamentoUsecase {
     const agendamento = this.iAgendamentoRepository.create(
       { ...rest },
       usuarioId,
-      empresaId
+      empresaId,
     );
 
     return agendamento;
