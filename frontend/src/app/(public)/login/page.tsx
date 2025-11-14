@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,16 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import NextNavbar from "@/components/NextNavbar";
 import NextFooter from "@/components/NextFooter";
-import { api } from "@/http/api";
 import { handleLogin } from "./action";
 
 const Login: React.FC = () => {
@@ -31,58 +22,9 @@ const Login: React.FC = () => {
     password: "",
   });
 
-  const [statusList, setStatusList] = useState<string[]>([]);
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [loadingStatus, setLoadingStatus] = useState(true);
-  const router = useRouter();
-
-  // 🔹 Buscar lista de status na API
-  useEffect(() => {
-    async function fetchStatus() {
-      try {
-        const response = await api.get("users/status").json<string[]>();
-        setStatusList(response);
-      } catch (error) {
-        console.error("Erro ao carregar status:", error);
-      } finally {
-        setLoadingStatus(false);
-      }
-    }
-    fetchStatus();
-  }, []);
-
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
-
-  // async function handleLogin(formdata: FormData) {
-  //   "use server";
-  //   const form = {
-  //     email: formdata.get("email")?.toString() || "",
-  //     password: formdata.get("password")?.toString() || "",
-  //   };
-  //   if (!form.email || !form.password) return;
-
-  //   try {
-  //     const response = await api.post("auth/login", {
-  //       json: { email: form.email, password: form.password },
-  //     });
-
-  //     const { token } = await response.json();
-
-  //     const cookiesStore = await cookies();
-  //     cookiesStore.set("access_token", token, {
-  //       path: "/",
-  //       maxAge: 60 * 60 * 24,
-  //     });
-
-  //     // setTimeout(() => {
-  //     //   router.push("/profile");
-  //     // }, 50);
-  //   } catch (error) {
-  //     console.error("Login failed:", error);
-  //   }
-  // }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -145,32 +87,6 @@ const Login: React.FC = () => {
                   >
                     Entrar
                   </Button>
-
-                  {/* Dropdown de status */}
-                  <div className="space-y-2">
-                    <Label>Status</Label>
-                    {loadingStatus ? (
-                      <div className="w-full p-2 text-center border rounded text-gray-500">
-                        Carregando status...
-                      </div>
-                    ) : (
-                      <Select
-                        value={selectedStatus}
-                        onValueChange={(value) => setSelectedStatus(value)}
-                      >
-                        <SelectTrigger className="w-full border border-gray-300 rounded-lg bg-white">
-                          <SelectValue placeholder="Selecione um status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {statusList.map((status) => (
-                            <SelectItem key={status} value={status}>
-                              {status.charAt(0) + status.slice(1).toLowerCase()}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  </div>
                 </div>
               </form>
             </CardContent>
