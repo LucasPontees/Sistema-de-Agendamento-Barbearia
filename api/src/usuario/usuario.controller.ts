@@ -5,7 +5,6 @@ import { AuthGuard } from "@nestjs/passport";
 import { JwtPayload } from "@/login/strategies/jwt-strategy";
 import { RolesGuard } from "@/login/strategies/roles.guard";
 import { Roles } from "@/login/strategies/roles.decorator";
-import { StatusAgendamentoService } from "./agendamento.service";
 import { UserRole } from "./enum/role";
 import { ApiBearerAuth } from "@nestjs/swagger";
 
@@ -14,20 +13,14 @@ interface RequestWithUser extends Request {
 }
 @Controller("users")
 export class UsuarioController {
-  constructor(
-    private readonly createUserUseCase: CreateUserUseCase,
-    private readonly agendamentoService: StatusAgendamentoService
-  ) {}
+  constructor(private readonly createUserUseCase: CreateUserUseCase) {}
 
   @Post()
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @ApiBearerAuth("JWT-auth")
   @Roles(UserRole.EMPRESA)
   async create(@Req() req: RequestWithUser, @Body() data: CreateUsuarioDto) {
-    console.log("REQ.USER NO CONTROLLER:", req.user); // 👈 coloque aqui
-
     const empresaId = req.user.empresaId;
-    console.log("Empresa ID:", empresaId);
     return this.createUserUseCase.execute(data, empresaId);
   }
 }
