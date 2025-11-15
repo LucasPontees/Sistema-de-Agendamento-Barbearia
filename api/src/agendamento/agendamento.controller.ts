@@ -39,7 +39,7 @@ export class AgendamentoController {
   @Post()
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @ApiBearerAuth("JWT-auth")
-  @Roles(UserRole.EMPRESA)
+  @Roles(UserRole.USUARIO)
   create(@Req() req: RequestWithUser, @Body() dto: CreateAgendamentoDto) {
     const usuarioId = Number(req.user.sub);
     const empresaId = req.user.empresaId;
