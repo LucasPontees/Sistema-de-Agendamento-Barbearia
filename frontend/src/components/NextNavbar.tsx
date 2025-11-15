@@ -31,6 +31,7 @@ const Header: React.FC<HeaderProps> = () => {
       "/profile",
       "/appointments",
       "/agendamentos",
+      "/register",
     ];
     const isProtectedRoute = protectedRoutes.some((route) =>
       pathname?.startsWith(route)

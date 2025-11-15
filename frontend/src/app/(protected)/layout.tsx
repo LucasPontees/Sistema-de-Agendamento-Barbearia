@@ -13,7 +13,7 @@ export default function ProtectedLayout({
       <div className="h-screen flex flex-col">
         <NextNavbar />
 
-        <main>{children}</main>
+        <main className="flex-grow">{children}</main>
 
         <NextFooter />
       </div>
