@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRouter, usePathname } from "next/navigation";
 import { deleteCookie } from "cookies-next";
+import { useUser } from "@/contexts/UserContext";
 
 interface HeaderProps {
   isAuthenticated?: boolean;
@@ -20,6 +21,7 @@ const Header: React.FC<HeaderProps> = () => {
   const { toast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
+  const { role } = useUser();
 
   useEffect(() => {
     // Verifica se está em uma rota protegida ou se acabou de fazer login
@@ -28,6 +30,7 @@ const Header: React.FC<HeaderProps> = () => {
       "/dashboard",
       "/profile",
       "/appointments",
+      "/agendamentos",
     ];
     const isProtectedRoute = protectedRoutes.some((route) =>
       pathname?.startsWith(route)
@@ -91,12 +94,21 @@ const Header: React.FC<HeaderProps> = () => {
                         Home
                       </Link>
                       <Link
-                        href="/appointments"
+                        href="/agendamentos"
                         className="text-white hover:text-barber-gold"
                         onClick={toggleMenu}
                       >
-                        Agendamentos
+                        Meus Agendamentos
                       </Link>
+                      {role === "USUARIO" && (
+                        <Link
+                          href="/appointments"
+                          className="text-white hover:text-barber-gold"
+                          onClick={toggleMenu}
+                        >
+                          Novo Agendamento
+                        </Link>
+                      )}
                       <Link
                         href="/dashboard"
                         className="text-white hover:text-barber-gold"
@@ -150,11 +162,19 @@ const Header: React.FC<HeaderProps> = () => {
                     Home
                   </Link>
                   <Link
-                    href="/appointments"
+                    href="/agendamentos"
                     className="text-white hover:text-barber-gold"
                   >
-                    Agendamentos
+                    Meus Agendamentos
                   </Link>
+                  {role === "USUARIO" && (
+                    <Link
+                      href="/appointments"
+                      className="text-white hover:text-barber-gold"
+                    >
+                      Novo Agendamento
+                    </Link>
+                  )}
                   <Link
                     href="/dashboard"
                     className="text-white hover:text-barber-gold"

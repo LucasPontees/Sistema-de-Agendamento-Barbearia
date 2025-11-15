@@ -15,6 +15,7 @@ import {
 import { Calendar, Clock, Scissors } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createAgendamento, getServices } from "./actions";
+import { useUser } from "@/contexts/UserContext";
 
 interface Service {
   id: number;
@@ -26,6 +27,7 @@ interface Service {
 
 const Appointments: React.FC = () => {
   const router = useRouter();
+  const { role, loading: userLoading } = useUser();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,8 +37,17 @@ const Appointments: React.FC = () => {
   });
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    // Se for EMPRESA, redireciona para a página de agendamentos
+    if (!userLoading && role === "EMPRESA") {
+      router.replace("/agendamentos");
+    }
+  }, [role, userLoading, router]);
+
+  useEffect(() => {
+    if (role === "USUARIO") {
+      fetchServices();
+    }
+  }, [role]);
 
   const fetchServices = async () => {
     const data = await getServices();
@@ -56,7 +67,7 @@ const Appointments: React.FC = () => {
 
       if (result.success) {
         alert("Agendamento criado com sucesso!");
-        router.push("/dashboard");
+        router.push("/agendamentos");
       } else {
         alert(
           `Erro: ${result.error || "Não foi possível criar o agendamento"}`
@@ -73,6 +84,15 @@ const Appointments: React.FC = () => {
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  // Se ainda está carregando ou é EMPRESA, mostra loading
+  if (userLoading || role === "EMPRESA") {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg">Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
