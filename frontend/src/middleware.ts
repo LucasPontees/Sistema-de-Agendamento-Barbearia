@@ -15,7 +15,14 @@ favicon.ico, sitemap.xml, robots.txt (metadata files)
   ],
 };
 
-const unprotectedRoutes = ["/login", "/notfound", "/register-company"];
+const unprotectedRoutes = [
+  "/login",
+  "/notfound",
+  "/register-company",
+  "/payment/success",
+  "/payment/waiting",
+  "/payment/manual-check",
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

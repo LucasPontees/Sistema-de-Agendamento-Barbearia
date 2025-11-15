@@ -66,6 +66,9 @@ export class PaymentController {
       this.logger.log(
         `✅ Cobrança criada: ${billing.data.id} | URL: ${billing.data.url}`
       );
+      this.logger.log(
+        `💾 Dados armazenados em memória. Total pendentes: ${this.pendingRegistrations.size}`
+      );
 
       return {
         success: true,

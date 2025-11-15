@@ -12,10 +12,13 @@ export class AbacatePayService {
   private readonly logger = new Logger(AbacatePayService.name);
   private readonly client: AxiosInstance;
   private readonly apiKey: string;
+  private readonly frontendUrl: string;
   private readonly baseUrl = "https://api.abacatepay.com/v1";
 
   constructor(private configService: ConfigService) {
     this.apiKey = this.configService.get<string>("ABACATEPAY_API_KEY") || "";
+    this.frontendUrl =
+      this.configService.get<string>("FRONTEND_URL") || "http://localhost:3000";
 
     if (!this.apiKey) {
       this.logger.warn(
@@ -23,6 +26,7 @@ export class AbacatePayService {
       );
     }
 
+    // Voltando para Axios (SDK tem problemas)
     this.client = axios.create({
       baseURL: this.baseUrl,
       headers: {
@@ -32,7 +36,7 @@ export class AbacatePayService {
       timeout: 30000,
     });
 
-    this.logger.log("✅ AbacatePay Service inicializado");
+    this.logger.log("✅ AbacatePay Service inicializado (Axios)");
   }
 
   /**
@@ -46,9 +50,15 @@ export class AbacatePayService {
     try {
       this.logger.log(`Criando cobrança: R$ ${(data.amount / 100).toFixed(2)}`);
 
+      const returnUrl = `${this.frontendUrl}/payment/waiting`;
+      const completionUrl = `${this.frontendUrl}/payment/waiting`;
+
+      this.logger.log(`🔗 returnUrl configurado: ${returnUrl}`);
+      this.logger.log(`🔗 completionUrl configurado: ${completionUrl}`);
+
       const payload = {
-        frequency: data.frequency || "ONE_TIME",
-        methods: data.methods || ["PIX"], // Apenas PIX por padrão
+        frequency: "ONE_TIME",
+        methods: ["PIX"], // Apenas PIX
         products: [
           {
             externalId: "registro-empresa",
@@ -58,24 +68,30 @@ export class AbacatePayService {
             price: data.amount,
           },
         ],
-        returnUrl:
-          this.configService.get<string>("FRONTEND_URL") + "/payment/success",
-        completionUrl:
-          this.configService.get<string>("FRONTEND_URL") + "/payment/success",
+        returnUrl,
+        completionUrl,
         metadata: data.metadata || {},
       };
+
+      this.logger.log(`📦 Payload completo:`, JSON.stringify(payload, null, 2));
 
       const response = await this.client.post("/billing/create", payload);
 
       this.logger.log(`✅ Cobrança criada: ${response.data.data?.id}`);
+      this.logger.log(`📋 URL pagamento: ${response.data.data?.url}`);
 
       return response.data as AbacatePayResponse<AbacatePayBilling>;
     } catch (error: any) {
-      this.logger.error("❌ Erro ao criar cobrança:", error.response?.data);
+      this.logger.error(
+        "❌ Erro ao criar cobrança:",
+        error.response?.data || error.message
+      );
       return {
         data: null,
         error:
-          error.response?.data?.error || "Erro ao criar cobrança no gateway",
+          error.response?.data?.error ||
+          error.message ||
+          "Erro ao criar cobrança no gateway",
       };
     }
   }
@@ -91,8 +107,7 @@ export class AbacatePayService {
     try {
       this.logger.log(`Buscando cobrança: ${billingId}`);
 
-      // A AbacatePay não tem endpoint GET /billing/{id}
-      // Precisamos usar /billing/list e filtrar pelo ID
+      // Lista todas as cobranças e filtra
       const response = await this.client.get("/billing/list");
 
       if (!response.data?.data || !Array.isArray(response.data.data)) {
@@ -103,7 +118,6 @@ export class AbacatePayService {
         };
       }
 
-      // Filtra a cobrança específica pelo ID
       const billing = response.data.data.find(
         (b: AbacatePayBilling) => b.id === billingId
       );
@@ -123,14 +137,16 @@ export class AbacatePayService {
         error: null,
       };
     } catch (error: any) {
-      this.logger.error("❌ Erro ao buscar cobrança:", {
-        billingId,
-        status: error.response?.status,
-        message: error.message,
-      });
+      this.logger.error(
+        "❌ Erro ao buscar cobrança:",
+        error.response?.data || error.message
+      );
       return {
         data: null,
-        error: error.response?.data?.error || "Erro ao buscar cobrança",
+        error:
+          error.response?.data?.error ||
+          error.message ||
+          "Erro ao buscar cobrança",
       };
     }
   }
@@ -139,26 +155,16 @@ export class AbacatePayService {
    * Cancela uma cobrança pendente
    * @param billingId ID da cobrança
    * @returns Sucesso ou erro
+   * @deprecated O SDK atual não suporta cancelamento direto
    */
   async cancelBilling(billingId: string): Promise<AbacatePayResponse<boolean>> {
-    try {
-      this.logger.log(`Cancelando cobrança: ${billingId}`);
-
-      await this.client.post(`/billing/${billingId}/cancel`);
-
-      this.logger.log(`✅ Cobrança cancelada: ${billingId}`);
-
-      return {
-        data: true,
-        error: null,
-      };
-    } catch (error: any) {
-      this.logger.error("❌ Erro ao cancelar cobrança:", error.response?.data);
-      return {
-        data: null,
-        error: error.response?.data?.error || "Erro ao cancelar cobrança",
-      };
-    }
+    this.logger.warn(
+      `⚠️  Cancelamento de cobrança não implementado no SDK: ${billingId}`
+    );
+    return {
+      data: null,
+      error: "Cancelamento não suportado pelo SDK atual",
+    };
   }
 
   /**

@@ -18,20 +18,27 @@ const PaymentSuccess: React.FC = () => {
   const [message, setMessage] = useState("Verificando pagamento...");
 
   useEffect(() => {
+    console.log("🔍 [SUCCESS] Página carregada");
+
     // Tenta obter o billingId da URL ou do sessionStorage
     let billingId = searchParams.get("billingId");
+    console.log("📋 [SUCCESS] billingId da URL:", billingId);
 
     if (!billingId && typeof window !== "undefined") {
       billingId = sessionStorage.getItem("pendingBillingId");
+      console.log("📋 [SUCCESS] billingId do sessionStorage:", billingId);
     }
 
     if (!billingId) {
+      console.error("❌ [SUCCESS] billingId não encontrado!");
       setStatus("error");
       setMessage(
         "ID de cobrança não encontrado. Por favor, tente registrar novamente."
       );
       return;
     }
+
+    console.log("✅ [SUCCESS] Usando billingId:", billingId);
 
     // Limpa o sessionStorage
     if (typeof window !== "undefined") {
@@ -40,9 +47,12 @@ const PaymentSuccess: React.FC = () => {
 
     const verifyPayment = async () => {
       try {
+        console.log("📞 [SUCCESS] Chamando checkAndCreateCompany...");
         const result = await checkAndCreateCompany(billingId!);
+        console.log("📊 [SUCCESS] Resposta recebida:", result);
 
         if (result.success && result.data.success) {
+          console.log("✅ [SUCCESS] Empresa criada com sucesso!");
           setStatus("success");
           setMessage("Empresa criada com sucesso! Você já pode fazer login.");
 
@@ -56,19 +66,24 @@ const PaymentSuccess: React.FC = () => {
           setTimeout(() => {
             router.push("/login");
           }, 3000);
-        } else if (result.data.status === "PENDING") {
+        } else if (result.data?.status === "PENDING") {
+          console.log("⏳ [SUCCESS] Pagamento ainda PENDING, aguardando...");
           setStatus("pending");
           setMessage(
-            "Pagamento ainda está sendo processado. Aguarde alguns instantes..."
+            "Aguardando confirmação do pagamento PIX. Complete o pagamento na outra aba e aguarde. Esta página será atualizada automaticamente."
           );
 
-          // Tenta novamente em 5 segundos
-          setTimeout(() => verifyPayment(), 5000);
+          // Tenta novamente em 3 segundos (mais rápido)
+          setTimeout(() => verifyPayment(), 3000);
         } else {
+          console.error("❌ [SUCCESS] Erro ao criar empresa:", result.data);
           setStatus("error");
-          setMessage(result.data.message || "Não foi possível criar a empresa");
+          setMessage(
+            result.data?.message || "Não foi possível criar a empresa"
+          );
         }
       } catch (error) {
+        console.error("💥 [SUCCESS] Exceção capturada:", error);
         setStatus("error");
         setMessage("Erro ao verificar pagamento. Tente novamente.");
       }
@@ -137,11 +152,17 @@ const PaymentSuccess: React.FC = () => {
           )}
 
           {status === "pending" && (
-            <div className="text-sm text-center text-muted-foreground">
-              <p>Aguarde enquanto processamos seu pagamento...</p>
-              <p className="mt-2">
-                Esta página será atualizada automaticamente.
+            <div className="text-sm text-center text-muted-foreground space-y-3">
+              <p className="font-semibold text-base">
+                Complete o pagamento PIX na outra aba
               </p>
+              <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
+                <p className="text-yellow-800 text-xs">
+                  ⚡ Após pagar, aguarde alguns segundos. Esta página será
+                  atualizada automaticamente quando o pagamento for confirmado.
+                </p>
+              </div>
+              <p className="text-xs">Verificando a cada 3 segundos...</p>
             </div>
           )}
         </CardContent>

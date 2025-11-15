@@ -1,17 +1,22 @@
 "use server";
 
+// Em Server Actions, use variáveis sem NEXT_PUBLIC_ ou hardcode para desenvolvimento
+const API_URL =
+  process.env.API_URL ||
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "http://localhost:7777";
+
 export async function createCompanyBilling(empresaData: any) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/payment/create-company-billing`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(empresaData),
-      }
-    );
+    console.log("[SERVER ACTION] API_URL:", API_URL);
+
+    const response = await fetch(`${API_URL}/payment/create-company-billing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(empresaData),
+    });
 
     if (!response.ok) {
       const error = await response.json();
@@ -31,16 +36,13 @@ export async function createCompanyBilling(empresaData: any) {
 
 export async function checkPaymentStatus(billingId: string) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/payment/billing/${billingId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
-    );
+    const response = await fetch(`${API_URL}/payment/billing/${billingId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
 
     if (!response.ok) {
       throw new Error("Erro ao consultar status do pagamento");
@@ -58,8 +60,10 @@ export async function checkPaymentStatus(billingId: string) {
 
 export async function checkAndCreateCompany(billingId: string) {
   try {
+    console.log("[SERVER ACTION] Verificando pagamento:", billingId);
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/payment/check-and-create/${billingId}`,
+      `${API_URL}/payment/check-and-create/${billingId}`,
       {
         method: "POST",
         headers: {

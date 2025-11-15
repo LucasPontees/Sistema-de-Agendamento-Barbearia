@@ -171,9 +171,18 @@ const RegisterCompany: React.FC = () => {
       // Salva o billingId no sessionStorage para usar depois
       if (typeof window !== "undefined") {
         sessionStorage.setItem("pendingBillingId", result.data.billingId);
+        console.log(
+          "💾 [REGISTER] billingId salvo no sessionStorage:",
+          result.data.billingId
+        );
       }
 
-      // Redireciona para página de pagamento da AbacatePay
+      console.log(
+        "🔀 [REGISTER] Redirecionando para pagamento:",
+        result.data.paymentUrl
+      );
+
+      // Redireciona para página de pagamento da AbacatePay (mesma aba)
       window.location.href = result.data.paymentUrl;
     } catch (error: unknown) {
       console.error("Erro ao processar registro:", error);
@@ -337,18 +346,6 @@ const RegisterCompany: React.FC = () => {
                         }
                       />
                     </div>
-
-                    {/* Logo (Opcional) */}
-                    <div className="space-y-2">
-                      <Label htmlFor="logo">Logo (URL - Opcional)</Label>
-                      <Input
-                        id="logo"
-                        type="url"
-                        placeholder="https://exemplo.com/logo.png"
-                        value={form.logo}
-                        onChange={(e) => handleChange("logo", e.target.value)}
-                      />
-                    </div>
                   </div>
                 </div>
 
@@ -457,22 +454,6 @@ const RegisterCompany: React.FC = () => {
                           handleChange("confirmarSenha", e.target.value, true)
                         }
                         minLength={6}
-                      />
-                    </div>
-
-                    {/* Foto de Perfil (Opcional) */}
-                    <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="usuario.fotoPerfil">
-                        Foto de Perfil (URL - Opcional)
-                      </Label>
-                      <Input
-                        id="usuario.fotoPerfil"
-                        type="url"
-                        placeholder="https://exemplo.com/foto.jpg"
-                        value={form.usuario.fotoPerfil}
-                        onChange={(e) =>
-                          handleChange("fotoPerfil", e.target.value, true)
-                        }
                       />
                     </div>
                   </div>
