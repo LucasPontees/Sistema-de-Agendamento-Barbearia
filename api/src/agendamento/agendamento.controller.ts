@@ -33,13 +33,13 @@ export class AgendamentoController {
     private readonly createAgendamentoUsecase: CreateAgendamentoUsecase,
     private readonly retornaAgendamentosEmpresaUsecase: RetornaAgendamentosEmpresaUsecase,
     private readonly returnAgendamentosPorIdUsecase: ReturnAgendamentosPorIdUsecase,
-    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase,
+    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase
   ) {}
 
   @Post()
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @ApiBearerAuth("JWT-auth")
-  @Roles(UserRole.EMPRESA)
+  @Roles(UserRole.USUARIO)
   create(@Req() req: RequestWithUser, @Body() dto: CreateAgendamentoDto) {
     const usuarioId = Number(req.user.sub);
     const empresaId = req.user.empresaId;
@@ -48,9 +48,13 @@ export class AgendamentoController {
   }
 
   @Get()
-  getAll(@Query("empresaId") empresaId: number) {
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.EMPRESA)
+  getAll(@Req() req: RequestWithUser) {
+    const empresaId = req.user.empresaId;
     return this.retornaAgendamentosEmpresaUsecase.retornaAgendamentos(
-      empresaId,
+      empresaId
     );
   }
   @Get(":id")
@@ -61,11 +65,11 @@ export class AgendamentoController {
   @Patch("status/:id")
   aceitarRejeitarAgendamento(
     @Param("id") id: number,
-    @Body() dto: AtualizaStatusAgendamentoDto,
+    @Body() dto: AtualizaStatusAgendamentoDto
   ) {
     return this.aceitarRejeitarAgendamentoUsecase.aceitarRejeitarAgendamento(
       id,
-      dto.acao,
+      dto.acao
     );
   }
 }

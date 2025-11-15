@@ -4,44 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ServiceCard from "@/components/ServiceCard";
 import { Scissors, Clock, Star, Users } from "lucide-react";
-
-const featuredServices = [
-  {
-    title: "Corte Clássico",
-    description:
-      "Corte preciso com modelagem especializada e finalização com toalha quente.",
-    price: 25,
-    image: "/model-barber.svg",
-    duration: 30,
-    slug: "haircut",
-  },
-  {
-    title: "Aparo de Barba",
-    description:
-      "Modelagem e estilização da sua barba para um visual limpo e definido.",
-    price: 15,
-    image: "/model-barber.svg",
-    duration: 15,
-    slug: "beard-trim",
-  },
-  {
-    title: "Combo Corte & Barba",
-    description: "Pacote completo de cuidados para o cavalheiro moderno.",
-    price: 35,
-    image: "/model-barber.svg",
-    duration: 45,
-    slug: "haircut-beard",
-  },
-  {
-    title: "Barbear com Toalha Quente",
-    description:
-      "Barbear tradicional com navalha e tratamento com toalha quente.",
-    price: 30,
-    image: "/model-barber.svg",
-    duration: 30,
-    slug: "hot-towel",
-  },
-];
+import { cookies } from "next/headers";
 
 const testimonials = [
   {
@@ -67,7 +30,56 @@ const testimonials = [
   },
 ];
 
-const Index: React.FC = () => {
+async function getServices() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+
+    if (!token) {
+      console.error("Token não encontrado nos cookies");
+      return [];
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/servico-barbearia`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Erro na resposta da API:", response.status);
+      return [];
+    }
+
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Erro ao buscar serviços:", error);
+    return [];
+  }
+}
+
+const Index = async () => {
+  const servicesFromApi = await getServices();
+
+  // Mapear os dados da API para o formato esperado pelo ServiceCard
+  const services = servicesFromApi.map((service: any) => ({
+    title: service.nome || service.title,
+    description: service.descricao || service.description,
+    price: service.preco || service.price,
+    duration: service.duracaoMin || service.duration,
+    image: "/model-barber.svg", // Imagem padrão
+    slug:
+      service.slug ||
+      service.nome?.toLowerCase().replace(/\s+/g, "-") ||
+      "service",
+  }));
+
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
@@ -98,87 +110,7 @@ const Index: React.FC = () => {
                     Agendar Horário
                   </Button>
                 </Link>
-                <Link href="/membership">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-barber-black text-barber-gold hover:bg-barber-white/10"
-                  >
-                    Junte-se ao Clube VIP
-                  </Button>
-                </Link>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">
-              Por Que Escolher Barba VIP
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Scissors size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Barbeiros Especialistas
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Nossos barbeiros qualificados trazem anos de experiência e
-                    paixão para cada corte.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Star size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Produtos Premium
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Utilizamos apenas os melhores produtos para resultados
-                    excepcionais.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Clock size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Serviço Eficiente
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Respeito pelo seu tempo com agendamentos pontuais e
-                    eficientes.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Users size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Experiência VIP
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Benefícios exclusivos para membros e abordagem
-                    personalizada.
-                  </p>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </section>
@@ -197,44 +129,15 @@ const Index: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredServices.map((service, index) => (
-                <ServiceCard key={index} {...service} />
-              ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <Link href="/services">
-                <Button
-                  variant="outline"
-                  className="border-barber-brown text-barber-brown hover:bg-barber-brown hover:text-white"
-                >
-                  Ver Todos os Serviços
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* VIP Club CTA */}
-        <section className="py-20 bg-barber-dark text-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-6">
-                Junte-se ao Nosso Clube VIP
-              </h2>
-              <p className="text-xl mb-8">
-                Torne-se um membro e desfrute de benefícios exclusivos como
-                descontos em serviços, agendamento prioritário, produtos
-                gratuitos e muito mais.
-              </p>
-              <Link href="/membership">
-                <Button
-                  size="lg"
-                  className="bg-barber-gold hover:bg-barber-gold/90 text-black"
-                >
-                  Saiba Mais
-                </Button>
-              </Link>
+              {services.length > 0 ? (
+                services.map((service: any, index: number) => (
+                  <ServiceCard key={index} {...service} />
+                ))
+              ) : (
+                <p className="col-span-4 text-center text-muted-foreground">
+                  Nenhum serviço cadastrado ainda.
+                </p>
+              )}
             </div>
           </div>
         </section>
