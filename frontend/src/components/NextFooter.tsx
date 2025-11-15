@@ -11,16 +11,16 @@ import {
 
 const NextFooter: React.FC = () => {
   return (
-    <footer className="bg-barber-dark text-white pt-12 pb-6">
+    <footer className="bg-barber-dark text-white pt-8 md:pt-12 pb-6">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <span className="text-xl font-bold text-barber-gold">
+              <span className="text-lg md:text-xl font-bold text-barber-gold">
                 BARBA VIP
               </span>
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-sm md:text-base text-gray-400 mb-4">
               Serviços de barbearia premium com benefícios exclusivos para
               membros do clube VIP.
             </p>
@@ -53,10 +53,10 @@ const NextFooter: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-barber-gold">
+            <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-barber-gold">
               Links Rápidos
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm md:text-base">
               <li>
                 <Link href="/" className="text-gray-400 hover:text-white">
                   Home
@@ -98,10 +98,10 @@ const NextFooter: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-barber-gold">
+            <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-barber-gold">
               Serviços
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm md:text-base">
               <li>
                 <Link
                   href="/services/haircut"
@@ -146,16 +146,16 @@ const NextFooter: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-barber-gold">
+            <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-barber-gold">
               Contato
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-3 text-sm md:text-base">
               <div className="flex items-start space-x-3">
                 <MapPin
                   size={20}
                   className="text-barber-gold flex-shrink-0 mt-1"
                 />
-                <span className="text-gray-400">
+                <span className="text-gray-400 break-words">
                   Rua do Barbeiro, 123, Cidade Alta, 12345
                 </span>
               </div>
@@ -165,13 +165,15 @@ const NextFooter: React.FC = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={20} className="text-barber-gold flex-shrink-0" />
-                <span className="text-gray-400">eulpontes@gmail.com</span>
+                <span className="text-gray-400 break-all">
+                  eulpontes@gmail.com
+                </span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500">
+        <div className="border-t border-gray-800 mt-6 md:mt-8 pt-6 text-center text-gray-500 text-xs md:text-sm">
           <p>
             &copy; {new Date().getFullYear()} Barba VIP. Todos os direitos
             reservados.

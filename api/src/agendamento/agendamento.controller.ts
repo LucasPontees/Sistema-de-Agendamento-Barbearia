@@ -8,6 +8,7 @@ import {
   Patch,
   UseGuards,
   Req,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { CreateAgendamentoUsecase } from "./agendamento.usecase";
 import { CreateAgendamentoDto } from "./dto/create-agendamento.dto";
@@ -33,13 +34,13 @@ export class AgendamentoController {
     private readonly createAgendamentoUsecase: CreateAgendamentoUsecase,
     private readonly retornaAgendamentosEmpresaUsecase: RetornaAgendamentosEmpresaUsecase,
     private readonly returnAgendamentosPorIdUsecase: ReturnAgendamentosPorIdUsecase,
-    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase,
+    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase
   ) {}
 
   @Post()
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @ApiBearerAuth("JWT-auth")
-  @Roles(UserRole.EMPRESA)
+  @Roles(UserRole.USUARIO)
   create(@Req() req: RequestWithUser, @Body() dto: CreateAgendamentoDto) {
     const usuarioId = Number(req.user.sub);
     const empresaId = req.user.empresaId;
@@ -48,24 +49,31 @@ export class AgendamentoController {
   }
 
   @Get()
-  getAll(@Query("empresaId") empresaId: number) {
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.EMPRESA)
+  getAll(@Req() req: RequestWithUser) {
+    const empresaId = req.user.empresaId;
     return this.retornaAgendamentosEmpresaUsecase.retornaAgendamentos(
-      empresaId,
+      empresaId
     );
   }
   @Get(":id")
-  getAgendamentosById(@Param("id") id: number) {
+  getAgendamentosById(@Param("id", ParseIntPipe) id: number) {
     return this.returnAgendamentosPorIdUsecase.returnAgendamentoPorId(id);
   }
 
   @Patch("status/:id")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.EMPRESA)
   aceitarRejeitarAgendamento(
-    @Param("id") id: number,
-    @Body() dto: AtualizaStatusAgendamentoDto,
+    @Param("id", ParseIntPipe) id: number,
+    @Body() dto: AtualizaStatusAgendamentoDto
   ) {
     return this.aceitarRejeitarAgendamentoUsecase.aceitarRejeitarAgendamento(
       id,
-      dto.acao,
+      dto.acao
     );
   }
 }

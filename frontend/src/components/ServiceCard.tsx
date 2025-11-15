@@ -26,34 +26,41 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   slug,
 }) => {
   return (
-    <Card className="overflow-hidden card-hover border-2 border-barber-brown/10">
-      <div className="h-48 overflow-hidden"></div>
+    <Card className="overflow-hidden card-hover border-2 border-barber-brown/10 flex flex-col h-full">
+      <div className="h-40 md:h-48 overflow-hidden bg-muted"></div>
 
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <span>{title}</span>
-          <span className="text-barber-gold">R${price}</span>
+      <CardHeader className="pb-3">
+        <CardTitle className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 text-base md:text-lg">
+          <span className="break-words">{title}</span>
+          <span className="text-barber-gold text-sm md:text-base whitespace-nowrap">
+            R${price}
+          </span>
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <p className="text-muted-foreground mb-2">{description}</p>
-        <div className="text-sm text-muted-foreground">
+      <CardContent className="flex-grow pb-3">
+        <p className="text-sm md:text-base text-muted-foreground mb-2 line-clamp-2">
+          {description}
+        </p>
+        <div className="text-xs md:text-sm text-muted-foreground">
           Duração: {duration} minutos
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-between">
-        <Link href={`/services/${slug}`}>
+      <CardFooter className="flex flex-col sm:flex-row gap-2 pt-3">
+        <Link href={`/services/${slug}`} className="w-full sm:flex-1">
           <Button
             variant="outline"
-            className="border-barber-brown text-barber-brown hover:bg-barber-brown hover:text-white"
+            className="w-full border-barber-brown text-barber-brown hover:bg-barber-brown hover:text-white text-sm"
           >
             Detalhes
           </Button>
         </Link>
-        <Link href={`/appointments?service=${slug}`}>
-          <Button className="bg-barber-gold hover:bg-barber-gold/90 text-black">
+        <Link
+          href={`/appointments?service=${slug}`}
+          className="w-full sm:flex-1"
+        >
+          <Button className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black text-sm">
             Agendar
           </Button>
         </Link>

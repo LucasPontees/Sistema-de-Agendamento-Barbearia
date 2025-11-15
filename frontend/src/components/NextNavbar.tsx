@@ -1,12 +1,13 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserCircle2, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useRouter } from "next/navigation";
-import { api } from "@/http/api";
+import { useRouter, usePathname } from "next/navigation";
+import { deleteCookie } from "cookies-next";
+import { useUser } from "@/contexts/UserContext";
 
 interface HeaderProps {
   isAuthenticated?: boolean;
@@ -15,30 +16,64 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
-  //   const isAuthenticated = useAuth(); // aqui você pega o estado atual via API
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const isMobile = useIsMobile();
   const { toast } = useToast();
-
   const router = useRouter();
+  const pathname = usePathname();
+  const { role } = useUser();
+
+  useEffect(() => {
+    // Verifica se está em uma rota protegida ou se acabou de fazer login
+    const protectedRoutes = [
+      "/homepage",
+      "/dashboard",
+      "/profile",
+      "/appointments",
+      "/agendamentos",
+    ];
+    const isProtectedRoute = protectedRoutes.some((route) =>
+      pathname?.startsWith(route)
+    );
+
+    // Se está em uma rota protegida, significa que está autenticado
+    setIsAuthenticated(isProtectedRoute);
+  }, [pathname]);
+
+  const getHomeLink = () => {
+    if (!isAuthenticated) return "/login";
+    // Se for EMPRESA, vai para agendamentos; se for USUARIO, vai para homepage
+    return role === "EMPRESA" ? "/agendamentos" : "/homepage";
+  };
 
   const handleLogout = async () => {
     try {
-      await api.post("auth/logout"); // Faz o logout no backend
+      // Remove o cookie de autenticação
+      deleteCookie("access_token", { path: "/" });
 
-      router.push("/login"); // Redireciona após logout
+      setIsAuthenticated(false);
+      router.push("/login");
       toast({ title: "Desconectado com sucesso!" });
     } catch (error) {
       console.error("Erro ao fazer logout", error);
+      toast({
+        title: "Erro ao desconectar",
+        variant: "destructive",
+      });
     }
   };
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
-    <header className="bg-barber-dark text-white shadow-md">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+    <header className="bg-barber-dark text-white shadow-md sticky top-0 z-40">
+      <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <Link href="/"></Link>
+          <Link href={getHomeLink()}>
+            <span className="text-xl md:text-2xl font-bold text-barber-gold">
+              Barber Shop
+            </span>
+          </Link>
         </div>
 
         {isMobile ? (
@@ -53,54 +88,70 @@ const Header: React.FC<HeaderProps> = () => {
             </Button>
 
             {menuOpen && (
-              <div className="absolute top-16 left-0 right-0 bg-barber-dark p-4 z-50 animate-fade-in">
+              <div className="fixed top-16 left-0 right-0 bg-barber-dark p-4 z-50 shadow-lg border-t border-barber-gold/20">
                 <nav className="flex flex-col space-y-4">
-                  <Link
-                    href="/"
-                    className="text-white hover:text-barber-gold"
-                    onClick={toggleMenu}
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    href="/appointments"
-                    className="text-white hover:text-barber-gold"
-                    onClick={toggleMenu}
-                  >
-                    Agendamentos
-                  </Link>
-                  {/* {isAuthenticated ? ( */}
-                  <>
-                    <Link
-                      href="/dashboard"
-                      className="text-white hover:text-barber-gold"
-                      onClick={toggleMenu}
-                    >
-                      Painel
-                    </Link>
-                    <Button variant="destructive" onClick={handleLogout}>
-                      Sair
-                    </Button>
-                  </>
-                  ) : (
-                  <>
-                    <Link
-                      href="/login"
-                      className="text-white hover:text-barber-gold"
-                      onClick={toggleMenu}
-                    >
-                      Login
-                    </Link>
-                    <Link href="/register">
-                      <Button
-                        variant="default"
-                        className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black"
+                  {isAuthenticated ? (
+                    <>
+                      <Link
+                        href={role === "EMPRESA" ? "/agendamentos" : "/homepage"}
+                        className="text-white hover:text-barber-gold"
+                        onClick={toggleMenu}
                       >
-                        Registrar
+                        Home
+                      </Link>
+                      <Link
+                        href="/agendamentos"
+                        className="text-white hover:text-barber-gold"
+                        onClick={toggleMenu}
+                      >
+                        Meus Agendamentos
+                      </Link>
+                      {role === "USUARIO" && (
+                        <Link
+                          href="/appointments"
+                          className="text-white hover:text-barber-gold"
+                          onClick={toggleMenu}
+                        >
+                          Novo Agendamento
+                        </Link>
+                      )}
+                      <Link
+                        href="/dashboard"
+                        className="text-white hover:text-barber-gold"
+                        onClick={toggleMenu}
+                      >
+                        Painel
+                      </Link>
+                      <Link
+                        href="/profile"
+                        className="text-white hover:text-barber-gold"
+                        onClick={toggleMenu}
+                      >
+                        Perfil
+                      </Link>
+                      <Button variant="destructive" onClick={handleLogout}>
+                        Sair
                       </Button>
-                    </Link>
-                  </>
-                  {/* )} */}
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        className="text-white hover:text-barber-gold"
+                        onClick={toggleMenu}
+                      >
+                        Login
+                      </Link>
+                      <Link href="/register" onClick={toggleMenu}>
+                        <Button
+                          variant="default"
+                          className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black"
+                        >
+                          Registrar
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </nav>
               </div>
             )}
@@ -108,66 +159,75 @@ const Header: React.FC<HeaderProps> = () => {
         ) : (
           <div className="flex items-center space-x-6">
             <nav className="flex space-x-6">
-              <Link
-                href="/homepage"
-                className="text-white hover:text-barber-gold"
-              >
-                Home
-              </Link>
-
-              <Link
-                href="/appointments"
-                className="text-white hover:text-barber-gold"
-              >
-                Agendamentos
-              </Link>
-              {/* {isAuthenticated && ( */}
-              <Link
-                href="/dashboard"
-                className="text-white hover:text-barber-gold"
-              >
-                Painel
-              </Link>
-              {/* )} */}
+              {isAuthenticated && (
+                <>
+                  <Link
+                    href={role === "EMPRESA" ? "/agendamentos" : "/homepage"}
+                    className="text-white hover:text-barber-gold"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    href="/agendamentos"
+                    className="text-white hover:text-barber-gold"
+                  >
+                    Meus Agendamentos
+                  </Link>
+                  {role === "USUARIO" && (
+                    <Link
+                      href="/appointments"
+                      className="text-white hover:text-barber-gold"
+                    >
+                      Novo Agendamento
+                    </Link>
+                  )}
+                  <Link
+                    href="/dashboard"
+                    className="text-white hover:text-barber-gold"
+                  >
+                    Painel
+                  </Link>
+                </>
+              )}
             </nav>
 
             <div className="flex items-center space-x-4">
-              {/* {isAuthenticated ? ( */}
-              <>
-                <Link
-                  href="/profile"
-                  className="text-white hover:text-barber-gold"
-                >
-                  <UserCircle2 size={24} />
-                </Link>
-                <Button
-                  variant="outline"
-                  onClick={handleLogout}
-                  className="border-barber-gold text-barber-gold hover:bg-barber-gold hover:text-black"
-                >
-                  Sair
-                </Button>
-              </>
-              ) : (
-              <>
-                <Link href="/login">
-                  <Button
-                    variant="ghost"
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    href="/profile"
                     className="text-white hover:text-barber-gold"
                   >
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/register">
+                    <UserCircle2 size={24} />
+                  </Link>
                   <Button
-                    variant="default"
-                    className="bg-barber-gold hover:bg-barber-gold/90 text-black"
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="border-barber-gold text-barber-gold hover:bg-barber-gold hover:text-black"
                   >
-                    Registrar
+                    Sair
                   </Button>
-                </Link>
-              </>
-              {/* )} */}
+                </>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button
+                      variant="ghost"
+                      className="text-white hover:text-barber-gold"
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button
+                      variant="default"
+                      className="bg-barber-gold hover:bg-barber-gold/90 text-black"
+                    >
+                      Registrar
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
