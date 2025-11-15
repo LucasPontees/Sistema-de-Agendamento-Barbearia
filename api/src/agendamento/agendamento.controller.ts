@@ -8,6 +8,7 @@ import {
   Patch,
   UseGuards,
   Req,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { CreateAgendamentoUsecase } from "./agendamento.usecase";
 import { CreateAgendamentoDto } from "./dto/create-agendamento.dto";
@@ -58,13 +59,16 @@ export class AgendamentoController {
     );
   }
   @Get(":id")
-  getAgendamentosById(@Param("id") id: number) {
+  getAgendamentosById(@Param("id", ParseIntPipe) id: number) {
     return this.returnAgendamentosPorIdUsecase.returnAgendamentoPorId(id);
   }
 
   @Patch("status/:id")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.EMPRESA)
   aceitarRejeitarAgendamento(
-    @Param("id") id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() dto: AtualizaStatusAgendamentoDto
   ) {
     return this.aceitarRejeitarAgendamentoUsecase.aceitarRejeitarAgendamento(

@@ -15,6 +15,7 @@ import {
 import { Calendar, Clock, Scissors } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createAgendamento, getServices } from "./actions";
+import { useUser } from "@/contexts/UserContext";
 
 interface Service {
   id: number;
@@ -26,6 +27,7 @@ interface Service {
 
 const Appointments: React.FC = () => {
   const router = useRouter();
+  const { role, loading: userLoading } = useUser();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -35,8 +37,17 @@ const Appointments: React.FC = () => {
   });
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    // Se for EMPRESA, redireciona para a página de agendamentos
+    if (!userLoading && role === "EMPRESA") {
+      router.replace("/agendamentos");
+    }
+  }, [role, userLoading, router]);
+
+  useEffect(() => {
+    if (role === "USUARIO") {
+      fetchServices();
+    }
+  }, [role]);
 
   const fetchServices = async () => {
     const data = await getServices();
@@ -56,7 +67,7 @@ const Appointments: React.FC = () => {
 
       if (result.success) {
         alert("Agendamento criado com sucesso!");
-        router.push("/dashboard");
+        router.push("/agendamentos");
       } else {
         alert(
           `Erro: ${result.error || "Não foi possível criar o agendamento"}`
@@ -74,13 +85,24 @@ const Appointments: React.FC = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Se ainda está carregando ou é EMPRESA, mostra loading
+  if (userLoading || role === "EMPRESA") {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg">Carregando...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-grow pt-8 pb-16">
+      <main className="flex-grow pt-6 md:pt-8 pb-12 md:pb-16">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold mb-4">Agende seu Horário</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">
+              Agende seu Horário
+            </h1>
+            <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
               Agende sua próxima visita com nossos barbeiros especialistas.
               Escolha seu serviço preferido, data e horário para uma experiência
               de cuidado personalizado.
@@ -88,19 +110,19 @@ const Appointments: React.FC = () => {
           </div>
 
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
                 <Calendar className="h-5 w-5" />
                 Novo Agendamento
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                 {/* Serviço */}
                 <div className="space-y-2">
                   <Label
                     htmlFor="servicoId"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 text-sm md:text-base"
                   >
                     <Scissors className="h-4 w-4" />
                     Serviço
@@ -110,7 +132,7 @@ const Appointments: React.FC = () => {
                     onValueChange={(value) => handleChange("servicoId", value)}
                     required
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Selecione um serviço" />
                     </SelectTrigger>
                     <SelectContent>
@@ -118,9 +140,12 @@ const Appointments: React.FC = () => {
                         <SelectItem
                           key={service.id}
                           value={service.id.toString()}
+                          className="text-sm"
                         >
-                          {service.nome} - R$ {service.preco.toFixed(2)} (
-                          {service.duracaoMin} min)
+                          <span className="block truncate">
+                            {service.nome} - R$ {service.preco.toFixed(2)} (
+                            {service.duracaoMin} min)
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -129,7 +154,10 @@ const Appointments: React.FC = () => {
 
                 {/* Data e Hora */}
                 <div className="space-y-2">
-                  <Label htmlFor="dataHora" className="flex items-center gap-2">
+                  <Label
+                    htmlFor="dataHora"
+                    className="flex items-center gap-2 text-sm md:text-base"
+                  >
                     <Clock className="h-4 w-4" />
                     Data e Hora
                   </Label>
@@ -140,12 +168,15 @@ const Appointments: React.FC = () => {
                     onChange={(e) => handleChange("dataHora", e.target.value)}
                     required
                     min={new Date().toISOString().slice(0, 16)}
+                    className="w-full"
                   />
                 </div>
 
                 {/* Observações */}
                 <div className="space-y-2">
-                  <Label htmlFor="observacoes">Observações (opcional)</Label>
+                  <Label htmlFor="observacoes" className="text-sm md:text-base">
+                    Observações (opcional)
+                  </Label>
                   <Textarea
                     id="observacoes"
                     placeholder="Alguma preferência ou observação?"
@@ -154,16 +185,17 @@ const Appointments: React.FC = () => {
                       handleChange("observacoes", e.target.value)
                     }
                     rows={4}
+                    className="w-full resize-none"
                   />
                 </div>
 
                 {/* Botões */}
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => router.back()}
-                    className="flex-1"
+                    className="w-full sm:flex-1"
                   >
                     Cancelar
                   </Button>
@@ -172,7 +204,7 @@ const Appointments: React.FC = () => {
                     disabled={
                       loading || !formData.servicoId || !formData.dataHora
                     }
-                    className="flex-1 bg-barber-gold hover:bg-barber-gold/90 text-black"
+                    className="w-full sm:flex-1 bg-barber-gold hover:bg-barber-gold/90 text-black"
                   >
                     {loading ? "Agendando..." : "Confirmar Agendamento"}
                   </Button>

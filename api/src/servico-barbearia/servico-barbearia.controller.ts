@@ -40,7 +40,7 @@ export class ServicoBarbeariaController {
   @Get()
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @ApiBearerAuth("JWT-auth")
-  @Roles(UserRole.EMPRESA)
+  @Roles(UserRole.USUARIO)
   findOne(@Req() req: RequestWithUser) {
     const empresaID = req.user.empresaId;
     return this.listarServicoIdUseCase.execute(empresaID);
