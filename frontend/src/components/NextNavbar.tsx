@@ -93,7 +93,9 @@ const Header: React.FC<HeaderProps> = () => {
                   {isAuthenticated ? (
                     <>
                       <Link
-                        href={role === "EMPRESA" ? "/agendamentos" : "/homepage"}
+                        href={
+                          role === "EMPRESA" ? "/agendamentos" : "/homepage"
+                        }
                         className="text-white hover:text-barber-gold"
                         onClick={toggleMenu}
                       >
@@ -122,6 +124,16 @@ const Header: React.FC<HeaderProps> = () => {
                       >
                         Painel
                       </Link>
+                      {role === "EMPRESA" && (
+                        <Link href="/register" onClick={toggleMenu}>
+                          <Button
+                            variant="default"
+                            className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black"
+                          >
+                            Registrar Cliente
+                          </Button>
+                        </Link>
+                      )}
                       <Link
                         href="/profile"
                         className="text-white hover:text-barber-gold"
@@ -142,12 +154,12 @@ const Header: React.FC<HeaderProps> = () => {
                       >
                         Login
                       </Link>
-                      <Link href="/register" onClick={toggleMenu}>
+                      <Link href="/register-company" onClick={toggleMenu}>
                         <Button
                           variant="default"
                           className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black"
                         >
-                          Registrar
+                          Registrar Empresa
                         </Button>
                       </Link>
                     </>
@@ -187,6 +199,16 @@ const Header: React.FC<HeaderProps> = () => {
                   >
                     Painel
                   </Link>
+                  {role === "EMPRESA" && (
+                    <Link href="/register">
+                      <Button
+                        variant="default"
+                        className="bg-barber-gold hover:bg-barber-gold/90 text-black"
+                      >
+                        Registrar Cliente
+                      </Button>
+                    </Link>
+                  )}
                 </>
               )}
             </nav>
@@ -218,12 +240,12 @@ const Header: React.FC<HeaderProps> = () => {
                       Login
                     </Button>
                   </Link>
-                  <Link href="/register">
+                  <Link href="/register-company">
                     <Button
                       variant="default"
                       className="bg-barber-gold hover:bg-barber-gold/90 text-black"
                     >
-                      Registrar
+                      Registrar Empresa
                     </Button>
                   </Link>
                 </>
