@@ -25,6 +25,7 @@ import {
   Clock,
   FileText,
 } from "lucide-react";
+import { createCompanyBilling } from "./actions";
 
 interface RegisterCompanyForm {
   // Dados da Empresa
@@ -154,33 +155,30 @@ const RegisterCompany: React.FC = () => {
         },
       };
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/empresa`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      // Cria cobrança na AbacatePay
+      const result = await createCompanyBilling(payload);
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Erro ao registrar empresa");
+      if (!result.success || !result.data) {
+        throw new Error(result.error || "Erro ao criar cobrança");
       }
 
       toast({
-        title: "Sucesso!",
+        title: "Redirecionando para pagamento...",
         description:
-          "Empresa registrada com sucesso! Faça login para continuar.",
+          "Você será redirecionado para completar o pagamento de R$ 1,00",
       });
 
-      router.push("/login");
+      // Salva o billingId no sessionStorage para usar depois
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("pendingBillingId", result.data.billingId);
+      }
+
+      // Redireciona para página de pagamento da AbacatePay
+      window.location.href = result.data.paymentUrl;
     } catch (error: unknown) {
-      console.error("Erro ao registrar empresa:", error);
+      console.error("Erro ao processar registro:", error);
       toast({
-        title: "Erro ao registrar",
+        title: "Erro ao processar registro",
         description:
           error instanceof Error
             ? error.message
@@ -493,9 +491,11 @@ const RegisterCompany: React.FC = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full sm:flex-1 bg-barber-gold hover:bg-barber-gold/90 text-black"
+                    className="w-full sm:flex-1 bg-barber-gold hover:bg-barber-gold/90 text-black font-semibold"
                   >
-                    {loading ? "Registrando..." : "Registrar Empresa"}
+                    {loading
+                      ? "Processando..."
+                      : "Pagar R$ 1,00 e Registrar 🥑"}
                   </Button>
                 </div>
               </form>

@@ -29,5 +29,10 @@ import { CreateUserUseCase } from "@/usuario/create-user.usecase";
       useClass: HashArgon2,
     },
   ],
+  exports: [
+    CreateEmpresaUseCase,
+    ListarEmpresaIdUseCase,
+    ListarTodasEmpresasUseCase,
+  ],
 })
 export class EmpresaModule {}
