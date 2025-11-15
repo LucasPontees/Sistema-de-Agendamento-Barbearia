@@ -98,87 +98,7 @@ const Index: React.FC = () => {
                     Agendar Horário
                   </Button>
                 </Link>
-                <Link href="/membership">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-barber-black text-barber-gold hover:bg-barber-white/10"
-                  >
-                    Junte-se ao Clube VIP
-                  </Button>
-                </Link>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">
-              Por Que Escolher Barba VIP
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Scissors size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Barbeiros Especialistas
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Nossos barbeiros qualificados trazem anos de experiência e
-                    paixão para cada corte.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Star size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Produtos Premium
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Utilizamos apenas os melhores produtos para resultados
-                    excepcionais.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Clock size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Serviço Eficiente
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Respeito pelo seu tempo com agendamentos pontuais e
-                    eficientes.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center p-6 card-hover">
-                <CardContent className="p-0 pt-6">
-                  <div className="mx-auto w-16 h-16 bg-barber-gold/10 rounded-full flex items-center justify-center mb-4">
-                    <Users size={28} className="text-barber-gold" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">
-                    Experiência VIP
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Benefícios exclusivos para membros e abordagem
-                    personalizada.
-                  </p>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </section>
@@ -200,41 +120,6 @@ const Index: React.FC = () => {
               {featuredServices.map((service, index) => (
                 <ServiceCard key={index} {...service} />
               ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <Link href="/services">
-                <Button
-                  variant="outline"
-                  className="border-barber-brown text-barber-brown hover:bg-barber-brown hover:text-white"
-                >
-                  Ver Todos os Serviços
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* VIP Club CTA */}
-        <section className="py-20 bg-barber-dark text-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-6">
-                Junte-se ao Nosso Clube VIP
-              </h2>
-              <p className="text-xl mb-8">
-                Torne-se um membro e desfrute de benefícios exclusivos como
-                descontos em serviços, agendamento prioritário, produtos
-                gratuitos e muito mais.
-              </p>
-              <Link href="/membership">
-                <Button
-                  size="lg"
-                  className="bg-barber-gold hover:bg-barber-gold/90 text-black"
-                >
-                  Saiba Mais
-                </Button>
-              </Link>
             </div>
           </div>
         </section>
