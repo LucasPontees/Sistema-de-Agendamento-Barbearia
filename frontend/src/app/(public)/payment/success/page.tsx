@@ -29,6 +29,22 @@ const PaymentSuccess: React.FC = () => {
       console.log("📋 [SUCCESS] billingId do sessionStorage:", billingId);
     }
 
+    // Recupera os dados da empresa do sessionStorage
+    let empresaData = null;
+    if (typeof window !== "undefined") {
+      const empresaDataStr = sessionStorage.getItem("pendingCompanyData");
+      if (empresaDataStr) {
+        try {
+          empresaData = JSON.parse(empresaDataStr);
+          console.log(
+            "📋 [SUCCESS] Dados da empresa recuperados do sessionStorage"
+          );
+        } catch (e) {
+          console.error("❌ [SUCCESS] Erro ao parsear dados da empresa:", e);
+        }
+      }
+    }
+
     if (!billingId) {
       console.error("❌ [SUCCESS] billingId não encontrado!");
       setStatus("error");
@@ -40,26 +56,42 @@ const PaymentSuccess: React.FC = () => {
 
     console.log("✅ [SUCCESS] Usando billingId:", billingId);
 
-    // Limpa o sessionStorage
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("pendingBillingId");
-    }
+    let isProcessing = false; // Flag para evitar múltiplas chamadas simultâneas
 
     const verifyPayment = async () => {
+      if (isProcessing) {
+        console.log("⏸️  [SUCCESS] Já está processando, aguarde...");
+        return;
+      }
+
+      isProcessing = true;
+
       try {
         console.log("📞 [SUCCESS] Chamando checkAndCreateCompany...");
-        const result = await checkAndCreateCompany(billingId!);
+        const result = await checkAndCreateCompany(billingId!, empresaData);
         console.log("📊 [SUCCESS] Resposta recebida:", result);
 
         if (result.success && result.data.success) {
           console.log("✅ [SUCCESS] Empresa criada com sucesso!");
           setStatus("success");
-          setMessage("Empresa criada com sucesso! Você já pode fazer login.");
+
+          const message = result.data.alreadyExists
+            ? "Empresa já foi criada anteriormente! Você já pode fazer login."
+            : "Empresa criada com sucesso! Você já pode fazer login.";
+
+          setMessage(message);
+
+          // Limpa o sessionStorage
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem("pendingBillingId");
+            sessionStorage.removeItem("pendingCompanyData");
+          }
 
           toast({
             title: "🎉 Sucesso!",
-            description:
-              "Sua empresa foi registrada. Redirecionando para login...",
+            description: result.data.alreadyExists
+              ? "Empresa já registrada. Redirecionando para login..."
+              : "Sua empresa foi registrada. Redirecionando para login...",
           });
 
           // Redireciona para login após 3 segundos
@@ -70,8 +102,10 @@ const PaymentSuccess: React.FC = () => {
           console.log("⏳ [SUCCESS] Pagamento ainda PENDING, aguardando...");
           setStatus("pending");
           setMessage(
-            "Aguardando confirmação do pagamento PIX. Complete o pagamento na outra aba e aguarde. Esta página será atualizada automaticamente."
+            "Aguardando confirmação do pagamento PIX. Complete o pagamento e aguarde. Esta página será atualizada automaticamente."
           );
+
+          isProcessing = false; // Libera para próxima tentativa
 
           // Tenta novamente em 3 segundos (mais rápido)
           setTimeout(() => verifyPayment(), 3000);
@@ -81,11 +115,13 @@ const PaymentSuccess: React.FC = () => {
           setMessage(
             result.data?.message || "Não foi possível criar a empresa"
           );
+          isProcessing = false;
         }
       } catch (error) {
         console.error("💥 [SUCCESS] Exceção capturada:", error);
         setStatus("error");
         setMessage("Erro ao verificar pagamento. Tente novamente.");
+        isProcessing = false;
       }
     };
 

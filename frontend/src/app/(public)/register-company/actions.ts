@@ -58,9 +58,16 @@ export async function checkPaymentStatus(billingId: string) {
   }
 }
 
-export async function checkAndCreateCompany(billingId: string) {
+export async function checkAndCreateCompany(
+  billingId: string,
+  empresaData?: any
+) {
   try {
     console.log("[SERVER ACTION] Verificando pagamento:", billingId);
+    console.log(
+      "[SERVER ACTION] Dados da empresa:",
+      empresaData ? "PRESENTE" : "NÃO ENVIADO"
+    );
 
     const response = await fetch(
       `${API_URL}/payment/check-and-create/${billingId}`,
@@ -69,6 +76,7 @@ export async function checkAndCreateCompany(billingId: string) {
         headers: {
           "Content-Type": "application/json",
         },
+        body: empresaData ? JSON.stringify(empresaData) : undefined,
         cache: "no-store",
       }
     );

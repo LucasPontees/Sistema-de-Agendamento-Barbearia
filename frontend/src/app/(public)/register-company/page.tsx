@@ -168,11 +168,12 @@ const RegisterCompany: React.FC = () => {
           "Você será redirecionado para completar o pagamento de R$ 1,00",
       });
 
-      // Salva o billingId no sessionStorage para usar depois
+      // Salva o billingId E os dados da empresa no sessionStorage
       if (typeof window !== "undefined") {
         sessionStorage.setItem("pendingBillingId", result.data.billingId);
+        sessionStorage.setItem("pendingCompanyData", JSON.stringify(payload));
         console.log(
-          "💾 [REGISTER] billingId salvo no sessionStorage:",
+          "💾 [REGISTER] billingId e dados da empresa salvos no sessionStorage:",
           result.data.billingId
         );
       }

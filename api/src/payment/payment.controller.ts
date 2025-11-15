@@ -229,6 +229,17 @@ export class PaymentController {
         // Tenta pegar dados da memória ou do body
         let dataToUse = this.pendingRegistrations.get(billingId) || empresaData;
 
+        this.logger.log(`🔍 DEBUG - billingId: ${billingId}`);
+        this.logger.log(
+          `🔍 DEBUG - Dados em memória: ${this.pendingRegistrations.has(billingId) ? "SIM" : "NÃO"}`
+        );
+        this.logger.log(
+          `🔍 DEBUG - Dados no body: ${empresaData ? "SIM" : "NÃO"}`
+        );
+        this.logger.log(
+          `🔍 DEBUG - dataToUse: ${dataToUse ? JSON.stringify(dataToUse) : "undefined"}`
+        );
+
         // Se tem dados no body mas não está mais na memória,
         // recria a partir dos metadados da cobrança
         if (!dataToUse && billing.data.metadata?.metadata) {
@@ -240,14 +251,27 @@ export class PaymentController {
 
           // Verifica se é um registro de empresa
           if (metadata.tipo === "registro-empresa") {
+            this.logger.log(
+              `🔧 Tentando reconstruir dados da empresa do metadata...`
+            );
+
+            // IMPORTANTE: O metadata da AbacatePay não contém todos os dados da empresa
+            // Apenas email e nome. Precisamos que o frontend reenvie os dados completos
+            // OU implementar um banco de dados para persistir os dados
+
+            this.logger.warn(
+              `⚠️  Dados completos não disponíveis no metadata. Necessário reenviar dados completos.`
+            );
+
             return {
               success: false,
               message:
-                "Pagamento confirmado, mas dados da empresa foram perdidos. Entre em contato com o suporte informando o billingId.",
+                "Pagamento confirmado, mas dados completos da empresa foram perdidos após reiniciar o servidor. O metadata da AbacatePay contém apenas informações básicas (email, nome). Para completar o cadastro, é necessário reenviar os dados completos ou implementar persistência em banco de dados.",
               status: billing.data.status,
               billingId,
               empresaNome: metadata.empresaNome,
               email: metadata.email,
+              hint: "Solução temporária: mantenha o backend rodando sem reiniciar durante o fluxo de pagamento. Solução permanente: implementar banco de dados para armazenar dados pendentes.",
             };
           }
         }
@@ -269,20 +293,46 @@ export class PaymentController {
           `💰 Pagamento confirmado! Criando empresa: ${dataToUse.nomeFantasia}`
         );
 
-        // Cria a empresa
-        const empresa = await this.createEmpresaUseCase.execute(dataToUse);
+        // Tenta criar a empresa
+        try {
+          const empresa = await this.createEmpresaUseCase.execute(dataToUse);
 
-        // Remove dos registros pendentes
-        this.pendingRegistrations.delete(billingId);
+          // Remove dos registros pendentes
+          this.pendingRegistrations.delete(billingId);
 
-        this.logger.log(`✅ Empresa criada com sucesso: ${empresa.id}`);
+          this.logger.log(`✅ Empresa criada com sucesso: ${empresa.id}`);
 
-        return {
-          success: true,
-          message: "Empresa criada com sucesso",
-          empresaId: empresa.id,
-          status: billing.data.status,
-        };
+          return {
+            success: true,
+            message: "Empresa criada com sucesso",
+            empresaId: empresa.id,
+            status: billing.data.status,
+          };
+        } catch (createError) {
+          // Se empresa já existe, considera como sucesso (evita erro em polling)
+          if (
+            createError instanceof Error &&
+            createError.message.includes("already exists")
+          ) {
+            this.logger.warn(
+              `⚠️  Empresa já existe (provavelmente criada em tentativa anterior)`
+            );
+
+            // Remove dos registros pendentes
+            this.pendingRegistrations.delete(billingId);
+
+            return {
+              success: true,
+              message:
+                "Empresa já foi criada anteriormente. Você já pode fazer login.",
+              status: billing.data.status,
+              alreadyExists: true,
+            };
+          }
+
+          // Se for outro erro, relança
+          throw createError;
+        }
       }
 
       return {
