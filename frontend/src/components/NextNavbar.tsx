@@ -63,25 +63,11 @@ const Header: React.FC<HeaderProps> = () => {
                     Home
                   </Link>
                   <Link
-                    href="/services"
-                    className="text-white hover:text-barber-gold"
-                    onClick={toggleMenu}
-                  >
-                    Barbearias
-                  </Link>
-                  <Link
                     href="/appointments"
                     className="text-white hover:text-barber-gold"
                     onClick={toggleMenu}
                   >
                     Agendamentos
-                  </Link>
-                  <Link
-                    href="/membership"
-                    className="text-white hover:text-barber-gold"
-                    onClick={toggleMenu}
-                  >
-                    Clube VIP
                   </Link>
                   {/* {isAuthenticated ? ( */}
                   <>
@@ -128,23 +114,12 @@ const Header: React.FC<HeaderProps> = () => {
               >
                 Home
               </Link>
-              <Link
-                href="/catalog"
-                className="text-white hover:text-barber-gold"
-              >
-                Barbearias
-              </Link>
+
               <Link
                 href="/appointments"
                 className="text-white hover:text-barber-gold"
               >
                 Agendamentos
-              </Link>
-              <Link
-                href="/membership"
-                className="text-white hover:text-barber-gold"
-              >
-                Clube VIP
               </Link>
               {/* {isAuthenticated && ( */}
               <Link
