@@ -25,7 +25,7 @@ interface RequestWithUser extends Request {
 export class ServicoBarbeariaController {
   constructor(
     private readonly servicoBarbeariaUseCase: ServicoBarbeariaUseCase,
-    private readonly listarServicoIdUseCase: ListarServicoIdUseCase,
+    private readonly listarServicoIdUseCase: ListarServicoIdUseCase
   ) {}
 
   @Post()
@@ -38,7 +38,11 @@ export class ServicoBarbeariaController {
   }
 
   @Get()
-  findOne(@Query("empresaID") empresaID: number) {
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.USUARIO)
+  findOne(@Req() req: RequestWithUser) {
+    const empresaID = req.user.empresaId;
     return this.listarServicoIdUseCase.execute(empresaID);
   }
 }
