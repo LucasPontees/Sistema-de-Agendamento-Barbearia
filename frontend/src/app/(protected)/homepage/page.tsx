@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ServiceCard from "@/components/ServiceCard";
-import { Scissors, Clock, Star, Users } from "lucide-react";
+import { Star } from "lucide-react";
 import { cookies } from "next/headers";
 
 const testimonials = [
@@ -73,7 +73,7 @@ const Index = async () => {
     description: service.descricao || service.description,
     price: service.preco || service.price,
     duration: service.duracaoMin || service.duration,
-    image: "/model-barber.svg", // Imagem padrão
+    image: "/model-barber.svg",
     slug:
       service.slug ||
       service.nome?.toLowerCase().replace(/\s+/g, "-") ||
@@ -90,22 +90,22 @@ const Index = async () => {
             className="absolute inset-0 bg-cover bg-center z-0"
             style={{ backgroundImage: "url(/hero-bg.jpg)" }}
           ></div>
-          <div className="container mx-auto px-4 py-24 relative z-20">
+          <div className="container mx-auto px-4 py-16 md:py-24 relative z-20">
             <div className="max-w-2xl">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                 Experiência de cuidados pessoais premium para o cavalheiro
                 moderno
               </h1>
-              <p className="text-xl mb-8 text-gray-200">
+              <p className="text-base md:text-xl mb-6 md:mb-8 text-gray-200">
                 Barbeiros especialistas, produtos premium e serviço excepcional.
                 Junte-se ao nosso clube VIP para vantagens exclusivas e reservas
                 prioritárias.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/appointments">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <Link href="/appointments" className="w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="bg-barber-gold hover:bg-barber-gold/90 text-black"
+                    className="w-full sm:w-auto bg-barber-gold hover:bg-barber-gold/90 text-black"
                   >
                     Agendar Horário
                   </Button>
@@ -116,25 +116,25 @@ const Index = async () => {
         </section>
 
         {/* Services Section */}
-        <section className="py-16">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">
                 Nossos Serviços Premium
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
                 Descubra nossa gama de serviços especializados projetados para
                 manter seu visual impecável.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {services.length > 0 ? (
                 services.map((service: any, index: number) => (
                   <ServiceCard key={index} {...service} />
                 ))
               ) : (
-                <p className="col-span-4 text-center text-muted-foreground">
+                <p className="col-span-full text-center text-muted-foreground">
                   Nenhum serviço cadastrado ainda.
                 </p>
               )}
@@ -143,13 +143,13 @@ const Index = async () => {
         </section>
 
         {/* Testimonials */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-12 md:py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">
               O Que Nossos Clientes Dizem
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
               {testimonials.map((testimonial, index) => (
                 <Card key={index} className="card-hover">
                   <CardContent className="pt-6">
@@ -180,18 +180,21 @@ const Index = async () => {
         </section>
 
         {/* Booking CTA */}
-        <section className="py-16">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">
               Pronto para um Novo Visual?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto px-4">
               Agende seu horário hoje e experimente a diferença Barba VIP.
             </p>
-            <Link href="/appointments">
+            <Link
+              href="/appointments"
+              className="inline-block w-full sm:w-auto"
+            >
               <Button
                 size="lg"
-                className="bg-barber-gold hover:bg-barber-gold/90 text-black"
+                className="w-full sm:w-auto bg-barber-gold hover:bg-barber-gold/90 text-black"
               >
                 Agendar seu Horário
               </Button>

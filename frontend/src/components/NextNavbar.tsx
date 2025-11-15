@@ -60,11 +60,11 @@ const Header: React.FC<HeaderProps> = () => {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
-    <header className="bg-barber-dark text-white shadow-md">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+    <header className="bg-barber-dark text-white shadow-md sticky top-0 z-40">
+      <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <Link href={isAuthenticated ? "/homepage" : "/login"}>
-            <span className="text-2xl font-bold text-barber-gold">
+            <span className="text-xl md:text-2xl font-bold text-barber-gold">
               Barber Shop
             </span>
           </Link>
@@ -82,7 +82,7 @@ const Header: React.FC<HeaderProps> = () => {
             </Button>
 
             {menuOpen && (
-              <div className="absolute top-16 left-0 right-0 bg-barber-dark p-4 z-50 animate-fade-in">
+              <div className="fixed top-16 left-0 right-0 bg-barber-dark p-4 z-50 shadow-lg border-t border-barber-gold/20">
                 <nav className="flex flex-col space-y-4">
                   {isAuthenticated ? (
                     <>
