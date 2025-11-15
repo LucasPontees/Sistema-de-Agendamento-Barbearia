@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import ServiceCard from "@/components/ServiceCard";
 import { Star } from "lucide-react";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const testimonials = [
   {
@@ -29,6 +30,27 @@ const testimonials = [
     avatar: "/avatar.png",
   },
 ];
+
+async function getUserRole() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+
+    if (!token) {
+      return null;
+    }
+
+    // Decodifica o token JWT para obter o role
+    const tokenPayload = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64").toString()
+    );
+
+    return tokenPayload.role as "EMPRESA" | "USUARIO" | null;
+  } catch (error) {
+    console.error("Erro ao decodificar token:", error);
+    return null;
+  }
+}
 
 async function getServices() {
   try {
@@ -65,6 +87,14 @@ async function getServices() {
 }
 
 const Index = async () => {
+  // Verifica o role do usuário
+  const userRole = await getUserRole();
+
+  // Se for EMPRESA, redireciona para agendamentos
+  if (userRole === "EMPRESA") {
+    redirect("/agendamentos");
+  }
+
   const servicesFromApi = await getServices();
 
   // Mapear os dados da API para o formato esperado pelo ServiceCard

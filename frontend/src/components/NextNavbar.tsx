@@ -40,6 +40,12 @@ const Header: React.FC<HeaderProps> = () => {
     setIsAuthenticated(isProtectedRoute);
   }, [pathname]);
 
+  const getHomeLink = () => {
+    if (!isAuthenticated) return "/login";
+    // Se for EMPRESA, vai para agendamentos; se for USUARIO, vai para homepage
+    return role === "EMPRESA" ? "/agendamentos" : "/homepage";
+  };
+
   const handleLogout = async () => {
     try {
       // Remove o cookie de autenticação
@@ -63,7 +69,7 @@ const Header: React.FC<HeaderProps> = () => {
     <header className="bg-barber-dark text-white shadow-md sticky top-0 z-40">
       <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <Link href={isAuthenticated ? "/homepage" : "/login"}>
+          <Link href={getHomeLink()}>
             <span className="text-xl md:text-2xl font-bold text-barber-gold">
               Barber Shop
             </span>
@@ -87,7 +93,7 @@ const Header: React.FC<HeaderProps> = () => {
                   {isAuthenticated ? (
                     <>
                       <Link
-                        href="/homepage"
+                        href={role === "EMPRESA" ? "/agendamentos" : "/homepage"}
                         className="text-white hover:text-barber-gold"
                         onClick={toggleMenu}
                       >
@@ -156,7 +162,7 @@ const Header: React.FC<HeaderProps> = () => {
               {isAuthenticated && (
                 <>
                   <Link
-                    href="/homepage"
+                    href={role === "EMPRESA" ? "/agendamentos" : "/homepage"}
                     className="text-white hover:text-barber-gold"
                   >
                     Home
