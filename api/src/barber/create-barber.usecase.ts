@@ -3,14 +3,7 @@ import { Barbeiro } from "@prisma/client";
 import { TYPES } from "../types";
 import { IBarberRepository } from "./repository/barber.repository";
 import { IEmpresaRepository } from "@/empresa/repository/empresa.repository";
-
-export interface CreateBarberRequest {
-  nome: string;
-  telefone: string;
-  email: string;
-  fotoPerfil: string;
-  empresaId: number;
-}
+import { CreateBarberDto } from "./dto/create-barber.dto";
 
 @Injectable()
 export class CreateBarberUseCase {
@@ -18,13 +11,16 @@ export class CreateBarberUseCase {
     @Inject(TYPES.BarberRepository)
     private readonly iBarberRepository: IBarberRepository,
     @Inject(TYPES.EmpresaRepository)
-    private readonly iEmpresaRepository: IEmpresaRepository,
+    private readonly iEmpresaRepository: IEmpresaRepository
   ) {}
-  async execute(request: CreateBarberRequest): Promise<Barbeiro> {
-    const { email, empresaId } = request;
+  async execute(
+    request: CreateBarberDto,
+    empresaId: number
+  ): Promise<Barbeiro> {
+    const { email } = request;
     const barberExists = await this.iBarberRepository.findByEmail(
       email,
-      empresaId,
+      empresaId
     );
 
     if (barberExists) {
@@ -37,12 +33,16 @@ export class CreateBarberUseCase {
       throw new ConflictException(`Empresa with ID ${empresaId} not found`);
     }
 
-    return this.iBarberRepository.create({
-      nome: request.nome,
-      telefone: request.telefone,
-      email: request.email.toLowerCase(),
-      fotoPerfil: request.fotoPerfil,
-      empresa: { connect: { id: request.empresaId } },
-    });
+    const barber = await this.iBarberRepository.create(
+      {
+        nome: request.nome,
+        telefone: request.telefone,
+        email: request.email.toLowerCase(),
+        fotoPerfil: request.fotoPerfil,
+      },
+      empresaId
+    );
+
+    return barber;
   }
 }

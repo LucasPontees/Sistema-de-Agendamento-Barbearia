@@ -2,13 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { IBarberRepository } from "./barber.repository";
 import { PrismaService } from "prisma/prisma.service";
 import { Prisma, Barbeiro } from "@prisma/client";
+import { CreateBarberDto } from "../dto/create-barber.dto";
 
 @Injectable()
 export class PrismaBarberRepository implements IBarberRepository {
   constructor(private readonly prisma: PrismaService) {}
   async findByEmail(
     email: string,
-    companyId: number,
+    companyId: number
   ): Promise<Barbeiro | null> {
     return this.prisma.barbeiro.findFirst({
       where: {
@@ -20,15 +21,18 @@ export class PrismaBarberRepository implements IBarberRepository {
     });
   }
 
-  async create(data: Prisma.BarbeiroCreateInput): Promise<Barbeiro> {
+  async create(data: CreateBarberDto, empresaId: number): Promise<Barbeiro> {
     return this.prisma.barbeiro.create({
-      data,
+      data: {
+        ...data,
+        empresaId,
+      },
     });
   }
 
   async updateBarber(
     id: number,
-    data: Partial<Prisma.BarbeiroUpdateInput>,
+    data: Partial<Prisma.BarbeiroUpdateInput>
   ): Promise<Barbeiro> {
     return this.prisma.barbeiro.update({
       where: {
