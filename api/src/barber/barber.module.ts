@@ -8,11 +8,14 @@ import { PrismaEmpresaRepository } from "@/empresa/repository/prisma-empresa.rep
 import { UpdateBarberUseCase } from "./update-barber.usecase";
 import { HashArgon2 } from "@/usuario/hash/hash-argon2";
 import { PrismaUserRepository } from "@/usuario/repository/prisma-user.repository";
+import { RetornaBarbeirosEmpresaUsecase } from "./retorna-barbeiros-empresa.usecase";
 
 @Module({
   controllers: [BarberController],
   providers: [
+    RetornaBarbeirosEmpresaUsecase,
     CreateBarberUseCase,
+
     {
       provide: TYPES.BarberRepository,
       useClass: PrismaBarberRepository,

@@ -43,6 +43,7 @@ const Header: React.FC<HeaderProps> = () => {
       "/register",
       "/my-appointments",
       "/services",
+      "/barbers",
     ];
 
     // Se está em uma rota pública, não está autenticado
@@ -159,6 +160,13 @@ const Header: React.FC<HeaderProps> = () => {
                             Serviços
                           </Link>
                           <Link
+                            href="/barbers"
+                            className="text-white hover:text-barber-gold"
+                            onClick={toggleMenu}
+                          >
+                            Barbeiros
+                          </Link>
+                          <Link
                             href="/register"
                             className="text-white hover:text-barber-gold"
                             onClick={toggleMenu}
@@ -249,6 +257,14 @@ const Header: React.FC<HeaderProps> = () => {
                       className="text-white hover:text-barber-gold"
                     >
                       Serviços
+                    </Link>
+                  )}
+                  {role === "EMPRESA" && (
+                    <Link
+                      href="/barbers"
+                      className="text-white hover:text-barber-gold"
+                    >
+                      Barbeiros
                     </Link>
                   )}
                   <Link

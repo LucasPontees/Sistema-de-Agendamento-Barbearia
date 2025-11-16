@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 export async function createAgendamento(formData: {
   servicoId: number;
   dataHora: string;
+  barbeiroId?: number;
   observacoes?: string;
 }) {
   try {
@@ -27,6 +28,7 @@ export async function createAgendamento(formData: {
         body: JSON.stringify({
           servicoId: formData.servicoId,
           dataHora: new Date(formData.dataHora).toISOString(),
+          barbeiroId: formData.barbeiroId || undefined,
           observacoes: formData.observacoes || undefined,
         }),
       }
@@ -73,6 +75,38 @@ export async function getServices() {
     return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error("Erro ao buscar serviços:", error);
+    return [];
+  }
+}
+
+export async function getBarbeiros() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+
+    if (!token) {
+      throw new Error("Token não encontrado");
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/barbers`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar barbeiros");
+    }
+
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Erro ao buscar barbeiros:", error);
     return [];
   }
 }

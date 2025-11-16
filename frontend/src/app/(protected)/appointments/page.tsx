@@ -12,9 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar, Clock, Scissors } from "lucide-react";
+import { Calendar, Clock, Scissors, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createAgendamento, getServices } from "./actions";
+import { createAgendamento, getServices, getBarbeiros } from "./actions";
 import { useUser } from "@/contexts/UserContext";
 
 interface Service {
@@ -25,13 +25,22 @@ interface Service {
   duracaoMin: number;
 }
 
+interface Barbeiro {
+  id: number;
+  nome: string;
+  email: string;
+  fotoPerfil: string | null;
+}
+
 const Appointments: React.FC = () => {
   const router = useRouter();
   const { role, loading: userLoading } = useUser();
   const [services, setServices] = useState<Service[]>([]);
+  const [barbeiros, setBarbeiros] = useState<Barbeiro[]>([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     servicoId: "",
+    barbeiroId: "",
     dataHora: "",
     observacoes: "",
   });
@@ -46,12 +55,18 @@ const Appointments: React.FC = () => {
   useEffect(() => {
     if (role === "USUARIO") {
       fetchServices();
+      fetchBarbeiros();
     }
   }, [role]);
 
   const fetchServices = async () => {
     const data = await getServices();
     setServices(data);
+  };
+
+  const fetchBarbeiros = async () => {
+    const data = await getBarbeiros();
+    setBarbeiros(data);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,6 +77,9 @@ const Appointments: React.FC = () => {
       const result = await createAgendamento({
         servicoId: parseInt(formData.servicoId),
         dataHora: formData.dataHora,
+        barbeiroId: formData.barbeiroId
+          ? parseInt(formData.barbeiroId)
+          : undefined,
         observacoes: formData.observacoes || undefined,
       });
 
@@ -150,6 +168,41 @@ const Appointments: React.FC = () => {
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                {/* Barbeiro (Opcional) */}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="barbeiroId"
+                    className="flex items-center gap-2 text-sm md:text-base"
+                  >
+                    <User className="h-4 w-4" />
+                    Barbeiro (opcional)
+                  </Label>
+                  <Select
+                    value={formData.barbeiroId}
+                    onValueChange={(value) => handleChange("barbeiroId", value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Qualquer barbeiro disponível" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {barbeiros.map((barbeiro) => (
+                        <SelectItem
+                          key={barbeiro.id}
+                          value={barbeiro.id.toString()}
+                          className="text-sm"
+                        >
+                          <span className="block truncate">
+                            {barbeiro.nome}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Se não selecionar, qualquer barbeiro poderá atendê-lo
+                  </p>
                 </div>
 
                 {/* Data e Hora */}
