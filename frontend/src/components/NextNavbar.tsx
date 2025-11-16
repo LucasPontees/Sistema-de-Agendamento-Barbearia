@@ -32,6 +32,8 @@ const Header: React.FC<HeaderProps> = () => {
       "/appointments",
       "/agendamentos",
       "/register",
+      "/my-appointments",
+      "/services",
     ];
     const isProtectedRoute = protectedRoutes.some((route) =>
       pathname?.startsWith(route)
@@ -102,21 +104,48 @@ const Header: React.FC<HeaderProps> = () => {
                       >
                         Home
                       </Link>
-                      <Link
-                        href="/agendamentos"
-                        className="text-white hover:text-barber-gold"
-                        onClick={toggleMenu}
-                      >
-                        Meus Agendamentos
-                      </Link>
                       {role === "USUARIO" && (
-                        <Link
-                          href="/appointments"
-                          className="text-white hover:text-barber-gold"
-                          onClick={toggleMenu}
-                        >
-                          Novo Agendamento
-                        </Link>
+                        <>
+                          <Link
+                            href="/my-appointments"
+                            className="text-white hover:text-barber-gold"
+                            onClick={toggleMenu}
+                          >
+                            Meus Agendamentos
+                          </Link>
+                          <Link
+                            href="/appointments"
+                            className="text-white hover:text-barber-gold"
+                            onClick={toggleMenu}
+                          >
+                            Novo Agendamento
+                          </Link>
+                        </>
+                      )}
+                      {role === "EMPRESA" && (
+                        <>
+                          <Link
+                            href="/agendamentos"
+                            className="text-white hover:text-barber-gold"
+                            onClick={toggleMenu}
+                          >
+                            Meus Agendamentos
+                          </Link>
+                          <Link
+                            href="/services"
+                            className="text-white hover:text-barber-gold"
+                            onClick={toggleMenu}
+                          >
+                            Serviços
+                          </Link>
+                          <Link
+                            href="/register"
+                            className="text-white hover:text-barber-gold"
+                            onClick={toggleMenu}
+                          >
+                            Registrar Cliente
+                          </Link>
+                        </>
                       )}
                       <Link
                         href="/dashboard"
@@ -125,16 +154,6 @@ const Header: React.FC<HeaderProps> = () => {
                       >
                         Painel
                       </Link>
-                      {role === "EMPRESA" && (
-                        <Link href="/register" onClick={toggleMenu}>
-                          <Button
-                            variant="default"
-                            className="w-full bg-barber-gold hover:bg-barber-gold/90 text-black"
-                          >
-                            Registrar Cliente
-                          </Button>
-                        </Link>
-                      )}
                       <Link
                         href="/profile"
                         className="text-white hover:text-barber-gold"
@@ -180,18 +199,36 @@ const Header: React.FC<HeaderProps> = () => {
                   >
                     Home
                   </Link>
-                  <Link
-                    href="/agendamentos"
-                    className="text-white hover:text-barber-gold"
-                  >
-                    Meus Agendamentos
-                  </Link>
                   {role === "USUARIO" && (
+                    <>
+                      <Link
+                        href="/my-appointments"
+                        className="text-white hover:text-barber-gold"
+                      >
+                        Meus Agendamentos
+                      </Link>
+                      <Link
+                        href="/appointments"
+                        className="text-white hover:text-barber-gold"
+                      >
+                        Novo Agendamento
+                      </Link>
+                    </>
+                  )}
+                  {role === "EMPRESA" && (
                     <Link
-                      href="/appointments"
+                      href="/agendamentos"
                       className="text-white hover:text-barber-gold"
                     >
-                      Novo Agendamento
+                      Meus Agendamentos
+                    </Link>
+                  )}
+                  {role === "EMPRESA" && (
+                    <Link
+                      href="/services"
+                      className="text-white hover:text-barber-gold"
+                    >
+                      Serviços
                     </Link>
                   )}
                   <Link
