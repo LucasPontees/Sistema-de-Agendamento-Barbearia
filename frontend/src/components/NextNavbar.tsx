@@ -24,6 +24,15 @@ const Header: React.FC<HeaderProps> = () => {
   const { role } = useUser();
 
   useEffect(() => {
+    // Define rotas públicas (não autenticadas)
+    const publicRoutes = [
+      "/login",
+      "/register-company",
+      "/payment/success",
+      "/payment/waiting",
+      "/payment/manual-check",
+    ];
+
     // Verifica se está em uma rota protegida ou se acabou de fazer login
     const protectedRoutes = [
       "/homepage",
@@ -35,11 +44,22 @@ const Header: React.FC<HeaderProps> = () => {
       "/my-appointments",
       "/services",
     ];
+
+    // Se está em uma rota pública, não está autenticado
+    const isPublicRoute = publicRoutes.some((route) =>
+      pathname?.startsWith(route)
+    );
+
+    if (isPublicRoute) {
+      setIsAuthenticated(false);
+      return;
+    }
+
+    // Se está em uma rota protegida, significa que está autenticado
     const isProtectedRoute = protectedRoutes.some((route) =>
       pathname?.startsWith(route)
     );
 
-    // Se está em uma rota protegida, significa que está autenticado
     setIsAuthenticated(isProtectedRoute);
   }, [pathname]);
 
