@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Req,
+  Get,
 } from "@nestjs/common";
 import { CreateBarberUseCase } from "./create-barber.usecase";
 import { UpdateBarberUseCase } from "./update-barber.usecase";
@@ -17,6 +18,8 @@ import { RolesGuard } from "@/login/strategies/roles.guard";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { Roles } from "@/login/strategies/roles.decorator";
 import { UserRole } from "@/usuario/enum/role";
+import { RetornaBarbeirosEmpresaUsecase } from "./retorna-barbeiros-empresa.usecase";
+
 interface RequestWithUser extends Request {
   user: JwtPayload;
 }
@@ -24,7 +27,8 @@ interface RequestWithUser extends Request {
 export class BarberController {
   constructor(
     private readonly createBarberUseCase: CreateBarberUseCase,
-    private readonly updateBarberUseCase: UpdateBarberUseCase
+    private readonly updateBarberUseCase: UpdateBarberUseCase,
+    private readonly retornaBarbeirosEmpresaUsecase: RetornaBarbeirosEmpresaUsecase
   ) {}
 
   @Post()
@@ -39,5 +43,14 @@ export class BarberController {
   @Patch(":id")
   update(@Param("id") id: number, @Body() dto: UpdateBarberDto) {
     return this.updateBarberUseCase.execute(dto, id);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.EMPRESA)
+  getAll(@Req() req: RequestWithUser) {
+    const empresaId = req.user.empresaId;
+    return this.retornaBarbeirosEmpresaUsecase.retornaBarbeiros(empresaId);
   }
 }
