@@ -121,6 +121,38 @@ export async function getAgendamentos() {
   }
 }
 
+export async function getAgendamentosCliente() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+
+    if (!token) {
+      throw new Error("Token não encontrado");
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/agendamento/cliente`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar agendamentos");
+    }
+
+    const data = await response.json();
+    return { success: true, data: Array.isArray(data) ? data : [] };
+  } catch (error: any) {
+    console.error("Erro ao buscar agendamentos do cliente:", error);
+    return { success: false, data: [], error: error.message };
+  }
+}
+
 export async function getUserInfo() {
   try {
     const cookieStore = await cookies();
