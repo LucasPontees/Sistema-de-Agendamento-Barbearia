@@ -48,7 +48,7 @@ export class BarberController {
   @Get()
   @UseGuards(AuthGuard("jwt"), RolesGuard)
   @ApiBearerAuth("JWT-auth")
-  @Roles(UserRole.EMPRESA)
+  @Roles(UserRole.EMPRESA, UserRole.USUARIO)
   getAll(@Req() req: RequestWithUser) {
     const empresaId = req.user.empresaId;
     return this.retornaBarbeirosEmpresaUsecase.retornaBarbeiros(empresaId);
