@@ -25,8 +25,4 @@ export class CreateBarberDto {
   @ApiProperty({ description: "Foto do barbeiro", example: "image.url" })
   @MinLength(3)
   fotoPerfil: string;
-
-  @ApiProperty({ description: "ID da empresa", example: "1" })
-  @IsInt()
-  empresaId: number;
 }
