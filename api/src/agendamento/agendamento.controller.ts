@@ -23,6 +23,7 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { Roles } from "@/login/strategies/roles.decorator";
 import { UserRole } from "@/usuario/enum/role";
 import { JwtPayload } from "@/login/strategies/jwt-strategy";
+import { RetornaAgendamentosClienteUsecase } from "./retorna-agendamentos-cliente.usecase";
 
 interface RequestWithUser extends Request {
   user: JwtPayload;
@@ -34,7 +35,8 @@ export class AgendamentoController {
     private readonly createAgendamentoUsecase: CreateAgendamentoUsecase,
     private readonly retornaAgendamentosEmpresaUsecase: RetornaAgendamentosEmpresaUsecase,
     private readonly returnAgendamentosPorIdUsecase: ReturnAgendamentosPorIdUsecase,
-    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase
+    private readonly aceitarRejeitarAgendamentoUsecase: AceitarRejeitarAgendamentoUsecase,
+    private readonly retornaAgendamentosClienteUsecase: RetornaAgendamentosClienteUsecase
   ) {}
 
   @Post()
@@ -58,6 +60,18 @@ export class AgendamentoController {
       empresaId
     );
   }
+
+  @Get("cliente")
+  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @ApiBearerAuth("JWT-auth")
+  @Roles(UserRole.USUARIO)
+  getAgendamentosCliente(@Req() req: RequestWithUser) {
+    const usuarioId = Number(req.user.sub);
+    return this.retornaAgendamentosClienteUsecase.retornaAgendamentosCliente(
+      usuarioId
+    );
+  }
+
   @Get(":id")
   getAgendamentosById(@Param("id", ParseIntPipe) id: number) {
     return this.returnAgendamentosPorIdUsecase.returnAgendamentoPorId(id);
