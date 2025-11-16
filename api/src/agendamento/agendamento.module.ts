@@ -11,10 +11,13 @@ import { RetornaAgendamentosEmpresaUsecase } from "./retorna-agendamentos-empres
 import { ReturnAgendamentosPorIdUsecase } from "./retorna-agendamentos-por-id.usecase";
 import { AceitarRejeitarAgendamentoUsecase } from "./aceitar-rejeitar-agendamento.usecase";
 import { HashArgon2 } from "@/usuario/hash/hash-argon2";
+import { RetornaAgendamentosClienteUsecase } from "./retorna-agendamentos-cliente.usecase";
+
 @Module({
   controllers: [AgendamentoController],
   providers: [
     RetornaAgendamentosEmpresaUsecase,
+    RetornaAgendamentosClienteUsecase,
     AceitarRejeitarAgendamentoUsecase,
     ReturnAgendamentosPorIdUsecase,
     CreateAgendamentoUsecase,

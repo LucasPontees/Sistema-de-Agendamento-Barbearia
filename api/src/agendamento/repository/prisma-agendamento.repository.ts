@@ -9,7 +9,7 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
   async create(
     data: CreateAgendamentoDto,
     usuarioId: number,
-    empresaId: number,
+    empresaId: number
   ): Promise<Agendamento> {
     return this.prisma.agendamento.create({
       data: {
@@ -43,8 +43,31 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
     });
   }
 
+  async returnAgendamentoPorCliente(usuarioId: number): Promise<Agendamento[]> {
+    return this.prisma.agendamento.findMany({
+      where: { usuarioId },
+      include: {
+        usuario: {
+          select: {
+            nome: true,
+            email: true,
+            telefone: true,
+            dataNascimento: true,
+            fotoPerfil: true,
+          },
+        },
+        barbeiro: {
+          select: { nome: true, fotoPerfil: true },
+        },
+        servico: {
+          select: { nome: true, descricao: true, preco: true },
+        },
+      },
+    });
+  }
+
   async returnAgendamentoPorId(
-    agendamentoId: number,
+    agendamentoId: number
   ): Promise<Agendamento | null> {
     return this.prisma.agendamento.findFirst({
       where: { id: agendamentoId },
@@ -70,7 +93,7 @@ export class PrismaAgendamentoRepository implements IAgendamentoRepository {
 
   async aceitarRejeitarAgendamento(
     agendamentoId: number,
-    acao: Extract<StatusAgendamento, "CONFIRMADO" | "CANCELADO" | "REJEITADO">,
+    acao: Extract<StatusAgendamento, "CONFIRMADO" | "CANCELADO" | "REJEITADO">
   ): Promise<Agendamento> {
     return this.prisma.agendamento.update({
       where: { id: agendamentoId },
