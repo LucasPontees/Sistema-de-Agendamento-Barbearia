@@ -116,15 +116,16 @@ const Header: React.FC<HeaderProps> = () => {
                 <nav className="flex flex-col space-y-4">
                   {isAuthenticated ? (
                     <>
-                      <Link
-                        href={
-                          role === "EMPRESA" ? "/agendamentos" : "/homepage"
-                        }
-                        className="text-white hover:text-barber-gold"
-                        onClick={toggleMenu}
-                      >
-                        Home
-                      </Link>
+                      {/* Home - apenas para USUARIO */}
+                      {role === "USUARIO" && (
+                        <Link
+                          href="/homepage"
+                          className="text-white hover:text-barber-gold"
+                          onClick={toggleMenu}
+                        >
+                          Home
+                        </Link>
+                      )}
                       {role === "USUARIO" && (
                         <>
                           <Link
@@ -221,12 +222,15 @@ const Header: React.FC<HeaderProps> = () => {
             <nav className="flex space-x-6">
               {isAuthenticated && (
                 <>
-                  <Link
-                    href={role === "EMPRESA" ? "/agendamentos" : "/homepage"}
-                    className="text-white hover:text-barber-gold"
-                  >
-                    Home
-                  </Link>
+                  {/* Home - apenas para USUARIO */}
+                  {role === "USUARIO" && (
+                    <Link
+                      href="/homepage"
+                      className="text-white hover:text-barber-gold"
+                    >
+                      Home
+                    </Link>
+                  )}
                   {role === "USUARIO" && (
                     <>
                       <Link
