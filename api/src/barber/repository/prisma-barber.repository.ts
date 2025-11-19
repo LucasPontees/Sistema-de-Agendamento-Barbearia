@@ -3,7 +3,6 @@ import { IBarberRepository } from "./barber.repository";
 import { PrismaService } from "prisma/prisma.service";
 import { Prisma, Barbeiro } from "@prisma/client";
 import { CreateBarberDto } from "../dto/create-barber.dto";
-import { B } from "vitest/dist/chunks/worker.d.1GmBbd7G";
 
 @Injectable()
 export class PrismaBarberRepository implements IBarberRepository {

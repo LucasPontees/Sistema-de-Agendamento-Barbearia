@@ -6,7 +6,6 @@ import { Barbeiro } from "@prisma/client";
 @Injectable()
 export class RetornaBarbeirosEmpresaUsecase {
   constructor(
-    @Inject(TYPES.BarberRepository)
     private readonly iBarberRepository: IBarberRepository
   ) {}
 

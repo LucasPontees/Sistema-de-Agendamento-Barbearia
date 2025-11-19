@@ -8,7 +8,6 @@ import { CreateBarberDto } from "./dto/create-barber.dto";
 @Injectable()
 export class CreateBarberUseCase {
   constructor(
-    @Inject(TYPES.BarberRepository)
     private readonly iBarberRepository: IBarberRepository,
     @Inject(TYPES.EmpresaRepository)
     private readonly iEmpresaRepository: IEmpresaRepository

@@ -12,6 +12,7 @@ import { ReturnAgendamentosPorIdUsecase } from "./retorna-agendamentos-por-id.us
 import { AceitarRejeitarAgendamentoUsecase } from "./aceitar-rejeitar-agendamento.usecase";
 import { HashArgon2 } from "@/usuario/hash/hash-argon2";
 import { RetornaAgendamentosClienteUsecase } from "./retorna-agendamentos-cliente.usecase";
+import { IBarberRepository } from "@/barber/repository/barber.repository";
 
 @Module({
   controllers: [AgendamentoController],
@@ -26,7 +27,7 @@ import { RetornaAgendamentosClienteUsecase } from "./retorna-agendamentos-client
       useClass: PrismaAgendamentoRepository,
     },
     {
-      provide: TYPES.BarberRepository,
+      provide: IBarberRepository,
       useClass: PrismaBarberRepository,
     },
     {

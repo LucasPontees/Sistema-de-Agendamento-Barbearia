@@ -1,6 +1,5 @@
 import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { Barbeiro } from "@prisma/client";
-import { TYPES } from "../types";
 import { IBarberRepository } from "./repository/barber.repository";
 
 export interface UpdateBarberRequest {
@@ -20,7 +19,6 @@ export interface UpdateBarberRequest {
 @Injectable()
 export class UpdateBarberUseCase {
   constructor(
-    @Inject(TYPES.BarberRepository)
     private readonly iBarberRepository: IBarberRepository,
   ) {}
 

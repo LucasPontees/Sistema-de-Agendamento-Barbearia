@@ -13,7 +13,7 @@ export class CreateAgendamentoUsecase {
   constructor(
     @Inject(TYPES.AgendamentoRepository)
     private readonly iAgendamentoRepository: IAgendamentoRepository,
-    @Inject(TYPES.BarberRepository)
+    @Inject(IBarberRepository)
     private readonly iBarberRepository: IBarberRepository,
     @Inject(TYPES.ServicoBarbeariaRepository)
     private readonly iServicoBarbeariaRepository: IServicoBarbeariaRepository,
